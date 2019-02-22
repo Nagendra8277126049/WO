@@ -1,0 +1,3 @@
+<apex:page showHeader="false" sidebar="false" standardController="Contract">
+    <apex:include pageName="xecm__Workspace"/>
+</apex:page>

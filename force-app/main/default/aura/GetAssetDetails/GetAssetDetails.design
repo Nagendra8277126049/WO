@@ -1,0 +1,14 @@
+<design:component label="GetAssetDetails">
+    <design:attribute name="CaseExtrasHeading" label="Case Extra Section - Heading" description="Name of the Case Extras Section"/>
+    <design:attribute name="SearchButtonName" label="Search for Assets Button - Name" description="Name of the Search Button"/>
+    <design:attribute name="SearchAssetErrorMessage" label="Error Message for Asset retrieval" description="Error Message to toast and show to User"/>
+    <design:attribute name="AccountNAErrorMessage" label="Error Message for Account NA in salesforce" description="Error Message to toast and show to User"/>
+    <design:attribute name="ProducttNAErrorMessage" label="Error Message for Product NA in salesforce" description="Error Message to toast and show to User"/>
+    <design:attribute name="SuccessMessage" label="Success Message" description="Success Message to toast and show to User"/>
+    <design:attribute name="ReplaceButton" label="Replace Button Name" description="Name of the Replace button in popup"/>
+   <sfdc:objects >
+        <sfdc:object >Asset</sfdc:object>
+        <sfdc:object >Case</sfdc:object>
+        <sfdc:object >LiveChatTranscript</sfdc:object>
+    </sfdc:objects>
+</design:component>

@@ -1,0 +1,30 @@
+<!--
+*******************************************************************************************************
+Name:       AssetOnHoldStatus.cmp
+Description:  This Lightning Component that will be the place holder for the dispatch creation.  - Story 4316154 
+*******************************************************************************************************
+Date         Version    Author             Summary of Changes 
+*******************************************************************************************************
+03/26/2018     1.0     Rodrigo Carpio      Initial Release
+*******************************************************************************************************
+-->
+<aura:component implements="lightning:availableForFlowScreens" access="global" >	
+    <aura:attribute name="assetHoldMessage" type="string" default="assetHoldMessage" access="global"/>
+    <lightning:card >
+        <table>
+            <tr><td><div >
+                
+                <aura:if isTrue="{!v.assetHoldMessage.length > 0}">
+                    The Hold Status for this asset is {!v.assetHoldMessage}
+                    <aura:set attribute="else">
+                      There is a hold on this asset. Work order cannot be created.
+                    </aura:set>
+                </aura:if>
+                
+                <br/>
+                <p>&nbsp;</p>
+                </div></td></tr>
+            
+        </table>        
+    </lightning:card>
+</aura:component>

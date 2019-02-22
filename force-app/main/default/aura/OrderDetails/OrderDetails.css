@@ -1,0 +1,8 @@
+.THIS .slds_wrap_text {
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.THIS .additionalSpace{
+    padding-left:4px;
+}

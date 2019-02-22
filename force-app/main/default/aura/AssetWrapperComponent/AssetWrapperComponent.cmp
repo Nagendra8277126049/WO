@@ -1,0 +1,26 @@
+<!--
+*******************************************************************************************************
+Name:       AssetWrapperComponent.cmp
+Description:  This Lightning Component is place holder for AssetLocation & AssetHeartBeatComponent- Story 4794544
+*******************************************************************************************************
+Date         Version           Author             Summary of Changes 
+***********************************************************************************************************
+03/14/2017     1.0     Sri Harsha Gangi Reddy      Initial Release
+05/21/2017     1.1     Srikanth Parvathareddy      Story #5091877-SFDC Phase 3 :SA Changes on Asset Details
+***********************************************************************************************************
+-->
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <aura:attribute name="AssetLocationHeading" type="String"/>
+    <aura:attribute name="AssetLocationErrorMessage" type="String"/>
+    <aura:attribute name="HeartBeatHeading" type="String"/>
+    <aura:attribute name="HeartBeatErrorMessage" type="String"/>
+    <aura:attribute name="NoRecordsHeartBeatMessage" type="String"/>
+	<div class="slds-grid slds-gutters">
+      <div class="slds-col slds-grid slds-size_1-of-2">
+    	<c:AssetLocation recordId="{#v.recordId}" Heading="{#v.AssetLocationHeading}" ErrorMessage="{#v.AssetLocationErrorMessage}"/>
+      </div>
+      <div class="slds-col slds-grid slds-size_1-of-2">
+        <c:AssetHeartBeatComponent recordId="{#v.recordId}" Heading="{#v.HeartBeatHeading}" noRecordsFoundMessage="{#v.NoRecordsHeartBeatMessage}" ErrorMessage="{#v.HeartBeatErrorMessage}"/>
+      </div> 
+	</div>
+</aura:component>

@@ -1,0 +1,355 @@
+<!--
+*******************************************************************************************************
+Name:       DispatchDefaultsEditForm.cmp
+Description:  This Lightning Component that will be the place holder for the dispatch default.  - Story 4346869 
+*******************************************************************************************************
+Date         Version    Author             Summary of Changes 
+*******************************************************************************************************
+04/30/2018     1.0     Harsha Reddy        Initial Release
+04/30/2018     1.0     Rodrigo Carpio      Initial Release
+*******************************************************************************************************
+-->
+<aura:component controller="DispatchDefaultsConfiguration">
+    <!-- Label -->
+    <aura:attribute name="ComponentLabel" type="String" />
+    <aura:attribute name="ServiceTypeLabel" type="String" />
+    <aura:attribute name="ServiceOptionsLabel" type="String" />
+    <aura:attribute name="SystemClassificationLabel" type="String" />
+    <aura:attribute name="CategoryLabel" type="String" />
+    <aura:attribute name="KeepYourComponentsLabel" type="String" />
+    <aura:attribute name="DSPOverideRequestLabel" type="String" />
+    <aura:attribute name="AccidentalDamageLabel" type="String" />
+    <aura:attribute name="AccidentalDamageLabel1" type="String" />
+    <aura:attribute name="BillToLabel" type="String" />
+    <aura:attribute name="OrderNumberLabel" type="String" />
+    <aura:attribute name="InstructionLabel" type="string" />
+    <aura:attribute name="OverrideLabel" type="string" />
+    <aura:attribute name="KYHDFlagLabel" type="string" />
+    <aura:attribute name="ADOverrideReasonLabel" type="string" default="AD Overrride Reason"/>
+    <aura:attribute name="InstructionPlaceHolderLabel" type="string" default="Include requested Dell Service Provider in your reason. Your request will be submitted for approval."/>
+    <aura:attribute name="AlternateReturnAddressChkboxLabel" type="string" default="Alternate Return Address"/>
+    <aura:attribute name="alternatePostalCodeLabel" type="string" default="Postal Code"/>
+    <aura:attribute name="alternateStreetLabel" type="string" default="Street" />
+    <aura:attribute name="alternateCityLabel" type="string" default="City" />
+    <aura:attribute name="alternateStateLabel" type="string" default="State" />
+    <aura:attribute name="alternateCountryLabel" type="string" default="Country" />
+    <aura:attribute name="altReturnCountryOptions" type="List" />
+    <aura:attribute name="altReturnStateOptions" type="List" />
+    <aura:attribute name="countryStateMap" type="Map" />
+    <aura:attribute name="entitledServiceLabel" type="String" default="Entitled Service" />
+    <aura:attribute name="entitledServiceValue" type="String" default=" " />
+    <!--5615509-->
+    <aura:attribute name="reasonForDamageLabel" type="String" default="Reason for the Damage"/>   
+    <!-- DASP-->
+    <aura:attribute name="Region" type="String"/>
+    <aura:attribute name="DASPLabel" type="String" default="DASP" />
+    <aura:attribute name="DASPValue" type="String" />
+    <aura:attribute name="DASPValues" type="List" />
+    <aura:attribute name="DASPEnable" type="Boolean" default="false" />
+    
+    <!--Label-->
+    
+    <!-- Work Order Record Id-->
+    <aura:attribute name="recordId" type="String" />
+    <!-- Dispatch Defaults Record Id -->
+    <aura:attribute name="dispDefaultsRecId" type="String" />
+    
+    <aura:attribute name="holdServiceTypeOptions" type="List" />
+    <aura:attribute name="serviceTypeOptions" type="List" />
+    <aura:attribute name="holdserviceoptions" type="List" />
+    <aura:attribute name="serviceoptions" type="List" />
+    <aura:attribute name="serviceTypeValue" type="string" />
+    <aura:attribute name="serviceOptionValue" type="String" />
+    <aura:attribute name="holdSpecialOptions" type="List" />
+    <aura:attribute name="specialOptionValue" type="String" />
+    <aura:attribute name="specialOptions" type="List" />
+    <aura:attribute name="holdprodClassOptions" type="string" />
+    <aura:attribute name="prodClassValue" type="String" />
+    <aura:attribute name="prodClassOptions" type="List" />
+    <aura:attribute name="kYComp" type="Boolean" default="false" />
+    <aura:attribute name="AccDamage" type="Boolean" default="false" />
+    <!--accidentalDamage-->
+    <aura:attribute name="AccDamageVal" type="Boolean" default="false" />
+    <!--accidentalDamage1-->
+    <aura:attribute name="ADCoverageFlag" type="Boolean" default="false" />
+    <!--ADCoverageFlag-->
+    <aura:attribute name="DSPOverReq" type="Boolean" default="false" />
+    <aura:attribute name="holdbillToOptions" type="List" />
+    <aura:attribute name="holdADOverride" type="List" />
+    <aura:attribute name="billToValue" type="String" />
+    <aura:attribute name="ADOverValue" type="string" />
+    <aura:attribute name="billToOptions" type="List" />
+    <aura:attribute name="ADOverrideOptions" type="List" />
+    <aura:attribute name="OrderNumber" type="string" />
+    <aura:attribute name="OutOfWarranty" type="Boolean" default="false" />
+    <aura:attribute name="Instructions" type="string" />
+    <aura:attribute name="InstructRecId" type="string" />
+    <aura:attribute name="KYHDFlag" type="Boolean" />
+    <!--KYHD changed to true-->
+    <aura:attribute name="KYHDFlagChangedTrue" type="Boolean" default="false"/>
+    <aura:attribute name="EntitlementDetailsValue" type="String" default="" />
+    <aura:attribute name="billToHasValue" type="Boolean" default="false" />
+    <aura:attribute name="validationError" type="Boolean" default="false" />
+    <aura:attribute name="errorMessage" type="String" />
+    <aura:attribute name="DDRecord" type="DispatchDefaults__c" />
+    <aura:attribute name="locationCoverageLevel" type="String" />
+    <aura:attribute name="KYHDChkBoxDisability" type="Boolean" default="true" />
+    <aura:attribute name="billToOldValue" type="String" />
+    <aura:attribute name="altReturnAddressChkBoxValue" type="Boolean" default="false"/>
+    <aura:attribute name="altReturnPostalCodeValue" type="String" />
+    <aura:attribute name="altReturnStreetValue" type="String" />
+    <aura:attribute name="altReturnCityValue" type="String" />
+    <aura:attribute name="altReturnStateValue" type="String" />
+    <aura:attribute name="altReturnCountryValue" type="String" />
+    <aura:attribute name="DSPOverReqerrorMessage" type="String" /><!--will be used to display the error message for Override reason-->
+    <!--5615509-->
+    <aura:attribute name="reasonForDamageOptionsHold" type="List"/>
+    <aura:attribute name="reasonForDamageOptions" type="List"/>
+    <aura:attribute name="reasonForDamage" type="String" default=""/>
+     <aura:attribute name="workOrderCountry" type="String" default=""/>
+    <aura:attribute name="isCountrySpain" type="Boolean" default="false" />
+   
+    <!--5615509-->
+    
+    
+    
+    <aura:registerEvent name="updateDisDefaultEvent" type="c:DispatchDefaultEvent" />
+    <aura:registerEvent name="openReadFormEvent" type="c:DispatchDefaultEditClose" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container" title="description of icon when needed">
+                        <lightning:icon iconName="standard:work_order" size="small" alternativeText="Dispatch Configuration Icon"/>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2>
+                        <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title="[object Object]">
+                            <span class="slds-text-heading_small">{#v.ComponentLabel}</span>
+                        </a>
+                    </h2>
+                </div>
+            </header>
+        </div>
+        
+        <div class="slds-card__body slds-card__body_inner">
+            <!-- Spinner-->
+            <lightning:spinner variant="brand" size="small" alternativeText="Loading" aura:id="mySpinner" title="Loading" class="slds-hide" />
+            
+            
+            <!-- Section to display : Error Message -->
+            <aura:if isTrue="{!v.validationError}">
+                <div class="slds-text-color_error slds-p-left_x-small slds-align_absolute-center">
+                    <lightning:formattedText value="{!v.errorMessage}" />
+                </div>
+            </aura:if>
+            
+            <aura:if isTrue="{!not(empty(v.locationCoverageLevel))}">
+                <lightning:icon iconName="utility:warning" variant="warning" size="small" /> This work order requires a minimum of {!v.locationCoverageLevel}
+                service because the location is in an extended delivery area.
+            </aura:if>
+            
+            <div class="slds-grid slds-wrap">
+                
+                <div class="slds-col slds-size_3-of-7 slds-m-vertical_xx-small">
+                    <lightning:select label="{!v.ServiceTypeLabel}" aura:id="serviceTypeId" value="{!v.serviceTypeValue}"
+                                      onchange="{!c.serviceType}">
+                        <aura:iteration items="{!v.serviceTypeOptions}" var="item">
+                            <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}" />
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+                <div class="slds-col slds-size_1-of-7 slds-m-vertical_xx-small">
+                </div>
+                <div class="slds-col slds-size_3-of-7 slds-m-vertical_xx-small">
+                    <lightning:select label="{!v.ServiceOptionsLabel}" aura:id="serviceOptionId" value="{!v.serviceOptionValue}"  onchange="{!c.serviceOptions}">
+                        <aura:iteration items="{!v.serviceoptions}" var="item">
+                            <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}" />
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+                <div class="slds-col slds-size_3-of-7 slds-m-vertical_xx-small test">
+                    <div class="test-id__field-label-container">
+                        <span class="test-id__field-label slds-form-element__label"> 
+                            <lightning:icon iconName="utility:info" size="x-small" style="color:grey;"/>
+                            {!v.entitledServiceLabel}:   {!v.entitledServiceValue}
+                        </span>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-7 slds-m-vertical_xx-small">
+                </div>
+                <div class="slds-col slds-size_1-of-7 slds-m-vertical_xx-small">
+                </div>
+                <div class="slds-col slds-size_3-of-7 slds-m-vertical_xx-small test">
+                    <lightning:select label="{!v.CategoryLabel}" aura:id="specialOptionId" value="{!v.specialOptionValue}">
+                        <aura:iteration items="{!v.specialOptions}" var="item">
+                            <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}" />
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+                <div class="slds-col slds-size_1-of-7 slds-m-vertical_xx-small">
+                </div>
+                <div class="slds-col slds-size_3-of-7 slds-m-vertical_xx-small">
+                    <lightning:select label="{!v.SystemClassificationLabel}" aura:id="prodClassId" value="{!v.prodClassValue}"
+                                      disabled="true">
+                        <aura:iteration items="{!v.prodClassOptions}" var="item">
+                            <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}" />
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+                
+                <aura:if isTrue="{!(v.serviceTypeValue == 'Mail-In')}">      
+                    <div class="slds-col slds-size_7-of-7 slds-m-vertical_xx-small">
+                        <span class="slds-p-top_x-large">{!v.AlternateReturnAddressChkboxLabel}</span>
+                        <lightning:input type="checkbox" label="" aura:Id="altReturnAddressId" name="altReturnAddressCheckbox"
+                                         checked="{!v.altReturnAddressChkBoxValue}" />
+                        <aura:if isTrue="{!v.altReturnAddressChkBoxValue}">
+                            
+                            <!--Megha: code changes below for Aug Story-Mail In -->
+                            <!-- Changed postalCode Mapping to altReturnPostalCodeValue from alternatePostalCodeLabel -->
+                            <div class="slds-col slds-size_7-of-7 slds-m-vertical_xx-small" style="max-width: 400px;">
+                                <lightning:inputAddress
+                                                        aura:id="myaddress"
+                                                        addressLabel=""
+                                                        streetLabel="Street"
+                                                        cityLabel="City"
+                                                        countryLabel="Country"
+                                                        provinceLabel="State"
+                                                        postalCodeLabel="Zip"
+                                                        street="{!v.altReturnStreetValue}"
+                                                        city="{!v.altReturnCityValue}"
+                                                        country="{!v.altReturnCountryValue}"
+                                                        countryOptions="{!v.altReturnCountryOptions }"
+                                                        provinceOptions="{!v.altReturnStateOptions }"
+                                                        province="{!v.altReturnStateValue}"
+                                                        postalCode="{!v.altReturnPostalCodeValue}"
+                                                        onchange = "{!c.OnCountryChanged}"                                                    
+                                                        />
+                            </div>
+                        </aura:if>
+                        <!--Megha: code changes end -->
+                    </div>
+                </aura:if>
+                
+                <div class="slds-col slds-size_3-of-7 slds-m-vertical_xx-small">
+                    <span class="slds-p-top_x-large">{!v.KeepYourComponentsLabel}</span>
+                    <lightning:input type="checkbox" label="" name="KYC" checked="{!v.kYComp}" disabled="true"
+                                     />
+                </div>
+                <div class="slds-col slds-size_1-of-7 slds-m-vertical_xx-small">
+                </div>
+                
+                <div class="slds-col slds-size_3-of-7 slds-m-vertical_xx-small">
+                    <span class="slds-p-top_x-large">{!v.KYHDFlagLabel}</span>
+                    <lightning:input type="checkbox" label="" aura:Id="KYHDChkBoxId" name="KYHD" disabled="{!v.KYHDChkBoxDisability}"
+                                     checked="{!v.KYHDFlag}" onchange="{!c.KYHDChkBoxChangeAction}"/>
+                </div>
+                
+                <div class="slds-col slds-size_3-of-7 slds-m-vertical_xx-small">
+                    <span class="slds-p-top_x-large">{!v.AccidentalDamageLabel}</span>
+                    <!--// added On Change By Harsha - 09/25/2018 - Defect #865002590 -->
+                    <lightning:input type="checkbox" label="" name="AccidentalDamage" disabled="{!!v.AccDamage}" checked="{!v.AccDamageVal}" onchange="{!c.handleADCheckChange}"/>
+                </div>
+                <div class="slds-col slds-size_1-of-7 slds-m-vertical_xx-small">
+                </div>
+                <div class="slds-col slds-size_3-of-7 slds-m-vertical_xx-small">
+                    
+                     <aura:if isTrue="{!and(v.AccDamageVal,v.ADCoverageFlag)}">
+                        <aura:if isTrue="{!!v.isCountrySpain}">
+                            <lightning:select label="{!v.ADOverrideReasonLabel}" aura:id="OverrideId" value="{!v.ADOverValue}"
+                                              onchange="{!c.ADOverrideChange}" required="{!and(v.AccDamageVal,v.ADCoverageFlag)}">
+                                <aura:iteration items="{!v.ADOverrideOptions}" var="item">
+                                    <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}" />
+                                </aura:iteration>
+                            </lightning:select>
+                    	</aura:if>
+                    </aura:if>
+                </div>
+                <!--5615509-->
+                    <aura:if isTrue="{!v.AccDamageVal}">
+                        <!--
+      					// Commented BY Harsha - DEFECT 6112261 - Feb 4th 2019
+                        <div class="slds-col slds-size_3-of-7 slds-m-vertical_xx-small">
+                        </div>
+                        <div class="slds-col slds-size_1-of-7 slds-m-vertical_xx-small">
+                        </div>
+						-->
+                        <div class="slds-col slds-size_3-of-7 slds-m-vertical_xx-small">
+                            <lightning:select label="{!v.reasonForDamageLabel}" aura:id="reasonForDamageId" value="{!v.reasonForDamage}"
+                                              required="{!v.AccDamageVal}">
+                                <aura:iteration items="{!v.reasonForDamageOptions}" var="item">
+                                    <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}" />
+                                </aura:iteration>
+                            </lightning:select>
+                            
+                        </div>
+        				<!-- Added by Harsha Starts Here - DEFECT 6112261 - Feb 4th 2019 -->
+                        <div class="slds-col slds-size_1-of-7 slds-m-vertical_xx-small">
+                        </div>
+                        <div class="slds-col slds-size_3-of-7 slds-m-vertical_xx-small">
+                        </div>
+                        <!-- Added by Harsha Ends Here - DEFECT 6112261 - Feb 4th 2019 -->
+                    </aura:if>
+                <!--5615509-->
+                <div class="slds-col slds-size_3-of-7 slds-m-vertical_xx-small">
+                    
+                    <span class="slds-p-top_x-large">{!v.DSPOverideRequestLabel}</span>
+                    <lightning:input type="checkbox" label="" checked="{!v.DSPOverReq}" disabled="{!(v.serviceTypeValue=='Parts Only')}"/>
+                </div>
+                <div class="slds-col slds-size_1-of-7 slds-m-vertical_xx-small">
+                </div>
+                <div class="slds-col slds-size_3-of-7 slds-m-vertical_xx-small">
+                    <aura:if isTrue="{!v.DSPOverReq}">
+                        <label class="slds-form-element__label" for="instructionId">
+                            <abbr class="slds-required" title="required">*</abbr>
+                            <span class="slds-p-top_x-large">{!v.InstructionLabel}</span>
+                        </label>
+                        <lightning:textarea aura:id="instructionId" variant="label-hidden" value="{!v.Instructions}"
+                                            placeholder="{!v.InstructionPlaceHolderLabel}"
+                                            />
+                        <aura:if isTrue="{!v.validationError}">
+                            <div class="slds-text-color_error slds-p-left_x-small">
+                                {!v.DSPOverReqerrorMessage}
+                            </div>
+                        </aura:if>
+                    </aura:if>
+                </div>
+                
+                <div class="slds-col slds-size_3-of-7 slds-m-vertical_xx-small">
+                    <lightning:select label="{!v.BillToLabel}" aura:id="billToId" value="{!v.billToValue}" onchange="{!c.billToChange}" required="{!v.OutOfWarranty}">
+                        <aura:iteration items="{!v.billToOptions}" var="item">
+                            <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}" />
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+                <div class="slds-col slds-size_1-of-7 slds-m-vertical_xx-small">
+                </div>
+                <div class="slds-col slds-size_3-of-7 slds-m-vertical_xx-small">
+                    <aura:if isTrue="{!and(v.billToHasValue,v.billToValue == 'Customer')}">
+                        <lightning:input aura:id="billToOrderNumId" label="{!v.OrderNumberLabel}" name="orderNumber"
+                                         value="{!v.OrderNumber}" />
+                    </aura:if>
+                </div>
+                  
+                <aura:if isTrue="{!v.DASPEnable}">
+                <div class="slds-col slds-size_3-of-7 slds-m-vertical_xx-small">
+                    <lightning:select label="{!v.DASPLabel}" aura:id="DASPId" value="{!v.DASPValue}"  onchange="{!c.DASP}">
+                        <aura:iteration items="{!v.DASPValues}" var="item">
+                            <option text="{!item.label}" value="{!item.value.PartnerName__c}" selected="{!item.selected}" />
+                        </aura:iteration>
+                    </lightning:select>
+                 </div>
+                 </aura:if>
+                                
+            </div>
+        </div>
+        <footer class="slds-card__footer">
+            <lightning:button variant="neutral" label="Cancel" onclick="{!c.closeModal}" />
+            <lightning:button variant="brand" label="Save" onclick="{!c.saveRecord}" />
+        </footer>
+    </article>
+</aura:component>

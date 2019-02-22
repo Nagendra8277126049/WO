@@ -1,0 +1,21 @@
+<!--
+*******************************************************************************************************
+Name:       screenmeet.cmp
+Description:  
+*******************************************************************************************************
+Date         Version           Author             Summary of Changes 
+***********************************************************************************************************
+07/05/2018     1.0     Sudha Jena     Initial Release
+*******************************************************************************************************
+-->
+<aura:component implements="flexipage:availableForRecordHome" access="global">
+    <article class="slds-card">
+        <div class="slds-scrollable_y" style="height: 100px;">
+            <div class="slds-media__body ">
+                <div class="slds-text-body_regular slds-align_absolute-center slds-p-top_x-large">
+                    <b>{!$Label.c.screenmeet}</b>  
+                </div>
+            </div>    
+        </div>
+</article>
+</aura:component>

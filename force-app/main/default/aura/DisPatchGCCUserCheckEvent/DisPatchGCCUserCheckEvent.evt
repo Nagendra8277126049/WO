@@ -1,0 +1,17 @@
+<!--
+*******************************************************************************************************
+Name:         DispatchGCCUserCheckEvent.evt
+Description:  This Lightning Event will notify all the components if GCC user is logged in and they are eligible for that 
+				- Story 5198559 
+*******************************************************************************************************
+Date         Version    Author             Summary of Changes 
+*******************************************************************************************************
+09/30/2018	   1.0	   Amit/Archana		   Added the Logic for GCC USers.-Story 5198559
+*******************************************************************************************************
+-->
+<aura:event type="APPLICATION" description="enable edit for GCC users">
+    <aura:attribute name="GccUser" type="boolean"/>
+    <aura:attribute name="woStatus" type="String"/>
+    <aura:attribute name="woSubStatus" type="String"/>
+    <aura:attribute name="woId" type="String"/>
+</aura:event>

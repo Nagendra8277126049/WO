@@ -1,0 +1,6 @@
+.THIS .overflowSection{
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

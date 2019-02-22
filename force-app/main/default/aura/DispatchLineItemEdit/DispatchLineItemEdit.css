@@ -1,0 +1,30 @@
+.THIS .slds-dropdown--length-5 .slds-select{
+    max-height: calc(((0.8125rem * 1.5) + 1rem) * 3) !important;
+}
+@media (min-width:420px) { /*Desktop Break point*/
+    .THIS.slds-spinner_container {
+        top: 16% !important;
+        bottom: 16% !important;
+    }
+}
+.THIS .GreenDot{
+	height: 10px;
+	width: 10px;
+    background-color: #008000;
+    border-radius: 50%;
+    display: inline-block;
+}
+.THIS .RedDot{
+	height: 10px;
+	width: 10px;
+    background-color: #FF0000;
+    border-radius: 50%;
+    display: inline-block;
+}
+.THIS .BlackDot{
+	height: 10px;
+	width: 10px;
+    background-color: #000000;
+    border-radius: 50%;
+    display: inline-block;
+}

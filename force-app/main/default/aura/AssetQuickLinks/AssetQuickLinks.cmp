@@ -1,0 +1,54 @@
+<!--
+*******************************************************************************************************
+Name:       AssetQUickLinks.cmp
+Description:  This Lightning Component displays the quick links on a case record page.  - Story 4326471
+*******************************************************************************************************
+Date         Version    Author             Summary of Changes 
+*******************************************************************************************************
+12/07/2017     1.0     Subash Suru      Initial Release
+*******************************************************************************************************
+-->
+
+<aura:component implements="flexipage:availableForRecordHome,force:lightningQuickActionWithoutHeader,force:hasRecordId" access="global" >
+    
+    <!-- RecordId will be avaible in record detail page -->
+    <aura:attribute name="recordId" type="String" default=""/>
+    <aura:attribute name="record" type="Object"/>
+    <aura:attribute name="assetRecord" type="Object"/>
+    <aura:attribute name="recordError" type="String"/>
+
+    <force:recordData aura:id="recordLoader"
+      recordId="{!v.recordId}"
+      layoutType="FULL"
+      targetRecord="{!v.record}"
+      targetFields="{!v.assetRecord}"
+      targetError="{!v.recordError}"
+      recordUpdated="{!c.handleRecordUpdated}"
+      />
+
+	<lightning:card iconName="standard:link">
+        <aura:set attribute="title">
+            Quick Links
+        </aura:set>        
+        <div class="slds-p-horizontal_large">
+            <ul class="slds-has-dividers_around">
+                <li class="slds_padding-bottom">
+                    <ui:outputURL value="{!$Label.c.SupportAssistTechConsole + v.assetRecord.Name}" target="_blank" label="Support Assist Tech Console (SATC)" />
+                </li>
+                <li class="slds_padding-bottom">
+                    <ui:outputURL value="{!$Label.c.Tech_Direct}" target="_blank" label="TechDirect" />
+                </li>
+                <li class="slds_padding-bottom">
+                    <ui:outputURL value="{!$Label.c.SparePartsMasterDatabase + v.assetRecord.Name}" target="_blank" label="Spare Parts Master Database (SPMD)" />
+                </li>
+                <li class="slds_padding-bottom">
+                    <ui:outputURL value="{!$Label.c.ServiceTagLookup + v.assetRecord.Name}" target="_blank" label="Service Tag Lookup (Qi)" />
+                </li>
+                <li class="slds_padding-bottom">
+                    <ui:outputURL value="{!$Label.c.DellSupport + v.assetRecord.Name}" target="_blank" label="Dell.com/support" />
+                </li>
+                
+            </ul>
+        </div>
+    </lightning:card>
+</aura:component>

@@ -1,0 +1,184 @@
+<!--
+*******************************************************************************************************
+Name:       OrderDetails.cmp
+Description:  This Lightning Component order details.  - story #4146442
+*******************************************************************************************************
+Date         Version    Author             Summary of Changes 
+*******************************************************************************************************
+11/17/2017     1.0     Tamojit Dasgupta             Initial Release
+*******************************************************************************************************
+-->
+<aura:component implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global" controller="GetOrderLineItems">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="OrderDetail" type="object" />
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="response" type="Map"/>
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    <aura:attribute name="AccountId" type="String"/>	
+        
+    <article class="slds-card">
+  	    <div class="slds-card__header slds-grid">
+            <aura:if isTrue="{!v.Spinner}">
+                <div aura:id="spinnerId" class="slds-spinner_container">
+                    <div class="slds-spinner--brand  slds-spinner slds-spinner--small slds-is-relative" role="alert">
+                        <span class="slds-assistive-text">Loading</span>
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
+                </div>
+            </aura:if>
+
+
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-contact" title="description of icon when needed">
+                        <lightning:icon iconName="custom:custom57" size="small" alternativeText="sss" variant="error"/>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2>          
+                        <span class="slds-text-heading_small">{!$Label.c.OrderDetails_Name}</span>
+                    </h2>
+                </div>
+            </header>
+        </div>
+        
+        <aura:if isTrue="{!v.OrderDetail!= null}">
+            <div class="slds-grid slds-gutters slds-wrap slds-m-horizontal_medium">
+  				<div class="slds-col slds-size_1-of-4">
+    				<span class="slds-text-heading--label-normal slds-m-bottom--xx-small slds-truncate">
+	                	{!$Label.c.Order_Number}                            
+                    </span>
+                    <p class="slds-text-body--regular">
+                    	<span>
+                        	{!v.OrderDetail.OrderNumber}
+                        </span>
+                    </p>
+  				</div>
+  				<div class="slds-col slds-size_1-of-4">
+    				<span class="slds-text-heading--label-normal slds-m-bottom--xx-small slds-truncate">
+                      	{!$Label.c.Customer_Order}
+                    </span>
+                    <p class="slds-text-body--regular">
+                        <span>
+                          	{!v.OrderDetail.CustomerName}
+                        </span>
+                    </p>
+  				</div>
+  				<div class="slds-col slds-size_1-of-4">
+    				<span class="slds-text-heading--label-normal slds-m-bottom--xx-small slds-truncate">
+                      	{!$Label.c.Invoice_Date_Order}
+                    </span>
+                    <p class="slds-text-body--regular">
+                        <span>
+                          	{!v.OrderDetail.InvoiceDate}
+                        </span>
+                    </p>
+  				</div>
+  				<div class="slds-col slds-size_1-of-4">
+    				<span class="slds-text-heading--label-normal slds-m-bottom--xx-small slds-truncate">
+                      	{!$Label.c.Ship_Date_Order}
+                    </span>
+                    <p class="slds-text-body--regular">
+                        <span>
+                          	{!v.OrderDetail.ShipDate}
+                        </span>
+                    </p>
+  				</div>
+                <div class="slds-col slds-size_1-of-4 slds-m-top_x-small">
+     				<span class="slds-text-heading--label-normal slds-m-bottom--xx-small 
+                                 slds-m-top_x-small slds-truncate">
+                      	{!$Label.c.Order_Status}
+                    </span>
+                    <p class="slds-text-body--regular">
+                        <span>
+                          	{!v.OrderDetail.OrderStatus}
+                        </span>
+                    </p>
+  				</div>
+  				<div class="slds-col slds-size_1-of-4 slds-m-top_x-small">
+    				<span class="slds-text-heading--label-normal slds-m-bottom--xx-small 
+                                 slds-m-top_x-small slds-truncate">
+                      	{!$Label.c.Customer_Number}
+                    </span>
+                    <p class="slds-text-body--regular">
+                        <span>
+                          	{!v.OrderDetail.CustomerNumber}
+                        </span>
+                    </p>
+  				</div>
+  				<div class="slds-col slds-size_1-of-4 slds-m-top_x-small">
+    				<span class="slds-text-heading--label-normal slds-m-bottom--xx-small 
+                                 slds-m-top_x-small slds-truncate">
+                      	{!$Label.c.Bill_to_address_Order} 
+                    </span>
+                    <p class="slds-text-body--regular ">
+                        <span>
+                          	<!--
+                            {!v.OrderDetail.BillToAddress}
+                            -->
+                            {!v.OrderDetail.BillStreetAddress1} <span class="additionalSpace"></span>
+                            {!v.OrderDetail.BillStreetAddress2} <br/>
+                            <aura:if isTrue="{!v.OrderDetail.BillStreetAddress3 != null}">
+                            	{!v.OrderDetail.BillStreetAddress3} <span class="additionalSpace"></span>
+                            	{!v.OrderDetail.BillStreetAddress4} <br/>
+                            </aura:if>
+                            <aura:if isTrue="{!v.OrderDetail.BillCity != null}">
+                            	{!v.OrderDetail.BillCity} <span class="additionalSpace"></span>
+                            	{!v.OrderDetail.BillState} <span class="additionalSpace"></span>	
+                            	{!v.OrderDetail.BillZipCode} <span class="additonalSpace"></span> 
+                            </aura:if>
+                        </span>
+                    </p>
+  				</div>
+  				<div class="slds-col slds-size_1-of-4 slds-m-top_x-small">
+    				<span class="slds-text-heading--label-normal slds-m-bottom--xx-small 
+                                 slds-m-top_x-small slds-truncate">
+                      	{!$Label.c.Ship_to_address_order}
+                    </span>
+                    <p class="slds-text-body--regular">
+                        <span>
+                            <!--
+                          	{!v.OrderDetail.ShipToAddress}
+							-->
+                            {!v.OrderDetail.ShiptoStreetAddress1} <span class="additionalSpace"></span>
+                            {!v.OrderDetail.ShiptoStreetAddress2} <br/>
+                            <aura:if isTrue="{!v.OrderDetail.ShiptoStreetAddress3 != null}">
+                            	{!v.OrderDetail.ShiptoStreetAddress3} <span class="additionalSpace"></span>
+                            	{!v.OrderDetail.ShiptoStreetAddress4} <br/>
+                            </aura:if>
+                            <aura:if isTrue="{!v.OrderDetail.ShiptoCity != null}">
+                            	{!v.OrderDetail.ShiptoCity} <span class="additionalSpace"></span>
+                            	{!v.OrderDetail.ShiptoState} <span class="additionalSpace"></span>	
+                            	{!v.OrderDetail.ShiptoZipCode} <span class="additonalSpace"></span> 
+                            </aura:if>
+                        </span>
+                    </p>
+  				</div>
+                <div class="slds-col slds-size_1-of-4 slds-m-top_x-small">
+    				<span class="slds-text-heading--label-normal slds-m-bottom--xx-small 
+                                 slds-m-top_x-small slds-truncate">
+                      	{!$Label.c.Order_Type}
+                    </span>
+                    <p class="slds-text-body--regular">
+                        <span>
+                          	{!v.OrderDetail.OrderType}
+                        </span>
+                    </p>
+  				</div>
+  				<div class="slds-col slds-size_1-of-4 slds-m-top_x-small">
+     				<span class="slds-text-heading--label-normal slds-m-bottom--xx-small 
+                                 slds-m-top_x-small slds-truncate">
+                      	{!$Label.c.Customer_BUID_Order}
+                    </span>
+                    <p class="slds-text-body--regular">
+                        <span>
+                          	{!v.OrderDetail.CustomerBUID}
+                        </span>
+                    </p>
+  				</div>
+			</div>
+        </aura:if>
+    </article>
+</aura:component>

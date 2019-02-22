@@ -1,0 +1,32 @@
+<aura:event type="COMPONENT">
+    <aura:attribute name="changedServiceOptionValue" type="String"/>
+    <aura:attribute name="changedServiceTypeValue" type="String"/>
+    <aura:attribute name="changedOrderNumber" type="String"/>
+    <aura:attribute name="changedSpecialOptionValue" type="String"/>
+	<aura:attribute name="changedProductClassValue" type="String"/>
+	<aura:attribute name="changedKeepYComp" type="Boolean"/>
+	<aura:attribute name="changedDSPOverideReq" type="Boolean"/>
+	<aura:attribute name="changedBillToValue" type="Boolean"/>
+	<aura:attribute name="changedAccidentalDamage" type="Boolean"/>
+	<aura:attribute name="changedServiceOptions" type="List"/>
+	<aura:attribute name="changedServiceTypeOptions" type="List"/>
+	<aura:attribute name="changedSpecialOptions" type="List"/>
+	<aura:attribute name="changedBillToOptions" type="List"/>
+	<aura:attribute name="changedProductClassOptions" type="List"/>
+    <aura:attribute name="changedInstructionValue" type="String"/>
+    <aura:attribute name="changedInstructionRecordId" type="String"/>
+    <aura:attribute name="changedKYHDFlag" type="Boolean"/>
+    <aura:attribute name="changedADOverrideReason" type="String" />
+    <aura:attribute name="changedADOverOptions" type="List"/>
+    <aura:attribute name="changedAltReturnAddressFlagValue" type="String" />
+    <aura:attribute name="changedAltReturnAddStreetValue" type="String" />
+    <aura:attribute name="changedAltReturnAddPostalCodeValue" type="String" />
+    <aura:attribute name="changedAltReturnAddCityValue" type="String" />
+    <aura:attribute name="changedAltReturnAddStatusValue" type="String" />
+    <aura:attribute name="changedAltReturnAddCountryValue" type="String" />
+    <aura:attribute name="reasonForDamage" type="String" />
+    <aura:attribute name="changedDASPEnable" type="Boolean"/>
+    <aura:attribute name="changedDASPValue" type="String"/>
+    <aura:attribute name="changedKoreaMonitorFlag" type="Boolean"/>
+    <aura:attribute name="changedKoreaMonitorValue" type="Boolean"/>
+</aura:event>

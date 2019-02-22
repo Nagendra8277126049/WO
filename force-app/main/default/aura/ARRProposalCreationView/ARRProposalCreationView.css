@@ -1,0 +1,34 @@
+.THIS .error-message-theme.modal-header {
+    color: rgb(255, 255, 255) !important;
+    background-color: rgb(194, 57, 52) !important;
+}
+.THIS .grid-icon {
+    margin-top: 23px; 
+    font-size:24px;
+    padding-left: 9px;
+    padding-right: 9px;
+}
+.THIS .add-icon {
+    margin-top: 10px; 
+    font-size:24px;
+    padding-left: 9px;
+    padding-right: 9px;
+    background-color: #2d992d;
+    border-color: #2d992d;
+}
+.THIS .white {
+    color: white;
+}
+.THIS .redirectButton {
+    margin-top: -28px;
+}
+.THIS #lookup-button{
+    margin-top: -6px;
+    text-align: right;
+}
+
+@media (max-width: 105em) {
+    .THIS .desktop-small-size {
+    	width: 100% !important;
+	}
+}

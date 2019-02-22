@@ -1,0 +1,41 @@
+/* Resize Quickview */
+/*.coveo-modal-backdrop  {
+    display: none;
+}*/
+.coveo-small-close:hover svg {
+    fill: white;
+}
+.coveo-small-close svg {
+    fill: lightgray;
+}
+.coveo-small-close {
+    width: 100% !important;
+    text-align: right;
+    background: black;
+    height: 31px !important;
+    padding-right: 10px;
+    padding-top: 5px;
+}
+/*.coveo-modal-content {
+    margin-right: 12px;
+    position: absolute !important;
+    right: 0px;
+    padding-bottom: 121px;
+    width: 25% !important;
+    min-width: 392px;
+    top: 166px;
+}*/
+.coveo-modal-header {
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    border-top: 2px solid black;
+}
+.coveo-modal-body, .coveo-mod-header-paddding, .coveo-mod-form-top-bottom-padding {
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    border-bottom: 2px solid black;
+}
+.coveo-quickview-pop-up-reminder {
+    pointer-events: none;
+    cursor: default;
+}

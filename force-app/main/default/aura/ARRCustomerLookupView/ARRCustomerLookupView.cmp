@@ -1,0 +1,51 @@
+<aura:component controller="ARRCustomerLookupApexController">
+    <aura:attribute name="customerNumber" type="string"/>
+    <aura:attribute name="buid" type="string"/>
+    <aura:attribute name="gridColumns" type="List"/>
+    <aura:attribute name="customerAssets" type="map"/>
+    <aura:attribute name="selectedRows" type="map"/>
+
+	<aura:attribute name="sortedBy" type="string" />
+	<aura:attribute name="sortedDirection" type="Boolean" default="true" />
+  
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+
+    <aura:method name="initMethod" action="{!c.loadValues}" access="GLOBAL"/>
+    <aura:method name="confirmMethod" action="{!c.sendValues}" access="GLOBAL"/> 
+    <aura:method name="closeMethod" action="{!c.clearSelection}" access="GLOBAL"/> 
+
+    <div style="height:25px">
+    	<b>Displaying Assets for:</b> Customer Number: {!v.customerNumber} | Business Unit: {!v.buid}
+    </div>
+
+    <div style="min-height:100px">
+        <div id="datatable-container">
+            <lightning:layout multipleRows="true" horizontalAlign="center">
+                <lightning:layoutItem padding="around-small" size="12">
+                    <lightning:datatable
+                        columns="{! v.gridColumns }"
+                        data="{! v.customerAssets }"
+                        onsort="{!c.updateColumnSorting}"
+                        sortedBy="{!v.sortedBy}"
+                        sortedDirection="{!v.sortedDirection}"
+                        onrowselection="{!c.updateSelectedRows}"
+                        keyField="serviceTag"/>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </div>
+
+        <aura:if isTrue="{! v.customerAssets }">
+            <div style="height:25px; text-align: right; margin-top:10px">
+        		Total Entries: {! v.customerAssets.length}
+            </div>
+        </aura:if>
+        
+        <div id="lookup-loading-spinner" style="display:block" role="status" class="slds-spinner slds-spinner_medium">
+            <span class="slds-assistive-text">Loading</span>
+            <div class="slds-spinner__dot-a"></div>
+            <div class="slds-spinner__dot-b"></div>
+        </div>
+    </div>
+    
+    <lightning:overlayLibrary aura:id="lookupErrorNotification"/>
+</aura:component>

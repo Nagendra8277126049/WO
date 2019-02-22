@@ -1,0 +1,128 @@
+<aura:component controller="OrderShipmentController" implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global" >
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="order" type="Order" />
+    <aura:attribute name="shipmentDetails" type="OrderShipment__x" />
+    <aura:attribute name="shipmentItems" type="ShipmentItem__x[]" />
+    <aura:attribute name="shouldShowShipment" type="Boolean" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    
+    <force:recordData aura:id="orderRecord" recordId="{!v.recordId}" targetFields="{!v.order}" layoutType="FULL" recordUpdated="{!c.setOrderStatus}"/>
+    
+    <aura:if isTrue="{!v.shouldShowShipment}">
+        <div class="slds-form" role="list">
+  		<div class="slds-grid slds-gutters_small">
+    		<div class="slds-col slds-has-flexi-truncate" role="listitem">
+                <div class="slds-form-element slds-form-element_edit slds-hint-parent">
+                	<label class="slds-form-element__label" for="assigned-to">Carrier ID</label>
+                    <div class="slds-form-element__control slds-grid itemBody">
+                      	<label class="slds-form-element__static slds-border_bottom" for="assigned-to">{!v.shipmentDetails.CarrierId__c}</label>
+                    </div>
+              	</div>
+            </div>
+    		<div class="slds-col slds-has-flexi-truncate" role="listitem">
+                <div class="slds-form-element slds-form-element_edit slds-hint-parent">
+                	<label class="slds-form-element__label" for="assigned-to">Actual Ship Date</label>
+                    <div class="slds-form-element__control slds-grid itemBody">
+                      	<label class="slds-form-element__static slds-border_bottom" for="assigned-to">{!v.shipmentDetails.ActualShipDate__c}</label>
+                    </div>
+              	</div>
+            </div>
+        </div>
+        <div class="slds-grid slds-gutters_small">
+    		<div class="slds-col slds-has-flexi-truncate" role="listitem">
+                <div class="slds-form-element slds-form-element_edit slds-hint-parent">
+                	<label class="slds-form-element__label" for="assigned-to">Box Quantity</label>
+                    <div class="slds-form-element__control slds-grid itemBody">
+                      	<label class="slds-form-element__static slds-border_bottom" for="assigned-to">{!v.shipmentDetails.BoxQuantity__c}</label>
+                    </div>
+              	</div>
+            </div>
+    		<div class="slds-col slds-has-flexi-truncate" role="listitem">
+                <div class="slds-form-element slds-form-element_edit slds-hint-parent">
+                	<label class="slds-form-element__label" for="assigned-to">Status Description</label>
+                    <div class="slds-form-element__control slds-grid itemBody">
+                      	<label class="slds-form-element__static slds-border_bottom" for="assigned-to">{!v.shipmentDetails.StatusDescription__c}</label>
+                    </div>
+              	</div>
+            </div>
+        </div>
+        <div class="slds-grid slds-gutters_small">
+    		<div class="slds-col slds-has-flexi-truncate" role="listitem">
+                <div class="slds-form-element slds-form-element_edit slds-hint-parent">
+                	<label class="slds-form-element__label" for="assigned-to">Target Delivery Date</label>
+                    <div class="slds-form-element__control slds-grid itemBody">
+                      	<label class="slds-form-element__static slds-border_bottom" for="assigned-to">{!v.shipmentDetails.TargetDeliveryDate__c}</label>
+                    </div>
+              	</div>
+            </div>
+    		<div class="slds-col slds-has-flexi-truncate" role="listitem">
+                <div class="slds-form-element slds-form-element_edit slds-hint-parent">
+                	<label class="slds-form-element__label" for="assigned-to">Ship To</label>
+                    <div class="slds-form-element__control slds-grid itemBody">
+                      	<label class="slds-form-element__static slds-border_bottom" for="assigned-to">{!v.shipmentDetails.ShipTo__c}</label>
+                    </div>
+              	</div>
+            </div>
+        </div>
+        <div class="slds-grid slds-gutters_small">
+    		<div class="slds-col slds-has-flexi-truncate" role="listitem">
+                <div class="slds-form-element slds-form-element_edit slds-hint-parent">
+                	<label class="slds-form-element__label" for="assigned-to">Ship Information</label>
+                    <div class="slds-form-element__control slds-grid itemBody">
+                      	<label class="slds-form-element__static slds-border_bottom" for="assigned-to">
+                            {!v.shipmentDetails.ShipToName__c} <br/>
+                            {!v.shipmentDetails.Address1__c} <br/>
+                            {!v.shipmentDetails.Address2__c} <br/>
+                            {!v.shipmentDetails.City__c} - {!v.shipmentDetails.State__c} - {!v.shipmentDetails.Country__c} <br/>
+                            {!v.shipmentDetails.PostalCode__c} <br/>
+                             <br/>
+                        </label>
+                    </div>
+              	</div>
+            </div>
+            <div class="slds-col slds-has-flexi-truncate" role="listitem">
+                <div class="slds-form-element slds-form-element_edit slds-hint-parent"></div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <h3 class="slds-text-heading_small ">Shipment Boxes:</h3>
+    <br />
+    <div>
+        <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+            <thead>
+                <tr class="slds-text-title--caps">
+                    <th scope="col">
+                        <div class="slds-truncate" title="Service Tag">SOURCE BOX ID</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Product LOB Description">SERVICE TAG</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Product Line Description">BOX WEIGHT</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <aura:iteration items="{!v.shipmentItems}" var="shipmentItem">
+                    <tr>
+                        <td data-label="Source Box Id">
+                            <div class="slds-truncate" title="{!shipmentItem.SourceBoxId__c}">{!shipmentItem.SourceBoxId__c}</div>
+                        </td>
+                        <td scope="row" data-label="ServiceTag">
+                            <div class="slds-truncate" title="{!shipmentItem.Name}">{!shipmentItem.ServiceTag__c }</div>
+                        </td>
+                        <td data-label="Box Weight">
+                            <div class="slds-truncate" title="{!shipmentItem.BoxWeight__c}">{!shipmentItem.BoxWeight__c}</div>
+                        </td>
+                    </tr>
+                </aura:iteration>
+            </tbody>
+        </table>
+    </div>
+    	<aura:set attribute="else">
+            There's no shipment data for this Order.
+        </aura:set>
+    </aura:if>
+</aura:component>

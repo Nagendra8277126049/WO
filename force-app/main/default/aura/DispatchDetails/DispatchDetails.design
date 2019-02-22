@@ -1,0 +1,19 @@
+<design:component label="Dispatch Details">
+	<design:attribute name="ComponentLabel" label="ComponentLabel - Dispatch"/>
+    <design:attribute name="DispatchNumberLabel" label="DispatchNumberLabel"/>
+    <design:attribute name="LogisticsProviderLabel" label="LogisticsProviderLabel"/>
+    <design:attribute name="ServiceProviderAssignmentLabel" label="ServiceProviderAssignmentLabel"/>
+    <design:attribute name="DispatchTypeLabel" label="DispatchTypeLabel"/>
+    <design:attribute name="RepeatReasonLabel" label="RepeatReasonLabel"/>
+    <design:attribute name="PPIDLabel" label="PPIDLabel"/>
+    <design:attribute name="TransportationLogisticsProviderLabel" label="TransportationLogisticsProviderLabel"/>
+    <design:attribute name="ReportingOnlyLabel" label="ReportingOnlyLabel"/>
+    <design:attribute name="LaborCountryLabel" label="LaborCountryLabel"/>
+    <design:attribute name="PartsCountryLabel" label="PartsCountryLabel"/>
+    <design:attribute name="ShippingMethodLabel" label="ShippingMethodLabel"/>
+    <design:attribute name="CallTypeLabel" label="CallTypeLabel"/>
+    <design:attribute name="epitomeReferenceNoLabel" label="epitomeReferenceNoLabel"/>    
+	<sfdc:objects >
+        <sfdc:object >WorkOrder</sfdc:object>
+    </sfdc:objects>
+</design:component>

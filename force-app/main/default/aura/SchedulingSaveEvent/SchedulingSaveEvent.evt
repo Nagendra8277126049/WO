@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT">
+    <aura:attribute name="updatedStartDateValue" type="String"/>
+    <aura:attribute name="updatedEndDateValue" type="String"/>
+</aura:event>

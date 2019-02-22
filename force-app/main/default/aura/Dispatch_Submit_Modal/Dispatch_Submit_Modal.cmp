@@ -1,0 +1,109 @@
+<!--
+*******************************************************************************************************
+Name:       Dispatch_Submit_Modal.cmp
+Description:  lightning Component to display Work Order Approval Flow.
+*******************************************************************************************************
+Date         Version            Author              Summary of Changes 
+*******************************************************************************************************
+06/20/2018     1.0     Sri Harsha Gangi Reddy         Initial Release
+08/28/2018     1.1     Rodrigo Carpio         added controller
+*******************************************************************************************************
+-->
+
+<aura:component controller="DispatchApprovalProcessController">
+    <aura:attribute name="recordId" type="String" required="true" />
+    <aura:attribute name="autoApproved" type="boolean" default="false" />
+    <aura:attribute name="approvalWrapper" type="DispatchApprovalProcessController.approvalWrapper" />
+    <!-- Determine which actions are available -->
+    <aura:attribute name="Acknowledged" type="boolean" default="false" />
+    <aura:attribute name="callTypeFailureFlag" type="boolean" default="false" />
+    <aura:attribute name="arrcriteria" type="List" default="[]" />
+    <aura:attribute name="Spinner" type="Boolean" default="False"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+    <div class="demo-only" style="height: 100%;">
+        <section class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-modal__close" title="Close" onclick="{!c.closeMe}">
+                        <lightning:icon class="white slds-icon_small" iconName="utility:close" />
+                        <span class="slds-assistive-text">
+                            Close
+                        </span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                        Submit Work Order
+                        
+                    </h2>
+                    <aura:if isTrue="{! v.Spinner}">
+                		<lightning:spinner alternativeText="Loading" size="small" variant="brand" class="slds-is-relative" />
+                	</aura:if>
+                </header>
+                <aura:if isTrue="{! !v.callTypeFailureFlag}">
+                    <aura:if isTrue="{!  or(v.autoApproved, not(empty(v.arrcriteria)))}">
+                        <article class="slds-card">
+                            <div class="slds-card__header slds-grid">
+                                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                    <div class="slds-media__body">
+                                        <h2 class="slds-card__header-title">
+                                            <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title="Accounts">
+                                                <span class="slds-text-heading_small">Acknowledgment</span>
+                                            </a>
+                                        </h2>
+                                    </div>
+                                </header>
+                            </div>
+                            <div class="slds-card__body slds-card__body_inner">
+                                <aura:if isTrue="{!v.autoApproved}">
+                                    Are you sure you want to submit your work order?
+                                    <aura:set attribute="else">
+                                        Your Work Order has been flagged for review and will be sent for approval. Are you sure you would like to submit your Work Order ?
+
+                                        <br />
+
+                                        <b>Reasons for review:</b>
+
+                                        <br />
+                                        <div class="slds-scrollable" style="height: 7rem;">
+                                            <aura:if isTrue="{! not(empty(v.arrcriteria))}">
+                                                <aura:iteration items="{!v.arrcriteria}" var="el" indexVar="i">
+                                                    <table class="slds-table slds-no-row-hover">
+                                                        <tbody>
+                                                            <tr>
+                                                                <span class="slds-m-right_x-small">
+                                                                    <lightning:icon iconName="utility:warning" variant="warning" size="small" />
+                                                                </span>
+
+                                                                <ui:outputText value="{!el}" />
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </aura:iteration>
+                                            </aura:if>
+                                        </div>
+                                    </aura:set>
+                                </aura:if>
+                            </div>
+                            <footer class="slds-card__footer">
+                                <lightning:button aura:id="FINISH" variant="neutral" label="Cancel" onclick="{! c.onButtonPressed }" />
+                                <lightning:button aura:id="NEXT" variant="brand" label="Submit" onclick="{! c.onButtonPressed }" />
+                            </footer>
+                        </article>
+                    </aura:if>
+                    <aura:set attribute="else">
+                        <article class="slds-card">
+                            <br/>
+                        	<div class="slds-card__body slds-card__body_inner">
+                                <center>
+                                    <p>"Work Order - Call Type failed"</p>
+                                </center>
+                            </div>
+                            <br/>
+                        </article>
+                    </aura:set>
+                </aura:if>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </div>
+</aura:component>

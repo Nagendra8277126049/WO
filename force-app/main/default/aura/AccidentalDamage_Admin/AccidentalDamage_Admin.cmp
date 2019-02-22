@@ -1,0 +1,67 @@
+<aura:component controller="EinsteinIntent_AdminController"  implements="flexipage:availableForAllPageTypes" access="global" >
+    <aura:attribute name="datasets" type="Einstein_Dataset[]"></aura:attribute>
+    <aura:attribute name="datasetModels" type="Einstein_Model[]"></aura:attribute>
+    <aura:attribute name="adminSettings" type="Einstein_CaseClassificAdminSettings"></aura:attribute>
+    
+    <aura:attribute name="selectionModels" type="List" />
+    <aura:attribute name="datasetId" type="Long"  />
+    <aura:attribute name="modelId" type="String"  />  
+    <aura:attribute name="ModelUpdateMessage" type="String"  /> 
+    <aura:attribute name="refreshModelMetricsMessage" type="String"  /> 
+    
+    <aura:registerEvent name="waitingEvent" type="c:EventEinsteinWaiting" />
+    <aura:registerEvent name="modelEvent" type="c:EventEinsteinModels" />
+    <aura:registerEvent name="databaseEvent" type="c:EventEinsteinDataset" />
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    
+    <c:LightningErrorHandler aura:id="leh"/>
+    
+    <lightning:card title="Currently configuration">
+        <div class="c-container">
+            <lightning:layout >
+                <lightning:layoutItem padding="around-small">
+                    <div class="slds-region_narrow" style="width: 360px;">
+                        <dl class="slds-dl_horizontal">
+                            <dt class="slds-dl_horizontal__label">ModelID:</dt>
+                            <dd class="slds-dl_horizontal__detail"> {!v.adminSettings.ADModel_ID} </dd>
+                            <dt class="slds-dl_horizontal__label">Last Update: </dt>
+                            <dd class="slds-dl_horizontal__detail">{!v.adminSettings.ADModelLastUpdate}</dd>
+                            <dt class="slds-dl_horizontal__label">Updated By: </dt>
+                            <dd class="slds-dl_horizontal__detail">{!v.adminSettings.ADModelUpdatedBy}</dd>
+                        </dl>
+                    </div>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </div>
+    </lightning:card>
+    <lightning:card title="Update Current Case Classification Model">
+        <div class="c-container">
+            <lightning:layout >
+                <lightning:layoutItem padding="around-small">
+                    <h1>Changing the current model may change the predicted values!</h1>
+                    <lightning:select aura:id="selectDataset" name="selectDataset" label="Select Dataset for Accidental Damage Classification" required="false" onchange="{!c.datasetValueChanged}" >
+                        <aura:iteration items="{!v.datasets}" var="dataset">
+                            <option value="{!dataset.id}" text="{!dataset.name + ' ' + dataset.createdAt }" selected="{!dataset.selected}"></option>
+                        </aura:iteration>
+                    </lightning:select>  
+                    <br></br>
+                    <p>Number of models in dataset: {!v.datasetModels.length}
+                    </p>
+                    <br></br>
+                    <lightning:select aura:id="selectModel" name="selectModel" label="Select Model for Accidental Damage" required="false" onchange="{!c.modelValueChanged}">
+                        <aura:iteration items="{!v.datasetModels}" var="model">
+                            <option value="{!model.modelId}" text="{!model.modelId + ' - ' + model.createdAt }" selected="{!model.selected}"></option>
+                        </aura:iteration>
+                    </lightning:select>
+                    <br></br>
+                    <br></br>
+                    <lightning:button variant="brand" onclick="{!c.onUpdateModelID}">Update</lightning:button>   
+                    <br></br>
+                    <br></br>
+                    <p>{!v.ModelUpdateMessage}  </p>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </div>
+    </lightning:card>
+    <hr></hr>    
+</aura:component>

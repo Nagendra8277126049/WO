@@ -1,0 +1,78 @@
+<!--
+*******************************************************************************************************
+Name:       CustomerAlerts.cmp
+Apex Controller: CustomerAlertsController.apx
+Description:  lightning Component to display the Alerts related to this Customer  - Story #4142699
+*******************************************************************************************************
+Date         Version            Author                Summary of Changes 
+*******************************************************************************************************
+11/17/2017     1.0       Sri Harsha Gangi Reddy         Initial Release
+05/25/2018     1.1       Brundha Rajkumar               Changes are made for the User Story #5096431
+13/07/2018	   2.0		 Sushmitha J                    Defect#5177651
+7/13/2018	   2.1		 Srikanth Parvathareddy	        Defect #5323980
+08/07/2018     2.2       Harsha Reddy                   DEFECT 5443199 - Updated the Code to Use 
+													    Lightning:Navigation Insted of 
+													    force:NavigateToComponent(Deprecated in Summer'18)
+08/15/2018     2.3      Rajesh Guru                     DEFECT 5478122- Updated the code as there is Case sensitive issue
+*******************************************************************************************************
+-->
+
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId" controller="CustomerAlertsController">
+
+    <aura:attribute name="assetAlerts" type="string[]" />
+    <aura:attribute name="flag" type="String" default="true" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!-- Navigation -->
+    <!-- Added by Harsha - 08/07/2018 -->
+    <lightning:navigation aura:id="navService" />
+
+    <lightning:card iconName="custom:custom53">
+        <aura:set attribute="title">
+            {!$Label.c.CustomerAlertsDashboardName}
+            <lightning:spinner aura:id="mySpinner" variant="brand" size="small" />
+        </aura:set>
+        <aura:set attribute="actions">
+            <lightning:button label="{!$Label.c.CustomerAlertsDashboardButton}" onclick="{! c.openDetails}" />
+        </aura:set>
+        <!--
+        <aura:if isTrue="{!or(v.assetAlerts[0].alertName!= null,v.assetAlerts[0].alertName!= undefined)}" > 
+		-->
+        <aura:if isTrue="{! !empty(v.assetAlerts[0].alertName)}">
+            <div class="slds-scrollable_y" style="height: 100px;">
+                <table class="slds-table slds-max-medium-table--stacked-horizontal">
+                    <!--Table must be responsive-->
+                    <tbody>
+                        <aura:iteration items="{!v.assetAlerts}" var="Ast">
+                            <aura:if isTrue="{!Ast.isActive}">
+                                <tr class="slds-hint-parent">                        
+                                    <td data-label="AlertName" class="slds-text-body_small slds_wrap_text">
+                                        <!-- {!Ast.AlertName}-->
+                                        
+                                        <aura:if isTrue="{!and(Ast.supportAssistURL!=null ,Ast.supportAssistURL!= '')}" >
+                                            
+                                            <!-- <aura:if isTrue="{! !empty(Ast.supportAssistURL)}" > -->
+                                            <ui:outputURL value="{!Ast.supportAssistURL}" target="_blank" label="{!Ast.alertName}" />
+                                            <aura:set attribute="else">
+                                                {!Ast.alertName}
+                                            </aura:set>
+                                        </aura:if>
+                                        <!--
+                                        <aura:if isTrue="{!or(Ast.supportAssistURL==null ,Ast.supportAssistURL== '')}" >
+                                        -->
+                                        
+                                        <aura:if isTrue="{!Ast.supportAssistURL=='null'}" >
+                                            {!Ast.alertName}
+                                        </aura:if>
+                                        
+                                    </td>
+                                </tr>
+                            </aura:if>
+                        </aura:iteration>
+                    </tbody>
+                </table>
+            </div>
+        </aura:if>
+    </lightning:card>
+</aura:component>

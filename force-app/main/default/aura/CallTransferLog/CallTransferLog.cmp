@@ -1,0 +1,27 @@
+<aura:component controller="CallTransferLog" implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId" access="global" >
+	  <aura:attribute name="CTAttrWrapper" type="object"/>
+    <aura:attribute name="CallTransferAttr" type="Call_Transfer_Attributes__c[]" />
+    <aura:attribute name="Columns" type="List" />
+     <aura:attribute name="record" type="Object" />
+	<aura:attribute name="ctRecord" type="Object" />
+	<aura:attribute name="recordError" type="String" />
+    
+    
+    <force:recordData aura:id="record"
+    layoutType="FULL"
+    recordId="{!v.recordId}"
+    fields="Call_UCID__c"                  
+    targetError="{!v.recordError}"
+    targetFields ="{!v.ctRecord}"
+    recordUpdated="{!c.callTransLog}"/>
+       
+    <div class="slds-box"> 
+        <div class="slds-p-left_x-small slds-p-top_small slds-m-bottom_medium">
+         	<lightning:icon iconName="utility:outbound_call" size="small"  />
+            <span id="compHeader" class="slds-p-left_x-small" >{!v.CTAttrWrapper.headerMsg}({!v.CTAttrWrapper.logSize})</span>
+        </div>
+        <div class="slds-m-bottom_small">
+       		<lightning:datatable data="{! v.CallTransferAttr}" columns="{! v.Columns }" keyField="id" hideCheckboxColumn="true"/>
+        </div>
+    </div>
+</aura:component>

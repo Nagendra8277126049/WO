@@ -1,0 +1,358 @@
+<!--
+*******************************************************************************************************
+Name:       DispatchDefaultDetails.cmp
+Description:  This Lightning Component will show dispatch default details. - Story #4849245 
+*******************************************************************************************************
+Date         Version    Author             Summary of Changes 
+*******************************************************************************************************
+05/14/2018     1.0     Bikram Bebarta      Initial Release
+07/16/2018     1.1     Harsha Reddy		   DEFECT 5345225 & Ajusting Code
+*******************************************************************************************************
+-->
+<aura:component implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global" controller="DispatchDefaultDetailsController">
+    <!-- Label -->
+    <aura:attribute name="ComponentLabel" type="String" default="Work Order"/>
+    <aura:attribute name="ServiceTypeLabel" type="String" default="Service Type"/>
+    <aura:attribute name="ServiceOptionsLabel" type="String" default="Service Options"/>
+    <aura:attribute name="SystemClassificationLabel" type="String" default="Product Classification"/>
+    <aura:attribute name="CategoryLabel" type="String" default="Special Options"/>
+    <aura:attribute name="KeepYourComponentsLabel" type="String" default="Keep Your Components"/>
+    <aura:attribute name="DSPOverideRequestLabel" type="String" default="Override Service Provider"/>
+    <aura:attribute name="ServiceProviderReasonLabel" type="String" default="Service Provider Reason"/>
+    <aura:attribute name="ServiceProviderReasonVal" type="String" default=""/>
+    
+    <aura:attribute name="AccidentalDamageLabel" type="String" default="Accidental Damage"/>
+    <aura:attribute name="ADOverrideLabel" type="String" default="AD Override"/>
+    <aura:attribute name="BillToLabel" type="String" default="Bill To"/>
+    <aura:attribute name="OrderNumberLabel" type="String" default="Bill To Customer Order Number"/>
+    <aura:attribute name="InstructionLabel" type="String" default="Service Options"/>
+    <aura:attribute name="KYHDLabel" type="String" default="Keep Your Hard Drive"/>
+    <aura:attribute name="response" type="object" />
+    <aura:attribute name="EditOverRide" type="Boolean" default="false"/>
+    <aura:attribute name="Override" type="Boolean" default="true"/>
+    <aura:attribute name="EditOverRideMode" type="Boolean"/>
+    
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler event="force:refreshView" action="{!c.doInit}" />
+     <aura:registerEvent name="GCCUserEvent" type="c:DisPatchGCCUserCheckEvent"/>
+	
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                 <div class="slds-media__figure">
+                     <span class="slds-icon_container" title="description of icon when needed">
+                     <lightning:icon iconName="standard:work_order" size="small" alternativeText="Dispatch Detail Icon"/>
+                 </span>
+                 </div>
+                 <div class="slds-media__body">
+                     <h2>
+                         <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title="[object Object]">
+                             <span class="slds-text-heading_small">{#v.ComponentLabel}</span>
+                         </a>
+                     </h2>
+                 </div>
+             </header>
+        </div>
+        <div class="slds-card__body slds-card__body_inner">
+            <div class="slds-grid mdp forcePageBlockSectionRow">
+                <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView" role="listitem">
+                    <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                        <div class="test-id__field-label-container">
+                            <span class="test-id__field-label slds-form-element__label">
+                                {#v.ServiceTypeLabel}
+                            </span>
+                        </div>
+                        <div class="slds-form-element__control slds-grid itemBody" >
+                            <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                <span class="uiOutputText">
+                                    {!v.response.dispatchDefault.Service_Type__c}
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                 
+                <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView" role="listitem">
+                    <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                        <div class="test-id__field-label-container">
+                            <span class="test-id__field-label slds-form-element__label">
+                                {#v.ServiceOptionsLabel}
+                            </span>
+                        </div>
+                        <div class="slds-form-element__control slds-grid itemBody" >
+                            <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                <span class="uiOutputText">
+                                    {!v.response.dispatchDefault.selected_service_option__c}
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-grid mdp forcePageBlockSectionRow">
+                <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView" role="listitem">
+                    <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                        <div class="test-id__field-label-container">
+                            <span class="test-id__field-label slds-form-element__label">
+                                {#v.CategoryLabel}
+                            </span>
+                        </div>
+                        <div class="slds-form-element__control slds-grid itemBody" >
+                            <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                <span class="uiOutputText">
+                                    {!v.response.dispatchDefault.SpecialOptions__c} 
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView" role="listitem">
+                    <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                        <div class="test-id__field-label-container">
+                            <span class="test-id__field-label slds-form-element__label">
+                                {#v.SystemClassificationLabel}
+                            </span>
+                        </div>
+                        <div class="slds-form-element__control slds-grid itemBody" >
+                            <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                <span class="uiOutputText">
+                                    {!v.response.dispatchDefault.Service_Configurations__c}
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!--Megha: started code changes from here for Aug release MailIn/Depot -->
+            
+            <aura:if isTrue="{!v.response.dispatchDefault.Service_Type__c == 'Mail-In'}" >
+                        
+                		
+                        <div class="slds-grid mdp forcePageBlockSectionRow">
+                            		
+                            <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView"
+                            role="listitem">
+                                <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                    <div class="test-id__field-label-container">
+                                        <span class="test-id__field-label slds-form-element__label">
+                                        Alternate Return Address
+                                    </span>
+                                    </div>
+                                     
+                                    <div class="slds-form-element__control slds-grid itemBody" ondblclick="{!c.openModalWindow}">
+                                        <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                <ui:outputCheckbox value="{!v.response.dispatchDefault.Work_Order__r.Alternate_Return_Address_Checkbox__c}"/>
+                                    	</span>
+                                    </div>
+                                </div>
+                        	</div>
+                         </div>
+                         
+                            <aura:if isTrue="{!v.response.dispatchDefault.Work_Order__r.Alternate_Return_Address_Checkbox__c}" >
+                                
+                                <div class="slds-grid mdp forcePageBlockSectionRow">
+                                    <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView"
+                                         role="listitem">
+                                        <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                            <div class="test-id__field-label-container">
+                                                <span class="test-id__field-label slds-form-element__label">
+                                                    Address
+                                                </span>
+                                            </div>
+                                            <div class="slds-form-element__control slds-grid itemBody" ondblclick="{!c.openModalWindow}">
+                                                <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                    
+                                                    <span style="color:#006dcc;" class="uiOutputText">
+                                                         
+                                                        {!v.response.dispatchDefault.Work_Order__r.Alternate_Return_Street__c}<br/>
+                                                    	{!v.response.dispatchDefault.Work_Order__r.Alternate_Return_City__c}, {!v.response.dispatchDefault.Work_Order__r.Alternate_Return_State__c}&nbsp; {!v.response.dispatchDefault.Work_Order__r.Alternate_Return_Postal_Code__c}<br/>
+ 														{!v.response.dispatchDefault.Work_Order__r.Alternate_Return_Country__c}
+                                                    </span>
+                                                    
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                               </div>    
+                         </aura:if>
+                    	
+                    </aura:if>
+            <!--Megha:code changes end here-->
+            
+            <div class="slds-grid mdp forcePageBlockSectionRow">
+                <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView" role="listitem">
+                    <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                        <div class="test-id__field-label-container">
+                            <span class="test-id__field-label slds-form-element__label">
+                                {#v.KeepYourComponentsLabel}
+                            </span>
+                        </div>
+                        <div class="slds-form-element__control slds-grid itemBody" >
+                            <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                <span class="uiOutputText">
+                                    <ui:outputCheckbox value="{!v.response.dispatchDefault.Keep_Your_Components__c}"/>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView" role="listitem">
+                    <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                        <div class="test-id__field-label-container">
+                            <span class="test-id__field-label slds-form-element__label">
+                                {#v.KYHDLabel}
+                            </span>
+                        </div>
+                        <div class="slds-form-element__control slds-grid itemBody" >
+                            <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                <span class="uiOutputText">
+                                    <ui:outputCheckbox value="{!v.response.dispatchDefault.KYHDOption__c}"/>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            <div class="slds-grid mdp forcePageBlockSectionRow">
+                <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView" role="listitem">
+                    <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                        <div class="test-id__field-label-container">
+                            <span class="test-id__field-label slds-form-element__label">
+                                {#v.AccidentalDamageLabel}
+                            </span>
+                        </div>
+                        <div class="slds-form-element__control slds-grid itemBody" >
+                            <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                <span class="uiOutputText">
+                                    <ui:outputCheckbox value="{!v.response.dispatchDefault.Complete_Care_Option__c}"/>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <aura:if isTrue="{!not(empty(v.response.dispatchDefault.AD_Override__c))}">
+	                <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView" role="listitem">
+	                    <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+	                        <div class="test-id__field-label-container">
+	                            <span class="test-id__field-label slds-form-element__label">
+	                                {#v.ADOverrideLabel}
+	                            </span>
+	                        </div>
+	                        <div class="slds-form-element__control slds-grid itemBody" >
+	                            <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+	                                <span class="uiOutputText">
+	                                    {!v.response.dispatchDefault.AD_Override__c}
+	                                </span>
+	                            </span>
+	                        </div>
+	                    </div>
+	                </div>
+                </aura:if>
+            </div>
+            
+            <div class="slds-grid mdp forcePageBlockSectionRow">
+                
+                <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView" role="listitem">
+                    <aura:if isTrue="{!!v.EditOverRideMode}">
+                    <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                        <div class="test-id__field-label-container">
+                            <span class="test-id__field-label slds-form-element__label">
+                                {#v.DSPOverideRequestLabel}
+                            </span>
+                        </div>
+                        <div class="slds-form-element__control slds-grid itemBody" >
+                            <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                <span class="uiOutputText">
+                                    <ui:outputCheckbox value="{!v.response.dispatchDefault.DSP_Override_Request__c}"/>
+                                </span>
+                            </span>
+                            <aura:if isTrue="{!v.EditOverRide}">
+                                <lightning:buttonIcon aura:id="OverRideButton" iconName="utility:edit" variant="bare"
+                                                      onclick="{!c.OpenEditForm}"  alternativeText="Edit Button"/> 
+                            </aura:if>
+                        </div>
+                    </div>
+                    </aura:if>
+                     <aura:if  isTrue="{!v.EditOverRideMode}">
+                        <!-- <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override slds-form-element">
+                        <div class="test-id__field-label-container">
+                            <span class="test-id__field-label slds-form-element__label">
+                                {#v.DSPOverideRequestLabel}
+                            </span>
+                        </div>
+                         </div>-->
+                          {#v.DSPOverideRequestLabel}
+                   <ui:inputCheckbox  value="{!v.Override}" aura:id="dspchk" change="{!c.handlechange}"/>
+                </aura:if>
+                </div>
+                
+               
+                <aura:if isTrue="{!not(empty(v.response.instruction))}">
+	                <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView" role="listitem">
+	                    <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+	                        <div class="test-id__field-label-container">
+	                            <span class="test-id__field-label slds-form-element__label">
+	                                {#v.ServiceProviderReasonLabel}
+	                            </span>
+	                        </div>
+	                        <div class="slds-form-element__control slds-grid itemBody" >
+	                            <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+	                                <span class="uiOutputText">
+	                                    {!v.response.instruction}
+	                                </span>
+	                            </span>
+	                        </div>
+	                    </div>
+	                </div>
+                </aura:if>
+                
+            </div>
+            
+        	<div class="slds-grid mdp forcePageBlockSectionRow">
+                <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView" role="listitem">
+                    <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                        <div class="test-id__field-label-container">
+                            <span class="test-id__field-label slds-form-element__label">
+                                {#v.BillToLabel}
+                            </span>
+                        </div>
+                        <div class="slds-form-element__control slds-grid itemBody" >
+                            <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                <span class="uiOutputText">
+                                    {!v.response.dispatchDefault.Bill_To__c}
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView" role="listitem">
+                    <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                        <div class="test-id__field-label-container">
+                            <span class="test-id__field-label slds-form-element__label">
+                                {#v.OrderNumberLabel}
+                            </span>
+                        </div>
+                        <div class="slds-form-element__control slds-grid itemBody" >
+                            <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                <span class="uiOutputText">
+                                    {!v.response.dispatchDefault.Bill_To_Order_Number__c}
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer aura:id = "SaveBun" class="slds-card__footer slds-hide">
+            <lightning:button variant="neutral" label="Cancel" onclick="{!c.closeModal}" />
+            <lightning:button variant="brand" label="Save" onclick="{!c.saveRecord}" />
+        </footer>
+    </article>
+</aura:component>

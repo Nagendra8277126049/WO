@@ -1,0 +1,11 @@
+.THIS {
+   display: none; 
+}.THIS.blueWhiteIcon svg{
+	fill: white;
+}
+.THIS.blueWhiteIcon {
+    background-color:blue;
+}
+.THIS .assetcolor{
+    background-color: #008080 !important;
+}

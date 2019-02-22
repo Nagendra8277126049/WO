@@ -1,0 +1,15 @@
+<design:component label="WorkOrder Returned Parts">
+    <design:attribute name="Label_PartsReturnedCompName" default="Parts Returned"/>
+    <design:attribute name="Label_PARTNUMBER"  default="PART NUMBER"/>
+    <design:attribute name="Label_DESCRIPTION"  default="DESCRIPTION"/>
+    <design:attribute name="Label_QUANTITY" default="QTY"/>
+    <design:attribute name="Label_RETURNDATE"  default="RETURN DATE"/>
+    <design:attribute name="Label_UNITPRICE" default="UNIT PRICE"/>
+    <design:attribute name="Label_SERVICETAG"  default="SERVICE TAG"/>
+    <design:attribute name="Label_WAYBILL" default="WAY BILL"/>
+    <design:attribute name="Label_CARRIER"  default="CARRIER"/>
+    <design:attribute name="Label_UserName" default="USER NAME"/>
+	<sfdc:objects>
+        <sfdc:object>WorkOrder</sfdc:object>
+    </sfdc:objects>
+</design:component>

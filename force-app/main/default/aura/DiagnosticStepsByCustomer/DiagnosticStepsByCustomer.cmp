@@ -1,0 +1,52 @@
+<!--
+*******************************************************************************************************
+Name:       DiagnosticStepsByCustomer.cmp
+Apex Controller: 
+Description: Lightning component to display eSupport data stored in Case fields and SATC through web services
+				Story 4656242:SFDC Phase2: Display if there are any Diagnostics alerts on an Asset and Case Page
+				Story 4560890:SFDC Pilot Phase 2 :: Agent Console :: Need to capture the diagnosis steps
+
+*******************************************************************************************************
+Date         Version            Author                Summary of Changes 
+*******************************************************************************************************
+02/28/2018     1.0       	Amitabh Wankhede	         Initial Release
+05/29/2018     1.1			Srikanth Parvathareddy       Story 5067671 :SA Changes on Asset Details and Diagnostic Tab
+*******************************************************************************************************
+-->
+
+<aura:component controller="CaseDiagnosisStepsController" implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId" access="global">
+
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="FailedResultLabel" type="String"/>
+    <aura:attribute name="PassedResultLabel" type="String"/>
+    <aura:attribute name="TestResultLabel" type="String"/>
+    <aura:attribute name="TestNameLabel" type="String"/>
+    <aura:attribute name="TestDateLabel" type="String"/>
+    <aura:attribute name="ErrorCodeLabel" type="String"/>
+    <aura:attribute name="eSupportLabel" type="String"/>
+    <aura:attribute name="eSupportErrorMessageText" type="String"/>
+    <aura:attribute name="TestResultEngFail" type="String"/>
+    <aura:attribute name="TestResultEngPass" type="String"/>
+    <aura:attribute name="ReportDateLabel" type="String"/>
+    <aura:attribute name="eSupportURLLabel" type="String"/>
+    <aura:attribute name="Critical" type="String"/>
+    <aura:attribute name="NeedsAttention" type="String"/>
+    <aura:attribute name="Recommended" type="String"/>
+    <aura:attribute name="Paranthesis" type="String"/>
+    <aura:attribute name="OpenParanthesis" type="String"/>
+    <aura:attribute name="CloseParanthesis" type="String"/>
+    <aura:attribute name="noRecordsFoundMessage" type="String"/>
+    <aura:attribute name="SupportAssistLabel" type="String" />
+    <aura:attribute name="CollectionDateLabel" type="String" />
+    <aura:attribute name="SupportErrorMessageText" type="String"/>
+    <aura:attribute name="SupportAssistPageSize" type="Integer"/>
+    <aura:attribute name="SupportAssitUrlLabel" type="String"/>
+    
+   <article class="slds-card"> 
+    <c:eSupport recId="{!v.recordId}" FailedResult="{!v.FailedResultLabel}" PassedResult="{!v.PassedResultLabel}" TestResult="{!v.TestResultLabel}" TestName="{!v.TestNameLabel}" TestDate="{!v.TestDateLabel}" eSupport="{!v.eSupportLabel}" TestResultEngFail="{!v.TestResultEngFail}" TestResultEngPass="{!v.TestResultEngPass}"  ErrorMessage="{!v.eSupportErrorMessageText}" ErrorCode="{!v.ErrorCodeLabel}" ReportDateLabel="{!v.ReportDateLabel}" 
+                eSupportURLLabel="{!v.eSupportURLLabel}" Critical="{!v.Critical}" NeedsAttention="{!v.NeedsAttention}" Recommended="{!v.Recommended}" OpenParanthesis="{!v.OpenParanthesis}" CloseParanthesis="{!v.CloseParanthesis}" noRecordsFoundMessage="{!v.noRecordsFoundMessage}"/>
+    </article>  
+    <article class="slds-card">
+    <c:SupportAssist recId="{!v.recordId}" SupportAssistLabel="{!v.SupportAssistLabel}" CollectionDateLabel="{!v.CollectionDateLabel}" ErrorMessage="{!v.SupportErrorMessageText}" pageSize="{!v.SupportAssistPageSize}" SupportAssitUrlLabel="{!v.SupportAssitUrlLabel}" OpenParanthesis="{!v.OpenParanthesis}" CloseParanthesis="{!v.CloseParanthesis}" noRecordsFoundMessage="{!v.noRecordsFoundMessage}" />
+    </article>    
+</aura:component>

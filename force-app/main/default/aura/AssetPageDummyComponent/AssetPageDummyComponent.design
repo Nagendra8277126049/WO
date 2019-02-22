@@ -1,0 +1,12 @@
+<design:component label="Dummy Component">
+    <sfdc:objects>
+        <sfdc:object >Asset</sfdc:object>
+        <sfdc:object>LiveChatTranscript</sfdc:object>
+        <sfdc:object>Call_Transcript__c</sfdc:object>
+    </sfdc:objects>
+    <design:attribute name="ComponentHeader" label="Component - Heading" description="Name of the Component"/>
+    <design:attribute name="ComponentIcon" label="Compoent Icon" description="Icon for the Component"/>
+    <design:attribute name="viewDetails" label="Need View Details Button"/>
+    <design:attribute name="assetLocationComp" label=" Is This is Asset Location Component"/>
+    <design:attribute name="NoDataMessage" label=" No Data Available Message "/>
+</design:component>

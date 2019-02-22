@@ -1,0 +1,35 @@
+<!--
+*******************************************************************************************************
+Name:       EntitlementDetails.cmp
+Description:  lightning Component  Placeholder to display the Entitlements details
+*******************************************************************************************************
+Date         Version            Author              Summary of Changes 
+*******************************************************************************************************
+11/17/2017     1.0     Sri Harsha Gangi Reddy         Initial Release
+08/07/2018     1.1     Harsha Reddy                   DEFECT 5443199 - Updated the Code to Use 
+													  lightning:isUrlAddressable - Since  
+													  force:NavigateToComponent(Deprecated in Summer'18)
+*******************************************************************************************************
+-->
+<aura:component implements="lightning:isUrlAddressable">
+    <!-- 
+	recId  ==> Stores RecordId of Asset/Case/LiveChatTranscript
+	-->
+    <aura:attribute name="recId" type='string' default="{!v.pageReference.state.recordId}"/> 
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <lightning:workspaceAPI aura:id="workspace"/>
+    
+    <aura:if isTrue="{! !empty(v.recId)}">
+    	<div class="slds-scrollable slds-grow" style="height:1000px;">
+	        <div>
+                <c:BasicEntitlements assetId="{#v.recId}" />
+            </div>    
+            <div class="slds-m-top--medium">
+                <c:AccidentalDamageEntitlements assetId="{#v.recId}" />
+            </div>
+            <div class="slds-m-top--medium">
+                <c:EntitlementLicenses assetId="{#v.recId}" />
+            </div>
+    	</div>
+    </aura:if>
+</aura:component>

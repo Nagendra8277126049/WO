@@ -1,0 +1,269 @@
+<aura:component controller="AutoSelectPartController" implements="force:hasRecordId,lightning:availableForFlowScreens">
+    <aura:attribute name="selectedString" type="String" access="global" />
+    <!--Input Param for the Component-->
+    <aura:attribute name="workOrderId" type="String" access="global" />
+    <!--Input Param for the Component-->
+    <aura:attribute name="serviceTag" type="String" access="global" />
+    <!--Input Param for the Component-->    
+    <!--<aura:attribute name="vfHost" type="String" default="dellservices-/-dev3-/-c.cs20.visual.force.com"/>
+    <aura:attribute name="message" type="String" default="I am the message"/>
+    
+    <aura:attribute name="productId" type="Integer" default="1"/>
+    <aura:attribute name="latency" type="Integer" default="2000"/>-->
+    <!--added for Continuation POC-->
+    
+    <!--Add custom message to the spinner -->
+    <aura:attribute name="spinnerMessage" type="String" default="Loading..." />
+    <aura:attribute name="shouldDisplaySpinner" type="Boolean" default="false" />
+    
+    <aura:attribute name="selectedPartList" type="List" />
+    <!--hold the selected list of line Items-->
+    <!--<aura:attribute name="wrapperList" type="object" />-->
+    <aura:attribute name="PartList" type="List" default="[]" />
+    <!--hold the list of line Items-->
+    <aura:attribute name="selectedStrings" type="List" />
+    <aura:attribute name="quantityList" type="List" default="[]" />
+    <!--this will hold the list of Quantity Options-->
+    <aura:attribute name="displayValidateParts" type="boolean" default="false" />
+    <!--this will control display of Validate Parts Button -->
+    <aura:attribute name="PartsValidated" type="boolean" default="false" />
+    <!--this will make the inputCheckBox ReadOnly -->
+    <aura:attribute name="displayAddParts" type="boolean" default="false" />
+    <!--this will make the inputCheckBox ReadOnly -->
+    <aura:attribute name="selectedPartsMap" type="Map" default="{}" />
+    <!--hold the selected Map of line Items-->
+    <aura:attribute name="selectedPartslist" type="workorderLineItem[]" />
+    <!--hold the selected Map of line Items-->
+    <aura:attribute name="renderComponent" type="Boolean" default="true" />
+    <aura:attribute name="disablePartSelection" type="Boolean" default="false" />
+    <aura:attribute name="spmdLink" type="String" access="global" /> <!-- will hold the dynamic value of SPMD url-->
+    <aura:attribute name="validatedParts" type="Boolean" default="false" />
+    <!--this value controls if the editablity of selected checkbox-->
+    <!--<lightning:spinner aura:id="mySpinnerApsScreen" variant="brand" alternativeText="{!v.spinnerMessage}"  size="medium" title="{!v.spinnerMessage}" />-->
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" />
+    <aura:attribute name="showAutoAddPopUp" type="Boolean" default="false" />
+    <aura:attribute name="addCFIAutoPart" type="Boolean" default="false" />
+    
+    
+    <lightning:flow aura:id="flowOnClick" />
+    
+    <aura:if isTrue="{!v.shouldDisplaySpinner}">
+        <div class="slds-spinner_container" aura:id="mySpinnerApsScreen">
+            <div class="slds-align--absolute-center" style="height: 100%">
+                <span class="spinner-text">{!v.spinnerMessage}</span>
+            </div>
+            <div class="slds-spinner--brand slds-spinner slds-spinner--medium" aria-hidden="false" role="alert">
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    
+    <!--<lightning:spinner aura:id="mySpinnerApsScreen" variant="brand" size="medium" />-->
+    <!--<iframe aura:id="vfFrame" src="/apex/SimpleContinuation" frameborder="0" width="1" height="1" />-->
+    <!--added for continuation POC-->
+    <div style="{!v.renderComponent ? 'display:block' : 'display:none'}">
+        <aura:if isTrue="{!v.selectedStrings.length>0}">
+            <!--<div class="slds-border_bottom slds-border_top slds-border_right slds-border_left" style=" margin-top: 5px; margin-bottom: 5px; padding:5px;">
+                <span>
+                    <aura:iteration items="{!v.selectedStrings}" var="Def" indexVar="index">
+                        <lightning:pill label="{!Def}" href="" onremove=""/>
+                    </aura:iteration>
+                </span>
+            </div>-->
+            <!--    <div class="slds-pill_container">
+                <ul class="slds-listbox slds-listbox_horizontal" role="listbox" aria-label="Selected Options:" aria-orientation="horizontal">
+                    <aura:iteration items="{!v.selectedStrings}" var="Def" indexVar="index">
+                        <li class="slds-listbox-item" role="presentation">
+                            <span class="slds-pill" role="option" tabindex="0" aria-selected="true">
+                                <span class="slds-pill__label" title="{!Def}">{!Def}</span>
+                            </span>
+                        </li>
+                    </aura:iteration>
+                </ul>
+            </div>    -->
+        </aura:if>
+        <div aura:id="c-PartContainer" id="cPartContainer" class="slds-hide slds-wrap slds-grid">
+            <aura:iteration items="{!v.PartList}" var="partTop" indexVar="index">
+                <!--<div style="padding: 1rem;">
+                    {!partTop.key}
+                    <div class="slds-border_bottom" style="text-align: center; width: 50rem; background-color: rgb(255, 255, 255);"/>
+                </div>-->
+                <div class="slds-section slds-size_12-of-12">
+                    <h3 class="slds-section__title">
+                        <span class=" slds-section__title-action">
+                            <span class="slds-truncate" title="Section Title">{!partTop.key}</span>
+                        </span>
+                    </h3>
+                </div>
+                <aura:if isTrue="{!partTop.Listval.length == 0}">
+                    <p style="margin-left:5em"><i>No Selection Found</i></p>
+                </aura:if>
+                <aura:iteration items="{!partTop.Listval}" var="part" indexVar="index">
+                    <div class="slds-size_6-of-12" style="padding-right: 5px;padding-left: 5px;">
+                        <div class="slds-border_bottom slds-border_top slds-border_right slds-border_left" style=" margin-top: 5px; margin-bottom: 5px;">
+                            <article class="slds-card slds-border_top slds-border_bottom">
+                                <div class="slds-card__header slds-grid slds-clearfix slds-wrap" style="padding: .3rem; margin-bottom: 0px;">
+                                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                        <div class="slds-size_8-of-12 slds-input_height">
+                                            <div class="slds-media__body">
+                                                <span class="slds-text-heading-x-small">
+                                                    <ui:inputCheckbox aura:id="cboxRow" text="{!part.WorkOrderLineItemVal.Id}" disabled="{!or(and(v.disablePartSelection,part.WorkOrderLineItemVal.Selected_By_user__c!=true),part.WorkOrderLineItemVal.Selected_Work_Order__c!=null)}" value="{!part.WorkOrderLineItemVal.Selected_By_user__c}" class="cBox" change="{!c.SelectPart}" />
+                                                    <!--<ui:inputCheckbox aura:id="cboxRow" text="{!part.WorkOrderLineItemVal.Id}" disabled="{!or(and(v.disablePartSelection,part.WorkOrderLineItemVal.Selected_By_user__c!=true),v.validatedParts)}" value="{!part.WorkOrderLineItemVal.Selected_By_user__c}" class="cBox" change="{!c.SelectPart}" />-->
+                                                    <!--<lightning:input type="checkbox" name="{!index}" disabled="{!and(v.disablePartSelection,part.WorkOrderLineItemVal.Selected_By_user__c!=true)}" value="{!part.WorkOrderLineItemVal.Selected_By_user__c}" class="cBox" onchange="{!c.SelectPart}"/>-->
+                                                    <strong>{!part.WorkOrderLineItemVal.DefectiveComponent__c} |<ui:outputURL label="{!part.WorkOrderLineItemVal.PartNumber__c}" value="{!part.WorkOrderLineItemVal.URLLInk__c}" target="_blank"/></strong>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <!--<div class="slds-size_2-of-12 ">
+          <lightning:input label="Quantity" type="number"  value="{!part.WorkOrderLineItemVal.Part_Quantity__c}" aura:id="quantity" onchange="{!c.handleQuantity}" name="{!part.WorkOrderLineItemVal.Id}" readonly="true" disabled="true" class=""/>
+         </div>-->
+                                        <div class="slds-size_1-of-12"></div>
+                                        <div class="slds-size_1-of-5 slds-float_right">
+                                            <lightning:combobox aura:id="selectItem" name="{!part.WorkOrderLineItemVal.Id}" label="Quantity" style="right" value="{!part.WorkOrderLineItemVal.Part_Quantity__c}" options="{!v.quantityList}" onchange="{!c.handleQuantitychange}" readonly="{!or(!or(part.WorkOrderLineItemVal.Selected_By_user__c,v.validatedParts),part.WorkOrderLineItemVal.Selected_Work_Order__c!=null)}" dropdownAlignment="right" />
+                                        </div>
+                                    </header>
+                                </div>
+                                <div class="slds-grid slds-wrap" style="position:relative;">
+                                    <div class="slds-col slds-card__body slds-card__body_inner slds-size_6-of-12" style="margin-bottom:0px !important; height:	100px;">
+                                        <!--<div class="slds-grid slds-grid_vertical-align-center slds-grid_align-center videoWrapper">-->
+                                        <iframe alt="Work Order" src="{!part.WorkOrderLineItemVal.Image_Url__c}" title="Work Order" style="position: relative; height: 100%; width: 100%;" scrolling="no" />
+                                        <!--</div>-->
+                                    </div>
+                                    <div class="slds-card__body slds-card__body_inner slds-size_6-of-12" style="margin-bottom:0px !important;">
+                                        <div style="height:40px; padding-left: 5px;" class="slds-scrollable_y">
+                                            <!--<aura:if isTrue="{!part.WorkOrderLineItemVal.SubComponent__c}">
+                                           <span> {!part.WorkOrderLineItemVal.SubComponent__c}, </span>
+                                          </aura:if>
+                                          <aura:if isTrue="{!part.WorkOrderLineItemVal.PartDescription__c}">
+                                           <span> {!part.WorkOrderLineItemVal.PartDescription__c}, </span>
+                                          </aura:if>-->
+                                            <aura:if isTrue="{!part.WorkOrderLineItemVal.FunctionalDescription__c}">
+                                                <span> {!part.WorkOrderLineItemVal.FunctionalDescription__c} </span>
+                                            </aura:if>
+                                        </div>
+                                        <div style="text-align: center;">
+                                            <footer class="slds-card__footer" style="display: inline-block; padding-bottom:0px !important; padding-top:0px !important;">
+                                                <aura:if isTrue="{!part.WorkOrderLineItemVal.FourHour__c =='Y'}">
+                                                    <span> 4HR | </span>
+                                                    <aura:set attribute="else">
+                                                        <span> Next Business Day | </span>
+                                                    </aura:set>
+                                                </aura:if>
+                                                <aura:if isTrue="{!part.WorkOrderLineItemVal.CustomerReplaceableUnit__c =='Y'}">
+                                                    <span> CRU </span>
+                                                </aura:if>
+                                                <aura:if isTrue="{!part.WorkOrderLineItemVal.FieldReplaceableUnit__c =='Y'}">
+                                                    <span> FRU </span>
+                                                </aura:if>
+                                                <aura:if isTrue="{!part.WorkOrderLineItemVal.InventoryStatus__c =='PART_AVAILABLE'}">
+                                                    <span> |
+                                                        <br /><span class="GreenDot"></span> Available
+                                                    </span>
+                                                </aura:if>
+                                                <aura:if isTrue="{!part.WorkOrderLineItemVal.InventoryStatus__c =='PART_UNAVAILABLE'}">
+                                                    <span> |
+                                                        <br /><span class="RedDot"></span> Unavailable
+                                                    </span>
+                                                </aura:if>
+                                                <aura:if isTrue="{!part.WorkOrderLineItemVal.InventoryStatus__c =='PART_NOT_FOUND'}">
+                                                    <span> |
+                                                        <br /><span class="BlackDot"></span> Unavailable
+                                                    </span>
+                                                </aura:if>
+                                                <aura:if isTrue="{!part.WorkOrderLineItemVal.InventoryStatus__c =='DISABLED'}">
+                                                    <span> |
+                                                        <br /><span class="BlackDot"></span> Unavailable
+                                                    </span>
+                                                </aura:if>
+                                            </footer>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <aura:if isTrue="{!and(part.WorkOrderLineItemVal.Warning_Message__c!=null,v.validatedParts)}">
+                                    <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
+                                        <span class="slds-m-right_x-small">
+                                            <lightning:icon iconName="utility:warning" variant="inverse" size="xx-small" />
+                                        </span>
+                                        <ui:outputText value="{!part.WorkOrderLineItemVal.Warning_Message__c}" />
+                                    </div>
+                                </aura:if>
+                            </article>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                </aura:iteration>
+            </aura:iteration>
+        </div>
+        <br />
+        <br />
+        <div style="padding: 1rem;" class="slds-wrap slds-grid">
+            <div class="slds-section slds-size_6-of-12">
+                <div class="slds-border_top" style="text-align: center; background-color: rgb(255, 255, 255);" />
+                <div align="left" style="margin-top: 10px">
+                    <a onclick="{!c.handleAdvancedSearch}"><strong>Didn't find what you were looking for?</strong></a>
+                </div>
+            </div>
+            <div class="slds-section slds-size_6-of-12">
+                <div class="slds-border_top" style="text-align: center; background-color: rgb(255, 255, 255);" />
+                <div align="right" aura:id="buttonSectionNext" class="" style="margin-top: 10px">
+                    <lightning:button label="Cancel" title="Cancel" aura:id="clearButton" onclick="{! c.handleClear }" />
+                    <aura:if isTrue="{!v.displayValidateParts}">
+                        <!-- // Updated Label  - DEFECT 5462004 - Harsha -08/21/2018
+                        <lightning:button label="Validate Selected Parts" title="Validate Selected Parts" variant="brand" aura:id="validateParts" onclick="{! c.handleValidateParts }"/>
+                        -->
+                        <lightning:button label="Add Selected Parts" title="Validate Selected Parts" variant="brand" aura:id="validateParts" onclick="{! c.handleValidateParts }" />
+                    </aura:if>
+                    <!-- // Commented - DEFECT 5462004 - Harsha -08/21/2018
+                    <aura:if isTrue="{!and(v.displayAddParts,!v.displayValidateParts)}">
+                        <lightning:button label="Add Selected Parts" title="Add Selected Parts" variant="brand" aura:id="validateParts" onclick="{! c.handleAddParts }"/>
+                    </aura:if>
+                    -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="slds-clearfix">
+            <div class="slds-clearfix">
+                <div class="slds-float_right">
+                    <a href="{!v.spmdLink}" target="_blank"><span>
+                        <lightning:buttonIcon aura:id="ServiceTypeEditBtn" iconName="utility:link" variant="bare" />
+                        Go to SPMD
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <aura:if isTrue="{!v.showAutoAddPopUp}">
+       
+        <div class="demo-only">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header">
+                        <button class="slds-button slds-modal__close" title="Close" onclick="{!c.closeAutoPartsPopUp}">
+                            <lightning:icon class="white slds-icon_small" iconName="utility:close"/> 
+                            <span class="slds-assistive-text">
+                                Close
+                            </span>
+                        </button>
+					</div>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        
+                        <h2 id="header43" class="slds-text-heading--medium slds-text-link">Dispatch the hard drive with CFI image?</h2>
+                    </div>
+                    <div class="slds-modal__footer">
+                        <footer>
+                            <lightning:button variant="brand" label="Yes" aura:id="addCFIPartButton" onclick="{! c.handleValidateParts }"></lightning:button>
+                            <lightning:button label="No" aura:id="dontAddCFIPartButton" onclick="{! c.handleValidateParts }"></lightning:button>
+                        </footer>
+                    </div>
+                </div>   
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </aura:if>
+
+</aura:component>

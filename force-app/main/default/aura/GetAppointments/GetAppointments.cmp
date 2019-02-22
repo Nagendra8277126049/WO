@@ -1,0 +1,129 @@
+<!--
+ - Created by tdavis on 10/23/18.
+ - 
+ - Modifications:
+ - 	Author		Date		Company			Description
+ - Pawan K		1/9/19		OAC Services	Adding spinner when buttons are clicked in the component.
+ -->
+
+<aura:component description="GetAppointments" access="global" controller="GetAppointmentsController"
+                implements="flexipage:availableForRecordHome,force:hasRecordId">
+    <aura:handler name="init" value="{!this}" action="{!c.getServiceAppointment}"/>
+    <aura:handler event="aura.waiting" action="{!c.runSpinner}"/>
+    <aura:handler event="aura.doneWaiting" action="{!c.stopSpinner}"/> 
+    <aura:attribute name="error" type="String" default=""/>
+	<aura:attribute name="spinner" type="boolean" default="false"/> 
+	<aura:attribute name="serviceAppointment" type="ServiceAppointment"/>
+    <aura:attribute name="scheduleType" type="String"/>
+    <aura:attribute name="fieldsArray" type="String[]" default="['EarliestStartTime', 'DueDate']"/>
+    <aura:attribute name="slots" type="List"/>
+    <aura:attribute name="selectedSlot" type="String"/>
+    <aura:attribute name="selectedKey" type="String"/>
+    <aura:attribute name="isSLA" type="Boolean" default="false"/>
+    <aura:attribute name="isAppointmentTask" type="Boolean" default="false"/>
+    <aura:attribute name="isOpen" type="boolean" default="false"/>
+    <h3 class="slds-section-title--divider">Work Order Details Section</h3>
+    <br/>
+    
+    <aura:if isTrue="{!v.spinner}" >
+    	<div aura:id="spinnerId" class="slds-spinner_container">
+           <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+             <span class="slds-assistive-text">Loading</span>
+             <div class="slds-spinner__dot-a"></div>
+             <div class="slds-spinner__dot-b"></div>
+           </div>
+    	</div>
+    </aura:if>
+    
+    <div class="slds-grid">
+        <div class="slds-col slds-size_1-of-2">
+            <lightning:recordViewForm recordId="{!v.serviceAppointment.Work_Order__c}" objectApiName="WorkOrder">
+                <lightning:outputField fieldName="WorkOrderNumber"/>
+                <lightning:outputField fieldName="ContactId"/>
+                <lightning:outputField fieldName="AssetId"/>
+            </lightning:recordViewForm>
+        </div>
+        <div class="slds-col slds-size_1-of-2">
+            <lightning:recordViewForm recordId="{!v.serviceAppointment.Id}" objectApiName="ServiceAppointment">
+                <lightning:outputField fieldName="Description"/>
+                <lightning:outputField fieldName="Duration"/>
+                <lightning:outputField fieldName="SchedStartTime"/>
+                <lightning:outputField fieldName="SchedEndTime"/>
+            </lightning:recordViewForm>
+        </div>
+    </div>
+    <br/>
+    <h3 class="slds-section-title--divider">User Selection Information</h3>
+    <br/>
+    <!--<ui:inputCheckbox aura:id="isSLA" label="Is SLA?" value="{!v.isSLA}" change="{!c.onIsSLAChange}"/>
+    <br/>-->
+    
+    <!-- Adding error logic and disabling buttons -->
+    <aura:if isTrue="{! !empty(v.error)}">
+        <ui:message title="Error" severity="error" closable="true">
+			{!v.error}
+		</ui:message>
+    </aura:if>
+    
+    <lightning:recordForm aura:id="recordForm" recordId="{!v.recordId}" objectApiName="ServiceAppointment"
+                          fields="{!v.fieldsArray}" onsubmit="{!c.resetSelectedSlot}"/>
+    <br/>
+    <lightning:button aura:id="viewTimeSlots" label="Auto-Schedule" type="button" onclick="{!c.doCallout}"/>
+    <!--<lightning:button aura:id="createSLATask" label="Create SLA Task" type="button"
+                      onclick="{!c.createSLATask}"/>-->
+    <lightning:button aura:id="createAppointmentTask" label="Resource Manager Request" type="button"
+                      onclick="{!c.createAppointmentTask}"/>
+    <br/>
+    <br/>
+    <div id="availableSlotsDiv" style="display: none">
+        <h3 class="slds-section-title--divider" aura:id="availableSlotsHeader">Available Slots</h3>
+        <lightning:select aura:id="slotSelection" value="{!v.selectedSlot}" onchange="{!c.onSlotSelection}">
+            <option value="">Choose one...</option>
+            <aura:iteration items="{!v.slots}" var="slot" indexVar="key">
+                <option value="{!slot.value}">
+                    {!slot.key}
+                </option>
+            </aura:iteration>
+        </lightning:select>
+        <br/>
+        <lightning:button aura:id="chooseSlotButton" label="Choose Slot" type="button" variant="brand"
+                          onclick="{!c.openModel}"/>
+    </div>
+
+    <aura:if isTrue="{!v.isOpen}">
+        <!--###### MODAL BOX Start######-->
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                 aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- ###### MODAL BOX HEADER Start ######-->
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{!c.closeModel}"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Confirm Chosen Slot</h2>
+                </header>
+                <!--###### MODAL BOX BODY Part Start######-->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <p><b>You have chosen {!v.selectedKey}. Please confirm your slot selection.
+                    </b>
+                    </p>
+                </div>
+                <!--###### MODAL BOX FOOTER Part Start ######-->
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="neutral"
+                                      label="Cancel"
+                                      title="Cancel"
+                                      onclick="{!c.closeModel}"/>
+                    <lightning:button variant="brand"
+                                      label="Confirm"
+                                      title="Confirm"
+                                      onclick="{!c.chooseSlot}"/>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+        <!--###### MODAL BOX Part END Here ######-->
+    </aura:if>
+</aura:component>

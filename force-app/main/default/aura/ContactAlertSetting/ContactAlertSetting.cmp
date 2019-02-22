@@ -1,0 +1,107 @@
+<!--
+*******************************************************************************************************
+Name:       ContactAlertSetting.cmp
+Description:  This Lightning Component that will be the place holder for the contact fields that will be used 
+   notification settings.  - Story 4623476 
+*******************************************************************************************************
+Date         Version    Author             Summary of Changes 
+*******************************************************************************************************
+03/26/2018     1.0     Rodrigo Carpio      Initial Release
+*******************************************************************************************************
+-->
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,force:hasSObjectName" controller="ValidatePhoneNumberController">
+    <aura:attribute name="contactAlertType" type="string" default=""/>
+    <aura:attribute name="ComponentLabel" type="String" />
+    <aura:attribute name="contactPrimaryAlert" type="string" default="--None--"/>
+    <aura:attribute name="contactPrimaryAlertCopy" type="string" default="--None--"/>
+    <aura:attribute name="recordAlertWrapperObject" type="ValidatePhoneNumberController"/>
+    <aura:attribute name="addContactAlertType" type="string" default=""/>
+    <aura:attribute name="record" type="Object"/>
+    <aura:attribute name="simpleRecord" type="Object"/>
+    <aura:attribute name="recordError" type="String"/>
+    <aura:attribute name="showAdditionalcontactAlerts" type="Boolean" default="false"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!-- // Commented by Harsha - Moved Logic to LDS - on Change (or) Adding New Contacts to Work Order it will trigger New Call to Server Side Logic.
+   // DEFECT 5446043
+    <aura:handler event="force:refreshView" action="{!c.doInit}" />
+    -->
+	<aura:attribute name="initialLoadValue" type="String" />
+    <aura:attribute name="startLoad" type="Boolean" default="true"/>
+    <aura:attribute name="renderRevisedView" type="Boolean" default="false"/>
+    <aura:attribute name="listOfContactAlerts" type="List" />
+    <aura:attribute name="savedAlertForThisContact" type="String"  />
+    <aura:attribute name="savedAlertForAddContact" type="String"  />
+
+    <force:recordData aura:id="recordHandler"
+                      recordId="{!v.recordId}"
+                      fields="AdditionalContactAlertUpdates__c, ContactAlertUpdates__c,AdditionalContactId__c,ContactId"
+                      targetRecord="{!v.record}"
+                      targetFields="{!v.simpleRecord}"
+                      targetError="{!v.recordError}"
+                      mode="EDIT"
+                      recordUpdated="{!c.handleRecordUpdated}"
+                      />
+    
+    <!--aura:attribute name="change" value="{!v.ContactAlertUpdates__c}" action="{!c.onValueChange}" /-->
+    <!-- Display Lightning Data Service errors, if any -->
+    <aura:if isTrue="{!not(empty(v.recordError))}">
+        <div class="recordError">
+            <ui:message title="Error" severity="error" closable="true">
+                {!v.recordError}
+            </ui:message>
+        </div>
+    </aura:if>
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container" title="description of icon when needed">
+                        <lightning:icon iconName="standard:work_order" size="small" alternativeText="Contact alert"/>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2>
+                        <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title="[object Object]">
+                            <span class="slds-text-heading_small">{#v.ComponentLabel}</span>
+                        </a>
+                    </h2>
+                </div>
+            </header>
+        </div>
+        <div class="slds-card__body slds-card__body_inner">
+            <div class="slds-grid mdp forcePageBlockSectionRow">
+                <lightning:recordEditForm aura:id="recordViewForm" recordId="{!v.recordId}" objectApiName="WorkOrder">
+                    <lightning:messages />
+                    <!--Picklist-->
+                    <div class="slds-grid slds-gutters">  
+                        <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                            <!--lightning:inputField fieldName="ContactAlertUpdates__c" 
+                                      aura:id="contactValue" onchange="{!c.handleCont}"/-->
+                            <div class="" style="padding: .5em;">
+                                <ui:inputSelect aura:id="contactValue" label="Primary Contact Method" change="{!c.handleCont}" >
+                                    
+                                    <aura:iteration items="{!v.listOfContactAlerts}" var="alertValue">
+                                        <ui:inputSelectOption text="{!alertValue}" label="{!alertValue}"/>
+                                    </aura:iteration>
+                                </ui:inputSelect>
+                            </div>
+                        </div>               
+                        <aura:if isTrue="{!v.showAdditionalcontactAlerts}">
+                            <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                <!--lightning:inputField fieldName="AdditionalContactAlertUpdates__c" 
+                                              aura:id="addContactValue" onchange="{!c.handleAddCont}" /-->
+                                <div class="" style="padding: .5em;">
+                                    <ui:inputSelect aura:id="addContactValue" label="Additional Contact Method" change="{!c.handleAddCont}">
+                                        
+                                        <aura:iteration items="{!v.listOfContactAlerts}" var="alertValue">
+                                            <ui:inputSelectOption text="{!alertValue}" label="{!alertValue}"/>
+                                        </aura:iteration>
+                                    </ui:inputSelect>
+                                </div>
+                            </div>
+                        </aura:if>
+                    </div>
+                </lightning:recordEditForm>
+            </div></div>
+    </article>
+</aura:component>

@@ -1,0 +1,51 @@
+<!--
+*******************************************************************************************************
+Name:       AssetLocation.cmp
+Apex Controller: GetAssetLocation.apx
+Description:  This Lightning Component Display the Asset Location on Asset Record Page - Story 4169915
+*******************************************************************************************************
+Date         Version           Author             Summary of Changes 
+*******************************************************************************************************
+11/17/2017     1.0     Sri Harsha Gangi Reddy      Initial Release
+03/14/2017     1.1     Sri Harsha Gangi Reddy      Updated for Story - 4794544
+04/30/2018	   1.2	   Srikanth Parvathareddy	   Modified for ODATA service update - #Defect 4976480			
+07/05/2018	   1.3	   Brundha Rajkumar	   		   Updated Address Line 3 Null Check to String Check- #Defect 5297797			
+
+*******************************************************************************************************
+-->
+<aura:component implements="flexipage:availableForAllPageTypes,force:hasRecordId" controller="GetAssetLocation" access="global">
+    
+    <aura:attribute name="Heading" type="String"/>
+    <aura:attribute name="ErrorMessage" type="String"/>
+    <aura:attribute name="recordId" type="string"/>
+    <aura:attribute name="Location" type="object"/>
+    
+   	<aura:handler name="init" value="{!this}" action="{!c.doInit}" /> 
+            
+    <article class="slds-card">
+        <div class="slds-media__body">
+            <h3 class="slds-m-left--x-small slds-text-body_small">{#v.Heading}</h3>
+            
+            <!--
+			{!$Label.c.Asset_Location}
+			-->
+            <!-- Spinner -->
+            <lightning:spinner aura:id="mySpinner" variant="brand" size="small" />
+            
+            <aura:if isTrue="{!v.Location != null}">
+            	<div class="slds-m-around--x-small">
+	            	{!v.Location[0].AddressLine1}  <span class="additionalSpace"></span>
+    	        	{!v.Location[0].AddressLine2}<br/>
+			    	<aura:if isTrue="{!v.Location.AddressLine3 != ''}">
+						{!v.Location[0].AddressLine3} <span class="additionalSpace"></span>
+        	    		{!v.Location[0].AddressLine4}<br/>
+  					</aura:if> 
+          			{!v.Location[0].City} <span class="additionalSpace"></span>
+                	{!v.Location[0].State} <span class="additionalSpace"></span>
+          			{!v.Location[0].Country} <span class="additionalSpace"></span>
+          			{!v.Location[0].PostalCode}            
+        		</div>
+            </aura:if>
+        </div>
+    </article>
+</aura:component>

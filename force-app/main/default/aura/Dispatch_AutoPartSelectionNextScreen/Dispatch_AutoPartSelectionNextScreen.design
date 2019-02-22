@@ -1,0 +1,5 @@
+<design:component >
+    <design:attribute name="selectedString" label="Selected String"/>
+    <design:attribute name="workOrderId" label="WorkOrderId"/>
+    <design:attribute name="serviceTag" label="serviceTag"/>
+</design:component>

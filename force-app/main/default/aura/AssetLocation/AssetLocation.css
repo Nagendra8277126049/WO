@@ -1,0 +1,4 @@
+/* [NN:-16 Nov'17] instead of using &nbsp; we are using this */
+.THIS .additionalSpace{
+    padding-left:4px;
+}

@@ -1,0 +1,33 @@
+.THIS .slds-icon-cls {
+    height:20px; 
+    width:20x;
+}
+
+.THIS .daysLeft {
+    color: gray;
+    font-size: smaller;
+    font-style: italic;
+    margin-top: 2px;
+}
+
+.THIS .additionalSpace{
+    padding-left:4px;
+}
+
+.THIS .imgSize {
+    width: 20px;
+    height: 20px;
+}
+
+.THIS .slds-icon-standard-entitlement {
+    background-color: #56c864 !important;
+}
+
+/*
+Replaced slds_wrap_text with slds_cell-wrap
+
+.THIS .slds_wrap_text {
+  white-space: normal;
+  word-wrap: break-word;
+}
+*/

@@ -1,0 +1,97 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global" controller="GetOrderLineItems">
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:attribute name="orderItems" type="string[]"/>
+    <aura:attribute name="serviceTag" type="string" />
+    <aura:attribute name="page" type="integer" description="pageNumber"/>
+    <aura:attribute name="next" type="boolean" default="false"/>
+    <aura:attribute name="previous" type="boolean" default="false"/>
+    
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+  	<aura:attribute name="alerts" type="boolean" default="false"/>
+    
+    <article class="slds-card">
+    	<div class="slds-card__header slds-grid">
+            <aura:if isTrue="{!v.Spinner}">
+              <div aura:id="spinnerId" class="slds-spinner_container">
+                <div class="slds-spinner--brand  slds-spinner slds-spinner--small slds-is-relative" role="alert">
+                  <span class="slds-assistive-text">Loading</span>
+                  <div class="slds-spinner__dot-a"></div>
+                  <div class="slds-spinner__dot-b"></div>
+                </div>
+              </div>
+            </aura:if>
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure">
+              <span class="slds-icon_container slds-icon-standard-contact" title="description of icon when needed">
+               <lightning:icon iconName="custom:custom57" size="small" alternativeText="sss"/>
+              </span>
+            </div>
+            <div class="slds-media__body">
+              <h2>          
+                  <span class="slds-text-heading_small">{!$Label.c.Order_Line_Items_Name}</span>
+              </h2>
+            </div>
+          </header>
+      </div>
+		
+      <aura:if isTrue="{!v.orderItems != null}">
+	      <div class="slds-card__body slds-scrollable" style="height: 15rem; width: auto;">
+	          <table class="slds-table slds-table_bordered slds-no-row-hover slds-table_cell-buffer">
+	            <thead>
+	              <tr class="slds-text-title_caps">
+	                <th scope="col">
+	                  <div class="slds-truncate" title="PARTNUM">{!$Label.c.PartNumber_OrderLine}</div>
+	                </th>
+	                <th scope="col">
+	                  <div class="slds-truncate" title="PRODUCTNUM">{!$Label.c.ProductNumber_OrderLine}</div>
+	                </th>
+	                <th scope="col">
+	                  <div class="slds-truncate" title="PRODUCT">{!$Label.c.Product_Description_OrderLine}</div>
+	                </th>
+	                <!--th scope="col">
+	                  <div class="slds-truncate" title="PPID">{!$Label.c.PPID_OrderLine}</div>
+	                </th>
+	                  <th scope="col">
+	                  <div class="slds-truncate" title="COMMODITY">{!$Label.c.Commodity_OrderLine}</div>
+	                </th-->
+	                  <th scope="col">
+	                  <div class="slds-truncate" title="QTYSHIPPED">{!$Label.c.Quantity_Shipped_OrderLine}</div>
+	                </th>
+	              </tr>
+	            </thead>
+	            
+	            <tbody id="datatable"> 
+	              <aura:iteration items="{!v.orderItems}" var="Ast" >
+	                <tr class="slds-truncate">
+	                  <td class="slds-truncate" scope="col"><a href="javascript:void(0)" name="{!Ast.PartNumber__c}" 
+	                                                           onclick="{!c.openSPMD}">{!Ast.PartNumber__c}</a></td>
+	                  <td class="slds-truncate" scope="col">{!Ast.ProductNumber__c}</td>
+	                  <td class="slds-truncate" scope="col">{!Ast.Description__c}</td>
+	                  <!--td class="slds-truncate" scope="col">{!Ast.PPID__c}</td>
+	                  <td class="slds-truncate" scope="col">{!Ast.CommodityDesc__c}</td-->
+	                  <td class="slds-truncate" scope="col">{!Ast.Quantity__c}</td>
+	                </tr>
+	              </aura:iteration>
+	            </tbody>
+	          </table>
+	        </div>
+    	    
+    	    <!-- Page Button's Section -->       
+	        <aura:if isTrue="{! or(v.next, v.previous)}">  
+				<footer class="slds-card__footer">
+		        	<!-- Button's Logic Begins Here -->  
+		            <aura:if isTrue="{!v.previous}" >
+		            	<ui:button press="{!c.previousPage}" label="Previous"/>
+		            </aura:if>
+		            <aura:if isTrue="{!v.next}">
+		            	<ui:button aura:id="nextbtn" press="{!c.nextPage}" label="Next"/>
+		            </aura:if>
+		            <!-- Button's Logic Ends Here -->
+				</footer>
+			</aura:if>
+			
+        </aura:if>
+    </article>
+</aura:component>

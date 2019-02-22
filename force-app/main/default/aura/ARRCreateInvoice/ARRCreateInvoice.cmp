@@ -1,0 +1,24 @@
+<aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId" controller="ARRCreateInvoiceController">
+        <aura:html tag="style">
+        .slds-modal__container{
+        	width:50% !Important;
+        	max-width:50% !important;
+        }
+        .modal-body{ 
+        	height:auto !important;
+        	max-height:unset !important;
+        } 
+    </aura:html>
+    
+    <aura:attribute name="settlement" type="Object"/>
+    
+    <force:recordData aura:id="recordLoader"
+        recordId="{!v.recordId}"
+		targetFields="{!v.settlement}"
+		layoutType="FULL"
+        recordUpdated="{!c.startFlow}"
+        />
+
+    <lightning:flow aura:id="flow" onstatuschange="{!c.statusChange}"/>
+    
+</aura:component>

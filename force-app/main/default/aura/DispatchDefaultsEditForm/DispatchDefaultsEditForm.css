@@ -1,0 +1,11 @@
+.THIS .icn-white svg {
+    fill: white;
+}
+
+.THIS .icn-white:hover svg {
+    fill: white;
+}
+.THIS .slds-spinner_container {  
+  z-index: 2;
+  position: fixed;   
+}

@@ -1,0 +1,110 @@
+<!--
+***************************************************************************************************************************
+Name:       getUserSRDispatches 
+Description:  This method reads User SR-Dispatches dashboard information from external object - story# 4419724
+***************************************************************************************************************************
+   Date         Version      Author             Summary of Changes 
+************  ***********  ************    ********************************************************************************
+12/27/2017     1.0     Rodrigo Carpio        Initial Release
+01/18/2018     1.1     Sri Harsha G			 Pagination Logic
+***************************************************************************************************************************
+-->
+
+<aura:component controller="ReletadDispatchController" implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global">
+    <aura:attribute name="dispatchList" type="string[]"/>    
+    <aura:attribute name="loadFlag" type="boolean" default="true"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" /> 
+
+    <aura:attribute name="errorMessage" type="string" />
+    <!-- Buttom Attributes -->
+    <aura:attribute name="next" type="boolean" default="false"/>
+    <aura:attribute name="previous" type="boolean" default="false"/>
+    
+    <aura:attribute name="page" type="integer" description="pageNumber"/>
+    
+    <!-- section for the data display starts here --> 
+    <article class="slds-card">
+   		<div class="slds-card__header slds-grid">
+        	<header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-contact" title="Dispatches">
+                        <lightning:icon iconName="standard:service_appointment" alternativeText="Dispatches" size="small"/>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2>          
+                        <span class="slds-text-heading_small"> 
+                            {!$Label.c.FlaggedDispatchesHeader} 
+                        </span>
+                    </h2>
+                </div>
+                <div class="slds-align--absolute-center">
+                    <lightning:spinner aura:id="mySpinner" variant="brand" size="small" />       
+                </div>
+        	</header>
+  		</div>
+    	<aura:if isTrue="{!v.loadFlag == true}" >
+    		<ui:scrollerWrapper class="scrollerSize">    	        
+            	<div class="slds-card__body">
+        			<div class="slds-scrollable--y" style="height: 200px;">
+                    	<table class="slds-table slds-table_bordered">
+                    		<thead >
+                        		<tr class="slds-text-title--caps">
+                                	<th scope="col">
+                                    	<div class="slds-truncate" title="Dispatch Number">
+                                            <b>{!$Label.c.DispatchNumber}</b>
+                                        </div>
+                                	</th>
+                                	<th scope="col">
+                                    	<div class="slds-truncate" title="Status">
+                                            <b>{!$Label.c.DispatchStatus}</b>
+                                        </div>
+                                	</th>
+                                	<th scope="col">
+                                    	<div class="slds-truncate" title="Case Number">
+                                            <b>{!$Label.c.DispatchCaseNumber}</b>
+                                        </div>
+                                	</th>                               
+                        		</tr>
+                    		</thead>
+                        	<aura:if isTrue="{!v.dispatchList != null}">
+                        		<tbody>    
+            						<aura:iteration items="{!v.dispatchList}" var="el" indexVar="i">
+                                		<tr>
+                                			<td data-label="Dispatch Number">
+                                                <div class='slds-truncate no-text-overflow'>
+                                                    {!el.dispatchNumber}
+                                                </div>                    
+                                			</td>
+                                			<td data-label="Status">
+                                                <div class='slds-truncate no-text-overflow'>
+                                                    {!el.status}
+                                                </div>                    
+                                			</td>
+                                			<td data-label="Option">
+                                            	<div class='slds-truncate no-text-overflow'>
+                                                	{!el.caseNumber}
+                                                </div>                    
+                                			</td>                                 
+                            			</tr>
+                            		</aura:iteration>
+                        		</tbody>
+                        	</aura:if>
+                    	</table>
+                	</div>
+            	</div>    	    
+    		</ui:scrollerWrapper>
+            <footer class="slds-card__footer">
+               <!-- Button's Logic Begins Here -->  
+               <aura:if isTrue="{!v.previous}" >
+                  <ui:button press="{!c.previousPage}" label="Previous"/>
+               </aura:if>
+               <aura:if isTrue="{!v.next}">
+                    <ui:button aura:id="nextbtn" press="{!c.nextPage}" label="Next"/>
+               </aura:if>
+               <!-- Button's Logic Ends Here -->
+            </footer>
+    	</aura:if>
+    </article>        
+    <!-- section for the data display ends here -->
+</aura:component>

@@ -1,0 +1,21 @@
+.THIS .slds-select_container:before{
+        display:none;
+    }
+
+.THIS .slds-select_container:after{
+        margin-bottom: 3px;
+    }
+
+.THIS .ReasonRepeatWorkOrderCls .slds-form-element__label{
+        display:none;
+    }
+
+.THIS .alignStyle {
+    vertical-align: top;
+    display: inline-block !important;
+    height: inherit;
+}
+
+.THIS .localAlignStyle{
+    vertical-align: top;
+}

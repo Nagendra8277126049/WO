@@ -1,0 +1,128 @@
+<!--
+*******************************************************************************************************
+Name:       EntitlementDashboard.cmp
+Apex Controller: EntitlementDashboardController.apx
+Description:  lightning Component to display the Entitlements Dashboard and Entitlements details 
+                in popup on Case And Asset Page  - Story #4145473
+*******************************************************************************************************
+Date         Version            Author              Summary of Changes 
+*******************************************************************************************************
+11/17/2017     1.0     Sri Harsha Gangi Reddy         Initial Release
+*******************************************************************************************************
+-->
+
+
+<aura:component controller="EntitlementDashboardController" implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global" >
+    
+  <aura:attribute name="entitlementList" type="object" />
+  <aura:attribute name="Spinner" type="boolean" default="false"/>    
+  <aura:attribute name="alerts" type="boolean" default="false"/>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />    
+   
+  <!-- section for the data display starts here -->
+  <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+             
+        <div class="slds-media__figure">
+          <span class="slds-icon_container slds-icon-standard-contact" title="Warranty">
+            <lightning:icon iconName="standard:entitlement" alternativeText="Warranty" size="small"/>
+          </span>
+        </div>
+        <div class="slds-media__body">
+          <h2>          
+            <span class="slds-text-heading_small"> {!$Label.c.EntitlementDashboardName} </span>
+          </h2>
+        </div>
+          <div align="right"><lightning:button class="slds-button_neutral" aura:id="entViedDetail" label="View Details" onclick="{!c.openModal}"/></div>
+       <!-- Spinner Code Begins Here -->
+    	<aura:if isTrue="{!v.Spinner}">
+      	<div aura:id="spinnerId" class="slds-spinner_container">
+       		<div class="slds-spinner--brand  slds-spinner slds-spinner--small slds-is-relative" role="alert">
+         		<span class="slds-assistive-text">Loading</span>
+         		<div class="slds-spinner__dot-a"></div>
+         		<div class="slds-spinner__dot-b"></div>
+       		</div>
+    	 </div>
+ 		  </aura:if>
+      <!-- Spinner Code Ends Here -->
+       </header>
+    </div>
+
+    <ui:scrollerWrapper class="scrollerSize">   
+ 	  <aura:if isTrue="{! or(v.entitlementList != null, v.entitlementList != undefined) }">
+        <div class="slds-card__body">
+        	<div class="slds-scrollable--y" style="height: 150px;">
+       		  <table class="slds-table slds-table_bordered slds-no-row-hover">
+              <thead >
+                <tr class="slds-text-title--caps">
+                  <th scope="col">
+                    <div title="Entitlement status">&nbsp;&nbsp;</div>
+                  </th>
+                  <!--
+                  <th scope="col">
+                      <div class="slds-truncate" title="Type"><b>{!$Label.c.EntitlementDash_Type}</b></div>
+                  </th>
+				  -->
+                  <th scope="col">
+                    <div class="slds-truncate" title="Entitlement Name"><b>{!$Label.c.EntitlementDash_Service}</b></div>
+                  </th>
+                  <th scope="col">
+                    <div class="slds-truncate" title="End Date"><b>{!$Label.c.EntitlementDash_EndDate}</b></div>
+                  </th>                    
+                </tr>
+              </thead>
+              
+              <tbody> 
+                <aura:iteration items="{!v.entitlementList}" var="el" indexVar="i">
+                  <tr>
+                    <td data-label="Status"> 
+                      <aura:if isTrue="{!greaterthan(el.entRemDays,0)}">
+                        <aura:if isTrue="{!lessthan(el.entRemDays,90)}">
+                            <div class="imgSize">
+                        		<img src="{!$Resource.Entitlement_SoonToBeExpired_Icon}"/>
+                            </div>
+                           	<aura:set attribute="else">
+                            	<div class="imgSize">
+                                	<img src="{!$Resource.Entitlement_Valid_ICON}"/>
+                               	</div>
+                            </aura:set>
+                        </aura:if>
+                        <aura:set attribute="else">
+                            <aura:if isTrue="{!(el.entRemDays=='0')}">
+                                <div class="imgSize">
+                                    <img src="{!$Resource.Entitlement_Expired_ICON}"/>
+                                </div>
+                            </aura:if>
+                        </aura:set>
+                      </aura:if>
+                    </td>
+                	<!--
+                    <td data-label="Entitlement Type" class="slds-text-body_small slds-cell-wrap"> {!el.entType} </td>
+					-->
+                    <td data-label="Entitlement Name" class="slds-text-body_small slds-cell-wrap"> {!el.entName} </td> 
+                    
+                    <td data-label="End Date" class="slds-truncate slds-text-body_small">
+                    {!el.entEndDate}
+                      <aura:if isTrue="{! greaterthan(el.entRemDays,0)}">
+                        <aura:if isTrue="{!lessthan(el.entRemDays,90)}"> 
+                          <br></br>
+                          <div class="daysLeft">{! el.entRemDays}
+                            <span class="additionalSpace"></span>
+                              {!$Label.c.DaysLeft}
+                          </div>
+                        </aura:if>
+                      </aura:if> 
+                    </td>
+                  </tr>
+                </aura:iteration>
+              </tbody>
+        	  </table>
+        	</div>
+	    </div>  
+	  </aura:if>
+    </ui:scrollerWrapper>
+  </article>
+  <!-- section for the data display ends here -->
+
+</aura:component>

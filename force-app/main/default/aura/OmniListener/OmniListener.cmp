@@ -1,0 +1,16 @@
+<aura:component implements="flexipage:availableForAllPageTypes,lightning:isUrlAddressable" controller="OmniListener" access="global" >
+    <aura:attribute name="name" type="String" description="The person that will be greeted" />
+    <aura:attribute name="omniNotificationWindow" type="Object" description="Popup window object" />
+    <aura:attribute name="omniNotificationaudio" type="Object" description="Popup audio object" />
+    <aura:attribute name="omniNotificationList" type="list" description="omniNotificationList" />
+    <aura:attribute name="omniAudioList" type="list" description="omniAudioList" />
+    <aura:attribute name="workItemList" type="list" description="workItemList" />
+    <aura:attribute name="assignedWorkItemList" type="list" description="assignedWorkItemList" />
+    <aura:attribute name="showPopup" type="String" description="flag to indicate ECS chat" />
+    <lightning:omniToolkitAPI aura:id="omniToolkit" />  
+    
+    
+    <aura:handler event="lightning:omniChannelWorkAssigned" action="{! c.onWorkAssigned }"/>
+    <aura:handler event="lightning:omniChannelWorkAccepted" action="{! c.onWorkAccepted }"/>
+    <aura:handler event="lightning:omniChannelWorkloadChanged" action="{! c.onWorkloadChanged }"/>
+</aura:component>

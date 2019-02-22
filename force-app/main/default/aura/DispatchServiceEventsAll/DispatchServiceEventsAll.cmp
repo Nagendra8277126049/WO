@@ -1,0 +1,174 @@
+<!--
+*******************************************************************************************************
+Name:       DispatchServiceEventsAll.cmp
+Description:  This Lightning Component that will be the place holder for the dispatch service events
+  - Story 5201685 
+*******************************************************************************************************
+Date         Version    Author             Summary of Changes 
+*******************************************************************************************************
+07/06/2018     1.0     Rodrigo Carpio      Initial Release
+*******************************************************************************************************
+-->
+<aura:component implements="lightning:isUrlAddressable" controller="DispatchDefaultDetailsController">
+	<!-- Label -->
+    <aura:attribute name="Label_SERVICEPROVIDER" type="String" default="DSP CODE" />
+    <aura:attribute name="Label_REFERENCENUMBER" type="String" default="DSP REF#" />
+    <aura:attribute name="Label_SERVICEEVENT" type="String" default="SERVICE" />
+    <aura:attribute name="Label_REJECTREASON" type="String" default="REJECT REASON" />
+    <aura:attribute name="Label_EVENTDATE" type="String" default="DATE" />
+    <!-- Added new fields as part of req# 5201685-->
+    <aura:attribute name="Label_EVENTSOURCE" type="String" default="EVENT SOURCE" />
+    <aura:attribute name="Label_ENGINEERID" type="String" default="ENGINEER ID" />
+    <aura:attribute name="Label_DSPOFFICEID" type="String" default="DSP OFFICE ID" />
+    <aura:attribute name="Label_DSPCODE" type="String" default="DSP CODE" />
+    <aura:attribute name="Label_DSPDETAILS" type="String" default="DSP DETAILS" />
+    <aura:attribute name="Label_REPLYCODE" type="String" default="REPLY CODE" />
+    <aura:attribute name="Label_REPLYCODEDESCRIPTION" type="String" default="REPLY CODE DESCRIPTION" />
+    <aura:attribute name="Label_CREATEDATETIME" type="String" default="CREATED DATE TIME" />
+    <aura:attribute name="Label_VENDORTRANSACTIONDATE" type="String" default="VENDOR TRANSACTION DATE TIME" />
+    <aura:attribute name="Label_EVENTCODE" type="String" default="EVENT CODE" />
+    <aura:attribute name="workOrderId" type="string" default="{!v.pageReference.state.workOrderId}"/> 
+    <aura:attribute name="ServiceEvents" type="List"/>
+    
+    <lightning:workspaceAPI aura:id="detailWorkspace" />
+
+    <!-- Handler -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler event="force:refreshView" action="{!c.doInit}" />
+    
+	    <article class="slds-card slds-card_boundary">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-contact">
+                        <lightning:icon iconName="standard:work_order_item" size="small" alternativeText="Service Events" />
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <a href="javascript:void(0);" class="slds-card__header-link slds-truncate">
+                            <span class="slds-text-heading_small">Service Events ({!v.ServiceEvents.length})</span>
+                        </a>
+                    </h2>
+                </div>
+            </header>
+        </div>
+        <aura:if isTrue="{! !empty(v.ServiceEvents)}">
+            <div class="slds-card__body slds-card__body_inner">
+                <div class="slds-scrollable" style="width:100%;">
+                    <table class="slds-table slds-table--bordered slds-table--cell-buffer slds-no-row-hover">
+                        <thead>
+                            <tr class="slds-text-heading--label">
+                                <th scope="col">
+                                    <div class="slds-truncate">{#v.Label_ENGINEERID}</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate">{#v.Label_REFERENCENUMBER}</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate">{#v.Label_SERVICEEVENT}</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate">{#v.Label_REJECTREASON}</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate">{#v.Label_EVENTDATE}</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate">{#v.Label_EVENTSOURCE}</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate">{#v.Label_DSPOFFICEID}</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate">{#v.Label_SERVICEPROVIDER}</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate">{#v.Label_DSPDETAILS}</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate">{#v.Label_REPLYCODE}</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate">{#v.Label_REPLYCODEDESCRIPTION}</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate">{#v.Label_CREATEDATETIME}</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate">{#v.Label_VENDORTRANSACTIONDATE}</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate">{#v.Label_EVENTCODE}</div>
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <aura:iteration items="{!v.ServiceEvents}" var="serviceEventItem" indexVar="idx">
+                                <!--
+                                <aura:if isTrue="{!lessthan(idx,3)}">
+                                -->
+                                <tr>
+                                    <td>
+                                        <div class="slds-truncate" title="{!serviceEventItem.ISP_Engineer_Id__c}">{!serviceEventItem.ISP_Engineer_Id__c}</div>
+                                    </td>
+                                    <td>
+                                        <div class="slds-truncate" title="{!serviceEventItem.DSP_Reference__c}">{!serviceEventItem.DSP_Reference__c}</div>
+                                    </td>
+                                    <td>
+                                        <div class="slds-truncate" title="{!serviceEventItem.Service_Event__c}">{!serviceEventItem.Service_Event__c}</div>
+                                    </td>
+                                    <td>
+                                        <div class="slds-truncate" title="{!serviceEventItem.Reject_Reason__c}">{!serviceEventItem.Reject_Reason__c}</div>
+                                    </td>
+                                    <td>
+                                        <div class="slds-truncate" title="{!serviceEventItem.Event_DateTime__c}">{!serviceEventItem.Event_DateTime__c}</div>
+                                    </td>
+                                    <td>
+                                        <div class="slds-truncate" title="{!serviceEventItem.Event_Source__c}">{!serviceEventItem.Event_Source__c}</div>
+                                    </td>
+                                    <td>
+                                        <div class="slds-truncate" title="{!serviceEventItem.DSP_Office_Id__c}">{!serviceEventItem.DSP_Office_Id__c}</div>
+                                    </td>
+                                    <td>
+                                        <div class="slds-truncate" title="{!serviceEventItem.DSP_Code__c}">{!serviceEventItem.DSP_Code__c}</div>
+                                    </td>
+                                    <td>
+                                        <div class="slds-truncate" title="{!serviceEventItem.DSP_Details__c}">{!serviceEventItem.DSP_Details__c}</div>
+                                    </td>
+                                    <td>
+                                        <div class="slds-truncate" title="{!serviceEventItem.Reply_Code__c}">{!serviceEventItem.Reply_Code__c}</div>
+                                    </td>
+                                    <td>
+                                        <div class="slds-truncate" title="{!serviceEventItem.Reply_Code_Description__c}">{!serviceEventItem.Reply_Code_Description__c}</div>
+                                    </td>
+                                    <td>
+                                        <div class="slds-truncate" title="{!serviceEventItem.CreatedDate}">{!serviceEventItem.CreatedDate}</div>
+                                    </td>
+                                    <td>
+                                        <div class="slds-truncate" title="{!serviceEventItem.Vendor_Transaction_DateTime__c}">{!serviceEventItem.Vendor_Transaction_DateTime__c}</div>
+                                    </td>
+                                    <td>
+                                        <div class="slds-truncate" title="{!serviceEventItem.Event_Code__c}">{!serviceEventItem.Event_Code__c}</div>
+                                    </td>
+
+                                </tr>
+                                <!--
+                                </aura:if>
+                                -->
+                                        <!--
+                                <aura:if isTrue="{!idx == 3}">
+                                    <tr>
+                                    <td colspan="5"><div class="slds-truncate slds-text-align_center slds-text-link" title="View All" onclick="{!c.viewAll}">View All</div></td>			          		
+                                </tr>
+                                </aura:if>
+                                -->
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </aura:if>
+    </article>
+</aura:component>

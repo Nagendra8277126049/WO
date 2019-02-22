@@ -1,0 +1,147 @@
+<aura:component controller="UserDetailsController" implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction,force:appHostable" access="global">
+    <aura:attribute name="ShowUserTable" type="boolean" default="true" description="Flag to Show/Hide Queue List in a Table"/>
+    <aura:attribute name="ShowSearchUserTable" type="boolean" default="false" description="Flag to Show/Hide User List in a Table"/>
+    <aura:attribute name="UserResult" type="List" description="List to store User details returned from Server"/>
+    <aura:attribute name="SearchUserResult" type="List" description="List to store User details returned from Server"/>
+    <aura:attribute name="SearchUserKeyword" type="String" description="Keyword from User search box"/>
+    <aura:attribute name="selectedLookUpRecords" type="sObject[]" default="[]" description="Keyword from User search box"/>
+    <aura:attribute name="isOpen" type="boolean" default="false" description="Used to display/hide View Queue button modal"/>
+    <aura:attribute name="ListOfUser" type="List" description="Contains the list of users from the query result"/>
+    <aura:attribute name="LstOfQueue" type="String" description="Contains the list of users from the query result"/>
+    <aura:attribute name="RecordId" type="String" access="global" />
+    <aura:attribute name="QueueName" type="String" default="Users" access="global" />
+    <aura:attribute name="Message" type="boolean" default="false" description="Used to display No record found message"/>
+    <aura:attribute name="TabName" type="String" default="User Assignments" description="String to save the tab name"/>
+    <aura:attribute name="Role" type="String" access="global" />
+    <aura:attribute name="arrowDirection" type="string" default="arrowup" description="Use for change arrow sign direction on header based on click"/>
+    <aura:attribute name="isAsc" type="boolean" default="true" description="boolean flag for pass sorting condition to apex class"/> 
+    <aura:attribute name="isSort" type="boolean" default="false" description="String to pass sorting condition to apex class"/> 
+    <aura:attribute name="selectedTabsoft" type="string" default="Manager" description="Use for show/hide arraow sign on header based on conditions"/>
+    <lightning:navigation aura:id="navService"/>
+    <lightning:workspaceAPI aura:id="workspace"/>
+    <!--HANDLER -->
+    <aura:handler name="init" value="{!this}" action="{!c.doinit}"/>
+    <!-- SHOW LOADING SPINNER--> 
+    <lightning:spinner variant="brand" size="large" aura:id="Id_spinner" class="slds-hide" />
+    <!--LIGHTNING CARD -->
+    <div  style="margin-top: -12px;margin-right: -12px;margin-left:-12px;">
+        <lightning:card class="card" title="User Assignments" iconName="standard:user">
+            <lightning:layout class="slds-grid_align-end slds-is-relative">
+                <lightning:layoutItem flexibility="auto" size="3" padding="around-small">
+                    <div aura:id="searchRes" class="slds-form-element slds-lookup slds-is-close" style="width: 96%;margin-top:-29px;margin-bottom:15px">
+                        <div aura:id="lookupField" class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right"  style="width: 100%;">                        
+                            <ui:inputText 
+                                          updateOn="keyup"
+                                          keyup="{!c.SearchUser}"
+                                          class="slds-lookup__search-input slds-input inputSize"
+                                          value="{!v.SearchUserKeyword}"
+                                          placeholder="Search by Name or Badge Id.."/>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </lightning:card>
+    </div>
+    <!-- ERROR MESSAGE IF NOT RECORDS FOUND--> 
+    <aura:if isTrue="{!v.Message}">
+        <div class="slds-notify_container slds-is-relative">
+            <div class="slds-notify slds-notify_toast slds-theme_error" role="alert">
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small">No Records Found...</h2>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+    <!-- TABLE CONTENT FORALL USER--> 
+    <aura:if isTrue="{!v.ShowUserTable}">
+        <div class="slds" style="margin-right: -12px;margin-left:-12px;">
+            <div class="slds-table--header-fixed_container" style="height:1000px;">
+                <div class="slds-scrollable_y" style="height:100%;">
+                    <table aria-multiselectable="true" class=" slds-table slds-table_bordered slds-table--header-fixed slds-table_resizable-cols" >
+                        <thead>
+                            <tr class="slds-text-title_caps" >
+                                <th scope="col" ><div class="slds-truncate slds-cell-fixed" style="height: 10px;padding-left: 9px;padding-top: 10px;" title="Sr.No"></div></th>
+                                <th scope="col" ><div class="slds-truncate slds-cell-fixed" style="height: 10px;padding-left: 9px;padding-top: 10px;" title="User Name">Name</div></th>
+                                <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 1000px;padding-left: 10px;padding-top: 10px;" title="FederationIdentifier">BadgeId</div></th>
+                                <th  aria-label="Manager"  aria-sort="Other" class=" slds-is-resizable slds-is-sortable slds-text-title--caps" scope="col" onclick="{!c.sortManager}">
+                                    <a  class=" slds-text-link_reset" href="javascript:void(0);">
+                                        <div class=" slds-th__action slds-truncate slds-cell-fixed"  style="width: 150px;padding-left: 10px;padding-top: 10px;" title="Manager">Manager
+                                            <aura:if isTrue="{! and(v.arrowDirection == 'arrowdown', v.selectedTabsoft == 'Manager') }"> 
+                                                <lightning:icon  size="x-small" iconName="utility:arrowdown" class="slds-icon slds-icon-text-default slds-is-sortable__icon " aria-hidden="true"/>
+                                            </aura:if>  
+                                            <aura:if isTrue="{! and(v.arrowDirection != 'arrowdown', v.selectedTabsoft == 'Manager') }"> 
+                                                <lightning:icon size="x-small" iconName="utility:arrowup" class="slds-icon slds-icon-text-default slds-is-sortable__icon " aria-hidden="true"/>
+                                            </aura:if>  
+                                        </div>
+                                    </a>
+                                </th>
+                                <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 400px;padding-top: 10px;padding-left: 10px;" title="Role">Role</div></th>
+                                <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 250px;padding-top: 10px;padding-left: 10px;" title="Profile">Profile</div></th>
+                                <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 200px;padding-top: 10px;" title="User CreatedDate">Created Date</div></th>
+                            </tr>
+                        </thead>
+                        <tbody align="right"> 
+                            <aura:iteration items="{!v.UserResult}" var="usr" indexVar="count">    
+                                <tr>
+                                    <td scope="row" style="width: 5px;padding-left: 10px;"><div class="slds-truncate">{!count + 1}</div></td>
+                                    <td scope="row" style="width: 260px;"><a href="#"><ui:outputText click="{!c.openuserqueue}" value="{!usr.Username}" class="{!usr.UserId}"/></a></td>
+                                    <td scope="row" style="width: 200px;" ><div class="slds-truncate" title="{!usr.FederationIdentifier}">{!usr.FederationIdentifier}</div></td>
+                                    <td scope="row" style="width: 200px;" ><div class="slds-truncate" title="{!usr.Manager}">{!usr.Manager}</div></td>
+                                    <td scope="row" style="width: 368px;"><div class="slds-truncate"  title="{!usr.Role}">{!usr.Role}</div></td>
+                                    <td scope="row" style="width: 250px;"><div class="slds-truncate" title="{!usr.Profile}">{!usr.Profile}</div></td>
+                                    <td scope="row" style="width: 201px;"><div class="slds-truncate" title="{!usr.CreatedDate}">{!usr.UserCreatedDate}</div></td>
+                                </tr>
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+    <!-- DISPLAY SEARCHED USER FROM THE LIST -->
+    <aura:if isTrue="{!v.ShowSearchUserTable}"> 
+        <div class="slds" style="margin-right: -12px;margin-left:-12px;">
+            <div class="slds-table--header-fixed_container" style="height:1000px;">
+                <div class="slds-scrollable_y" style="height:100%;">
+                    <table class="slds-table slds-table_bordered slds-table--header-fixed"> 
+                        <thead>
+                            <tr class="slds-text-title_caps" >
+                                <th scope="col" ><div class="slds-truncate slds-cell-fixed" style="height: 10px;padding-left: 9px;padding-top: 10px;" title="S.No"></div></th>
+                                <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 350px;padding-top: 10px;padding-left: 10px;" title="User Name">Name</div></th>
+                                <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 350px;padding-top: 10px;padding-left: 10px;" title="FederationIdentifier">BadgeId</div></th>
+                                     <th  aria-label="Manager"  aria-sort="Other" class=" slds-is-resizable slds-is-sortable slds-text-title--caps" scope="col" onclick="{!c.sortManager}">
+                                          <a  class=" slds-text-link_reset" href="javascript:void(0);">
+                                    <div class=" slds-th__action slds-truncate slds-cell-fixed" style="width: 240px;padding-top: 10px;padding-left: 10px;" title="Manager">Manager
+                                    <aura:if isTrue="{! and(v.arrowDirection == 'arrowdown', v.selectedTabsoft == 'Manager') }"> 
+                                                <lightning:icon  size="x-small" iconName="utility:arrowdown" class="slds-icon slds-icon-text-default slds-is-sortable__icon " aria-hidden="true"/>
+                                            </aura:if>  
+                                            <aura:if isTrue="{! and(v.arrowDirection != 'arrowdown', v.selectedTabsoft == 'Manager') }"> 
+                                                <lightning:icon size="x-small" iconName="utility:arrowup" class="slds-icon slds-icon-text-default slds-is-sortable__icon " aria-hidden="true"/>
+                                            </aura:if>    
+                                    </div>
+                                         </a> 
+                                         </th>
+                                <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 350px;padding-top: 10px;padding-left: 10px;" title="Role">Role</div></th>
+                                <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 250px;padding-top: 10px;padding-left: 10px;" title="Profile">Profile</div></th>
+                                <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 300px;padding-top: 10px;padding-left: 10px;margin-left:-19px" title="User CreatedDate">Created Date</div></th>
+                            </tr>
+                        </thead>
+                        <tbody> 
+                            <aura:iteration items="{!v.SearchUserResult}" var="usr" indexVar="count">    
+                                <tr> 
+                                    <td scope="row" style="width: 5px;padding-left: 10px;"><div class="slds-truncate">{!count + 1}</div></td>
+                                    <td scope="row" style="width: 360px;"><a href="#"><ui:outputText click="{!c.openuserqueue}" value="{!usr.Username}" class="{!usr.UserId}"/></a></td>
+                                    <td scope="row" style="width: 400px;"><div class="slds-truncate" title="{!usr.FederationIdentifier}">{!usr.FederationIdentifier}</div></td>
+                                    <td scope="row" style="width: 400px;"><div class="slds-truncate" title="{!usr.Manager}">{!usr.Manager}</div></td>
+                                    <td scope="row" style="width: 200px;"><div class="slds-truncate" title="{!usr.Role}">{!usr.Role}</div></td>
+                                    <td scope="row" style="width: 250px;"><div class="slds-truncate" title="{!usr.Profile}">{!usr.Profile}</div></td>
+                                    <td scope="row" style="width: 100px;"><div class="slds-truncate"  title="{!usr.CreatedDate}">{!usr.UserCreatedDate}</div></td>
+                                </tr>
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+</aura:component>

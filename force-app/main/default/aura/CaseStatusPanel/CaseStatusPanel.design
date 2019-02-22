@@ -1,0 +1,8 @@
+<design:component label="Case Status Panel">
+    <sfdc:objects>
+        <sfdc:object>Case</sfdc:object>
+    </sfdc:objects>
+    <design:attribute name="SubmitReviewMessage" label="Submit Review Message"/>
+    <design:attribute name="SubmitButtonLabel" label="Submit Button Label"/>
+    <design:attribute name="CancelButtonLabel" label="Cancel Button Label"/>
+</design:component>

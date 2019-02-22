@@ -1,0 +1,118 @@
+<apex:component ><div id="search" class="CoveoBox" data-design="new" data-excerpt-length="275" data-use-local-storage-for-box-state="false" data-enable-box-state-history="false">
+        <div class="CoveoAnalytics" data-search-hub="DellAgentBox"></div>
+        <div class="coveo-box-query-section">
+            <div class="CoveoBoxQuerySome" data-include="Subject, Product__c, Description, Resolution_Summary__c" data-best="5" data-match="3" data-use-some-q-r-e="false"></div>
+        </div>
+
+        <div class="CoveoBoxHeader" data-open-sub-section-by-default="false" data-allow-non-contextual-search="true" data-enable-omnibox="true">
+            <div class="CoveoShareQuery"></div>
+            <div class="CoveoPreferencesPanel">
+                <div class="CoveoResultsPreferences"></div>
+                <div class="CoveoResultsFiltersPreferences"></div>
+            </div>
+            <div class="coveo-box-popups-section">
+                <div class="coveo-tab-section coveo-inline-tab-section">
+                    <div class="CoveoBoxPopup">
+                        <div class="CoveoBoxCurrentTab"></div>
+                        <div class="coveo-tab-section coveo-stacked-tab-section">
+<div class="CoveoTab" data-id="All" data-caption="Search Results" data-expression="(@syssource==(&quot;Dell - Inquira&quot;, &quot;Dell - Support Videos&quot;, &quot;Dell Drivers&quot;, &quot;Dell Legacy esupport content&quot;, &quot;Dell Legacy eSupport Flat Content&quot;, &quot;Dell Manuals&quot;, &quot;Dell Product catalog&quot;, &quot;Dell Product catalog us&quot;, &quot;EMC Documentation&quot;, &quot;EMC Documentation Files&quot;, &quot;EMC Downloads&quot;, &quot;EMC Forums&quot;, &quot;EMC Knowledgebase&quot;, &quot;EMC Support Tools&quot;, &quot;VMWare Public KB&quot;) OR (@syssource==&quot;Dell - SFDC Cases&quot; @sfcasestatus==Closed @sfcreateddate &gt; now-90d))"></div>
+<a class="CoveoAttachedResultsTab" data-id="AttachedResults" data-caption="Linked Articles"></a></div>
+                    </div>
+                    <div class="CoveoCustomFacetPopup" data-title="Facets">
+                        <div class="coveo-box-facet-column">
+<div class="CoveoFacet" data-title="Source" data-field="@source"></div>
+<div class="CoveoFacet" data-title="Answerflow" data-field="@objecttype" data-additional-filter="@objecttype==ANSWERFLOW"></div>
+<div class="CoveoFacet" data-title="Language" data-field="@language"></div></div>
+                    </div>
+                    <div class="CoveoBoxPopup" data-hidden="true">
+                        <div class="CoveoBoxCurrentSort"></div>
+                        <div class="coveo-sort-section">
+                            <span class="CoveoSort" data-sort-criteria="relevancy" data-caption="Relevance"></span>
+                            <span class="CoveoSort" data-sort-criteria="date descending,date ascending" data-caption="Date"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="coveo-box-settings">
+
+                    <a class="CoveoBoxEditLink" target="_top" data-text="Edit"></a>
+                </div>
+                <div class="CoveoBoxQuerySummary"></div>
+            </div>
+        </div>
+
+        <div class="CoveoTriggers"></div>
+        <div class="CoveoBreadcrumb"></div>
+        <div class="CoveoDidYouMean"></div>
+        <div class="CoveoErrorReport"></div>
+        <div class="CoveoBoxBody" data-auto-select-fields-to-include="false"> 
+
+            <script id="Default" class="result-template" type="text/x-underscore-template">
+                <div class="coveo-result-frame">
+                    <div class="coveo-result-row" style="margin-bottom:7px;">
+                        <div class="coveo-result-cell" style="vertical-align:top;width:32px;">
+                           <span class="CoveoIcon" data-small="true"></span>
+                        </div>
+                        <div class="coveo-result-cell" style="vertical-align:middle;font-size:14px;padding-left:10px;">
+<div class="coveo-result-row" style="font-size:15px;margin:0;">
+                            </div>
+                            {{ if(raw.sfcaseid) { }}
+                            <a class="CoveoSalesforceResultLink" data-open-in-primary-tab="false" data-open-in-sub-tab="false" data-always-open-in-new-window="false" data-open-quickview="true"></a>
+                            {{ } else if(raw.source != 'Dell - Siebel Cases') { }}
+                            <a class="CoveoSalesforceResultLink" data-open-in-primary-tab="false" data-open-in-sub-tab="false" data-always-open-in-new-window="true"></a>
+                            {{ } else { }}
+                            <a class="CoveoSalesforceResultLink siebel-case" data-open-in-primary-tab="false" data-open-in-sub-tab="false" style="cursor: text; text-decoration: none;"></a>
+                            {{ } }}
+                            </div>
+                        <div class="coveo-result-cell" style="width:30px;vertical-align:top;text-align:right">
+                            <span class="CoveoAttachToCase" data-display-text="false"></span>
+                        </div>
+                        {{ if(raw.source != 'Dell - Siebel Cases') { }}
+                        <div class="coveo-result-cell" style="width:30px;vertical-align:top;text-align:right">
+                            <div class="CoveoBoxResultAction">
+                                <div class="CoveoBoxQuickview"></div>
+                            </div>
+                        </div>
+                        {{ } }}
+                    </div>
+                    {{ if(raw.source != 'VMWare Public KB') { }}
+                    <div class="coveo-result-row">
+                        <div class="coveo-result-cell" style="">
+                            <span class="CoveoExcerpt"></span>
+                        </div>
+                    </div>
+                    {{ } }}
+                    <div class="coveo-result-row">
+                        <div class="coveo-result-cell">
+                            {{ if(raw.objecttype == 'ANSWERFLOW') { }}
+                            <span class="coveo-field-caption" style="color: red; font-weight: bold;">ANSWERFLOW</span>
+                            {{ } else { }}
+                            <div class="CoveoFieldValue" data-field="@okbvisibility" style="font-weight: bold;"></div>
+                            {{ } }}
+                        </div>
+                    </div>
+                    <div class="coveo-result-row">
+                    <div class="coveo-result-row">
+                        <div class="coveo-result-cell">
+                            <div class="CoveoFieldValue" data-text-caption="Source:" data-field="@syssource" data-facet="null"></div>
+                        </div>
+                    </div>
+                    <div class="coveo-result-row">
+                        <div class="coveo-result-cell">
+                            <div class="CoveoFieldValue" data-split-values="true" data-text-caption="Product:" data-field="@commonproduct"></div>
+                        </div>
+                    </div>
+                    {{ if(raw.sfcasenumber) { }}
+                    <div class="coveo-result-row">
+                        <div class="coveo-result-cell">
+                            <div class="CoveoFieldValue" data-text-caption="Case number:" data-field="@sfcasenumber" data-facet="null"></div>
+                        </div>
+                    </div>
+                    {{ } }}
+                </div>
+            </script>
+
+        </div>
+    <div class="CoveoBoxRelatedContext"></div>
+</div>
+</apex:component>

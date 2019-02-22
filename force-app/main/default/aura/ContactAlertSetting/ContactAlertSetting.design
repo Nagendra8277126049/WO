@@ -1,0 +1,6 @@
+<design:component label="Tracking Notification-ContactAlertSetting">
+	<design:attribute name="ComponentLabel" label="Tracking Notification - Heading"/>
+    <sfdc:objects >
+        <sfdc:object >WorkOrder</sfdc:object>
+    </sfdc:objects>
+</design:component>

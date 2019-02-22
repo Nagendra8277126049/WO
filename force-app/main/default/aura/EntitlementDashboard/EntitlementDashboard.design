@@ -1,0 +1,8 @@
+<design:component >
+    <sfdc:objects >
+        <sfdc:object >Case</sfdc:object>
+        <sfdc:object >Asset</sfdc:object>
+        <sfdc:object >LiveChatTranscript</sfdc:object>
+        <sfdc:object >Call_Transcript__c</sfdc:object>
+    </sfdc:objects>
+</design:component>

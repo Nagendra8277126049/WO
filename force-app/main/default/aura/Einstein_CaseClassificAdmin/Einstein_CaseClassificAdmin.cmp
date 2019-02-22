@@ -1,0 +1,95 @@
+<aura:component controller="Einstein_CaseClassificAdminController"  implements="flexipage:availableForAllPageTypes" access="global" >
+    <aura:attribute name="EinsteinApiToken" type="String"></aura:attribute>
+    <aura:attribute name="datasets" type="Einstein_Dataset[]"></aura:attribute>
+    <aura:attribute name="datasetModels" type="Einstein_Model[]"></aura:attribute>
+    <aura:attribute name="adminSettings" type="Einstein_CaseClassificAdminSettings"></aura:attribute>
+    <aura:attribute name="usage" type="object[]"/> <!-- -->
+    
+    <aura:attribute name="selectionModels" type="List" />
+    <aura:attribute name="datasetId" type="Long"  />
+    <aura:attribute name="modelId" type="String"  />  
+    <aura:attribute name="ModelUpdateMessage" type="String"  /> 
+    <aura:attribute name="refreshModelMetricsMessage" type="String"  /> 
+    
+    <aura:registerEvent name="waitingEvent" type="c:EventEinsteinWaiting" />
+    <aura:registerEvent name="modelEvent" type="c:EventEinsteinModels" />
+    <aura:registerEvent name="databaseEvent" type="c:EventEinsteinDataset" />
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    
+    <c:LightningErrorHandler aura:id="leh"/>
+    
+    <lightning:card title="Prediction Usage">
+        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_fixed-layout">
+            <thead>
+                <tr class="slds-text-title_caps">
+                    <th scope="col">
+                        <div class="slds-truncate" title="Start">Start</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="End">End</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Used">Used</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Remaining">Remaining</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <aura:iteration items="{!v.usage}" var="usage">
+                    <tr>
+                        <td> <ui:outputDateTime value="{!usage.startsAt}" format="M/d/yyyy ha"/> </td>
+                        <td> <ui:outputDateTime value="{!usage.endsAt}" format="M/d/yyyy ha"/> </td>
+                        <td> {!usage.predictionsUsed}/{!usage.predictionsMax} </td>
+                        <td> {!usage.predictionsRemaining} </td>
+                    </tr>
+                </aura:iteration>
+            </tbody>
+        </table>
+        <aura:set attribute="footer">
+            <ul class="slds-list_horizontal slds-has-dividers_right slds-has-block-links_space">
+                <li class="slds-item">OrgId: {!v.usage[0].organizationId}</li>
+                <li class="slds-item">License: {!v.usage[0].licenseId}</li>
+                <li class="slds-item">Source: {!v.usage[0].planData[0].source}</li>
+                <li class="slds-item">Plan: {!v.usage[0].planData[0].plan}</li>
+                <li class="slds-item">Amount: {!v.usage[0].planData[0].amount}</li>
+            </ul> 
+        </aura:set>
+        
+    </lightning:card>
+    
+    <lightning:card title="Prediction Case Classification Admin Settings">
+            <ul class="slds-list_horizontal slds-has-dividers_right slds-has-block-links_space">
+                <li class="slds-item">ModelID: {!v.adminSettings.CCModel_ID}</li>
+                <li class="slds-item">Last Update: {!v.adminSettings.CCModelLastUpdate}</li>
+                <li class="slds-item">Updated By: {!v.adminSettings.CCModelUpdatedBy}</li>
+            </ul>         
+        <lightning:select aura:id="selectDataset" name="selectDataset" label="Select Dataset for Case Classification" required="false" onchange="{!c.datasetValueChanged}" >
+            <aura:iteration items="{!v.datasets}" var="dataset">
+                <option value="{!dataset.id}" text="{!dataset.name + ' ' + dataset.createdAt }" selected="{!dataset.selected}"></option>
+            </aura:iteration>
+        </lightning:select>
+        <h1>Changing the current model may change the predicted values!</h1>
+        <p>Number of models in dataset: {!v.datasetModels.length}
+        </p>
+        <lightning:select aura:id="selectModel" name="selectModel" label="Select Model for Case Classification" required="false" onchange="{!c.modelValueChanged}">
+            <aura:iteration items="{!v.datasetModels}" var="model">
+                <option value="{!model.modelId}" text="{!model.modelId + ' - ' + model.createdAt }" selected="{!model.selected}"></option>
+            </aura:iteration>
+        </lightning:select>
+        <lightning:button variant="brand" onclick="{!c.onUpdateModelID}">Update Current Case Classification Model</lightning:button>    
+        <p>{!v.ModelUpdateMessage}    
+        </p>        
+        <hr></hr>
+        <h1>Click the 'Refresh Metrics' button to update Einstein Analytics dataset with metrics from current model</h1>
+        <lightning:button variant="brand" onclick="{!c.OnRefreshModelMetrics}">Refresh Metrics</lightning:button>    
+        <p>{!v.refreshModelMetricsMessage} </p>
+        <hr></hr>
+        <lightning:button variant="brand" onclick="{!c.getToken}">Get Current Token</lightning:button>    
+        <p>Token: <br></br>
+            {!v.EinsteinApiToken}
+        </p>
+        <br></br>
+    </lightning:card>
+</aura:component>

@@ -1,0 +1,28 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" controller="EncryptKey" >
+    <aura:attribute name="privateKey" type="string" />
+    <aura:attribute name="cryptoKey" type="string" />
+    <aura:attribute name="encryptedKey" type="string" />
+    
+    
+   
+   <lightning:card iconName="standard:user" title="Encrypt Your Private Key"> 
+   		<lightning:input aura:id="privateKeyInput" type="text" value="{!v.privateKey}" label="Enter a Private Key"/>
+        <lightning:input aura:id="privatekeyEncrypted" type="text" value="{!v.encryptedKey}" disabled="true" label="Encrypted Key"/>
+        <lightning:input aura:id="cryptKey" type="text" value="{!v.cryptoKey}" disabled="true" label="Crypto Key"/>
+                    
+       
+   
+       <lightning:button label="Encrypt" 
+                                  class="slds-m-top--medium"
+                                  variant="brand"
+                                  onclick="{!c.encryptKey}"/>
+       <lightning:spinner aura:id="spinner" variant="brand" size="large" class="slds-hide"/>
+   </lightning:card>    
+    <lightning:layout horizontalAlign="center" class="slds-m-top_large">
+                <!--<lightning:button variant="neutral" label="Cancel" title="Cancel" type="text" onclick="{!c.handleCancel}"/>-->
+                <lightning:button variant="brand" label="Submit" title="Submit" type="submit" />
+        
+        
+    </lightning:layout>
+    
+</aura:component>

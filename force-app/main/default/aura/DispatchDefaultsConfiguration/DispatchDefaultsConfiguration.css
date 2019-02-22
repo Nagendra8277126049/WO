@@ -1,0 +1,7 @@
+.THIS .slds-spinner_container {  
+  z-index: 100;
+  position: fixed;   
+}
+.THIS .slds-button_icon-bare {
+    color: rgb(239, 238, 236);
+}

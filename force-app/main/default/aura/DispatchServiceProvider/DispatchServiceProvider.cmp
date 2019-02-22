@@ -1,0 +1,259 @@
+<!--
+   *******************************************************************************************************
+   Name:       DispatchServiceProvider.cmp
+   Description:  This Lightning Component will show Service Provider details and Scheduling 
+          & Entitlments Start & End Date 
+   *******************************************************************************************************
+   Date         Version    Author             Summary of Changes 
+   *******************************************************************************************************
+   05/14/2018     1.0     Harsha Reddy      Initial Release
+   09/24/2018     1.1     Harsha Reddy      Added Logic for Rescheduling - STORY 5587160
+   12/21/2018     1.2     Harsha Reddy 		STORY 5910457
+   *******************************************************************************************************
+-->
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,force:hasSObjectName" controller="DispatchGccConfiguration">
+    <aura:attribute name="ComponentLabel" type="String" default=""/>
+    <aura:attribute name="DSPFieldLabel" type="String" default=""/>
+    <aura:attribute name="ScheduleStartDateFieldLabel" type="String" default="" />
+    <aura:attribute name="ScheduleEndDateFieldLabel" type="String" default=""/>
+    <aura:attribute name="TimezoneFieldLabel" type="String" default=""/>
+    <aura:attribute name="EntitlementStartDateFieldLabel" type="String" default=""/>
+    <aura:attribute name="EntitlementEndDateFieldLabel" type="String" default=""/>
+    <aura:attribute name="IsDefferedFieldLabel" type="String" default=""/>
+    <aura:attribute name="record" type="Object" />
+    <aura:attribute name="WorkOrderRecord" type="Object" />
+    <aura:attribute name="recordError" type="String" default=""/>
+    <aura:attribute name="EntitlementEndDateValue" type="String" default=""/>
+    <aura:attribute name="EntitlementStartDateValue" type="String" default=""/>
+    <aura:attribute name="ScheduleEndDateValue" type="String" default=""/>
+    <aura:attribute name="ScheduleStartDateValue" type="String" default=""/>
+    <aura:attribute name="openEditView" type="boolean" default="false"/>
+    <aura:attribute name="reScheduleEnableFlag" type="boolean" default="false"/>
+    
+    <!--will be used to enable Spinner -->
+    <aura:attribute name="IsSpinner" type="boolean" default="false"/>
+    <!--will be used to enable DSP edit button for the GCC User -->
+    <aura:attribute name="enableDSP" type="boolean" default="false"/>
+    <!--will be used to enable DSP edit values for the GCC User -->
+    <aura:attribute name="editDSP" type="boolean" default="false"/>
+    <!--will be used to display DSP List for the GCC User -->
+    <aura:attribute name="dspOptions" type="List" default="[]" />
+    <aura:attribute name="errorMessage" type="String" default=""/>
+    <aura:attribute name="DSPValue" type="String" default=""/>
+    
+	<!--Registering GCCUSER Event to make the page editable whenever required-->
+    <aura:registerEvent name="GCCUserEvent" type="c:DisPatchGCCUserCheckEvent"/>
+    
+    <aura:handler name="openReadFormEvent" event="c:DispatchServiceProviderEditClose" action="{!c.closeEditForm}" />
+    <force:recordData 
+                      aura:id="record" 
+                      fields="DSP__c,Status,DSPName__c,ScheduleStartDate__c,schedulingInternalLogic__c,Deferred__c,
+                              EntitlementStartDate__c,ScheduleEndDate__c,EntitlementEndDate__c,Timezone__c,
+                              StartDate,EndDate,Service_Option__c,Sub_Status__c,CountryCode,Country"
+                      recordId="{!v.recordId}" 
+                      targetError="{!v.recordError}" 
+                      targetRecord="{!v.record}"
+                      targetFields="{!v.WorkOrderRecord}" 
+                      mode="VIEW" 
+                      recordUpdated="{!c.recordUpdated}"
+                      />
+    
+    <aura:if isTrue="{! not(v.openEditView)}">
+        <article class="slds-card">
+            <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container" title="description of icon when needed">
+                            <lightning:icon iconName="standard:work_order" size="small" alternativeText="Service Provider"/>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <h2>
+                            <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title="">
+                                <span class="slds-text-heading_small">{#v.ComponentLabel}</span>
+                            </a>
+                        </h2>
+                    </div>
+                </header>
+            </div>
+            <aura:if isTrue="{!v.IsSpinner}">
+                <lightning:spinner variant="brand" size="Small" />
+            </aura:if>
+            <div class="slds-card__body slds-card__body_inner">
+                
+                <aura:if isTrue="{!(v.editDSP)}">
+                    <div align ="center">
+                        <lightning:button label="Save" onclick="{!c.SaveDSP}" variant="brand" disabled="{!empty(v.DSPValue)}" />
+                        <lightning:button label="Cancel" onclick="{!c.cancelEdit}" />
+                    </div>
+                </aura:if>
+                <!-- Section to display : Error Message -->
+                <aura:if isTrue="{! not(empty(v.errorMessage))}">
+                    <div class="slds-text-color_error slds-p-left_x-small slds-align_absolute-center">
+                        {!v.errorMessage}
+                    </div>
+                </aura:if>
+                <!-- Section Ends: Error Message -->
+                <div class="slds-grid mdp forcePageBlockSectionRow cols-2">
+                    <aura:if isTrue="{! not(v.editDSP)}">
+                        <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView slds-col" role="listitem">
+                            <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                <div class="test-id__field-label-container">
+                                    <span class="test-id__field-label slds-form-element__label">
+                                        {#v.DSPFieldLabel}
+                                    </span>
+                                </div>
+                                <div class="slds-form-element__control slds-grid itemBody">
+                                    <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                        <span class="uiOutputText">
+                                            {!v.WorkOrderRecord.DSPName__c}
+                                        </span>
+                                    </span>
+                                    <aura:if isTrue="{!v.enableDSP}">
+                                        <lightning:buttonIcon aura:id="DSPNameEditBtn" iconName="utility:edit" variant="bare" onclick="{!c.OpenDSPEdit}"  alternativeText="Edit DSP"/>
+                                    </aura:if>
+                                </div>
+                            </div>
+                        </div>
+                    </aura:if>
+                    <aura:if isTrue="{!(v.editDSP)}">
+                        <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element slds-col slds-size_6-of-12">
+                            <lightning:select label="{#v.DSPFieldLabel}" aura:id="serviceTypeId" value="{!v.DSPValue}" class="slds-grow slds-form-element_separator">
+                                <aura:iteration items="{!v.dspOptions}" var="item">
+                                    <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}"/>
+                                </aura:iteration>
+                            </lightning:select>
+                        </div>
+                    </aura:if>
+                    <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView slds-col" role="listitem">
+                        <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                            <div class="test-id__field-label-container">
+                                <span class="test-id__field-label slds-form-element__label">
+                                    {#v.TimezoneFieldLabel}
+                                </span>
+                            </div>
+                            <div class="slds-form-element__control slds-grid itemBody">
+                                <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                    <span class="uiOutputText">
+                                        {!v.WorkOrderRecord.Timezone__c}
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-grid mdp forcePageBlockSectionRow">
+                    <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView" role="listitem">
+                        <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                            <div class="test-id__field-label-container">
+                                <span class="test-id__field-label slds-form-element__label">
+                                    {#v.ScheduleStartDateFieldLabel}
+                                </span>
+                            </div>
+                            <div class="slds-form-element__control slds-grid itemBody">
+                                <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                    <aura:if isTrue="{! and(not(empty(v.WorkOrderRecord.Timezone__c)),not(empty(v.ScheduleStartDateValue)))}">
+                                    	<lightning:formattedDateTime value="{!v.ScheduleStartDateValue}" timeZone="{!v.WorkOrderRecord.Timezone__c}" year="numeric" month="numeric" day="numeric" hour="2-digit" minute="2-digit" hour12="true"/>
+                                    	<aura:set attribute="else">
+                                            <aura:if isTrue="{! and(empty(v.WorkOrderRecord.Timezone__c), not(empty(v.ScheduleStartDateValue)) )}">
+                                                <lightning:formattedDateTime value="{!v.ScheduleStartDateValue}" timeZone="GMT" year="numeric" month="numeric" day="numeric" hour="2-digit" minute="2-digit" hour12="true"/>
+                                            </aura:if>
+                                        </aura:set>
+                                    </aura:if>
+                                </span>
+                                <aura:if isTrue="{!v.reScheduleEnableFlag}">
+                                    <lightning:buttonIcon aura:id="scheduleStartDateEditBtn" iconName="utility:edit" variant="bare" onclick="{!c.openModalWindow}"  alternativeText="Edit Button"/>
+                                </aura:if>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView" role="listitem">
+                        <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                            <div class="test-id__field-label-container">
+                                <span class="test-id__field-label slds-form-element__label">
+                                    {#v.ScheduleEndDateFieldLabel}
+                                </span>
+                            </div>
+                            <div class="slds-form-element__control slds-grid itemBody">
+                                    <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                        <aura:if isTrue="{! and(not(empty(v.WorkOrderRecord.Timezone__c)),not(empty(v.ScheduleEndDateValue)))}">
+                                        	<lightning:formattedDateTime value="{!v.ScheduleEndDateValue}" timeZone="{!v.WorkOrderRecord.Timezone__c}" year="numeric" month="numeric" day="numeric" hour="2-digit" minute="2-digit" hour12="true"/>
+                                        	<aura:set attribute="else">
+                                                <aura:if isTrue="{! and(empty(v.WorkOrderRecord.Timezone__c), not(empty(v.ScheduleEndDateValue)) )}">
+                                                    <lightning:formattedDateTime value="{!v.ScheduleEndDateValue}" timeZone="GMT" year="numeric" month="numeric" day="numeric" hour="2-digit" minute="2-digit" hour12="true"/>
+                                                </aura:if>
+                                            </aura:set>
+                                        </aura:if>
+                                    </span>
+                                <aura:if isTrue="{!v.reScheduleEnableFlag}">
+                                    <lightning:buttonIcon aura:id="scheduleEndDateEditBtn" iconName="utility:edit" variant="bare" onclick="{!c.openModalWindow}"  alternativeText="Edit Button"/>
+                                </aura:if>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-grid mdp forcePageBlockSectionRow">
+                    <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView" role="listitem">
+                        <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                            <div class="test-id__field-label-container">
+                                <span class="test-id__field-label slds-form-element__label">
+                                    {#v.EntitlementStartDateFieldLabel}
+                                </span>
+                            </div>
+                            <div class="slds-form-element__control slds-grid itemBody">
+                                <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                    <aura:if isTrue="{! not(empty(v.EntitlementStartDateValue))}">
+                                    	<lightning:formattedDateTime value="{!v.EntitlementStartDateValue}" timeZone="GMT" year="numeric" month="numeric" day="numeric" hour="2-digit" minute="2-digit" hour12="true"/>
+                                    </aura:if>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView" role="listitem">
+                        <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                            <div class="test-id__field-label-container">
+                                <span class="test-id__field-label slds-form-element__label">
+                                    {#v.EntitlementEndDateFieldLabel}
+                                </span>
+                            </div>
+                            <div class="slds-form-element__control slds-grid itemBody">
+                                <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                    <aura:if isTrue="{! not(empty(v.EntitlementEndDateValue))}">
+                                        <lightning:formattedDateTime value="{!v.EntitlementEndDateValue}" timeZone="GMT" year="numeric" month="numeric" day="numeric" hour="2-digit" minute="2-digit" hour12="true"/>
+                                 	</aura:if>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-grid mdp forcePageBlockSectionRow">
+                    <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView" role="listitem">
+                        <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                            <div class="test-id__field-label-container">
+                                <span class="test-id__field-label slds-form-element__label">
+                                    {#v.IsDefferedFieldLabel}
+                                </span>
+                            </div>
+                            <div class="slds-form-element__control slds-grid itemBody">
+                                <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                    <!--
+                                    <ui:outputCheckbox aura:id="output" value="{! (v.WorkOrderRecord.schedulingInternalLogic__c == 'Deferred') ? true : false}"/>
+									-->
+                                    <ui:outputCheckbox aura:id="output" value="{! ((not(empty(v.WorkOrderRecord.Deferred__c)))?( or((v.WorkOrderRecord.Deferred__c=='Yes'),(v.WorkOrderRecord.Deferred__c=='yes'),(v.WorkOrderRecord.Deferred__c=='YES'))? true : false):false)}"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </aura:if>
+    <!--set component in the varible {!v.body}-->
+    <div aura:id="cmpBody">
+        {!v.body}
+    </div>
+</aura:component>

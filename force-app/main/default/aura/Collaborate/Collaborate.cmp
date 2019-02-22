@@ -1,0 +1,116 @@
+<!--
+*******************************************************************************************************
+Name:       Collaborate.cmp
+Description:  This Lightning Component is for Collaborate Chat.  - Story 5086637 & 5150078  
+*******************************************************************************************************
+Date         Version         Author                 Summary of Changes 
+*******************************************************************************************************
+09/24/2018     1.0          Sunil Surappagari       Initial Release
+
+*******************************************************************************************************
+-->
+
+<aura:component  controller="CollaborateInternalChat" implements="flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" >
+    <!-- aura attributes-->
+    <aura:attribute name="edit" type="Boolean" default="true"/>
+    <aura:attribute name="optionList" type="CollaborateInternalChat.WrapperForOptions[]"  description="to store buttonID and Labels"/>  
+    <aura:attribute name="listControllingValues" type="list" default="[]" description="to store controller field values"/>
+    <aura:attribute name="listDependingValues" type="list"   default="" description="to store dependent field values"/>
+    <aura:attribute name="depnedentFieldMap" type="map" description="map to store dependent values with controlling value"/>
+    <aura:attribute name="bDisabledDependentFld" type="boolean" default="true"/> 
+    <aura:attribute name="objDetail" type="Case" default="{'sobjectType' : 'case'}"/>
+   <aura:attribute name="controllingFieldAPI" type="string" default="Collaborate_Reason__c" description="store field API name of Controller field"/>
+    <aura:attribute name="dependingFieldAPI" type="string" default="Collaborate_Reason__c" description="store field API name of dependent field"/>
+    <aura:attribute name="selectedOption" type="string" default="" description="The value of the selected option"/>
+    
+    
+    <aura:attribute name="currentUser" type="User" />
+    <force:recordData
+                      fields="Name"
+                      recordId="{!$SObjectType.CurrentUser.Id}"
+                      targetFields="{!v.currentUser}"
+                      mode="VIEW"
+                      />
+    <aura:attribute name="case" type="Object"/>
+    <aura:attribute name="simpleCase" type="Object"/>
+    <force:recordData aura:id="caseRecordLoader"
+                      recordId="{!v.recordId}"
+                      fields="CaseNumber, Origin"
+                      targetRecord="{!v.case}"
+                      targetFields="{!v.simpleCase}"
+                      />
+    <!-- aura handler-->
+    <aura:handler name="init" value="this" action="{!c.doInit}"/>
+    
+    <div class="slds-grid">
+        <div class="slds-col slds-size_1-of-3">  
+            <lightning:select aura:id="Rl" name="dependentFld" 
+                              label="Support Team"
+                              required="true">
+                <option value="Centralized Tech Expert">Centralized Tech Expert</option>
+                
+            </lightning:select> 
+        </div>
+        <div class="slds-col slds-size_1-of-3">
+            <span>&nbsp;</span>
+        </div>
+        <div class="slds-col"> 
+            <lightning:select aura:id="RlR" name="controllerFld"
+                              value="{!v.objDetail.Collaborate_Role__c}"
+                              label="Reason"
+                              onchange="{!c.onControllerFieldChange}"  required="true">
+                
+                <aura:iteration items="{!v.listControllingValues}" var="val">
+                    <option value="{!val}">{!val}</option>
+                </aura:iteration>
+            </lightning:select>
+        </div>
+    </div>
+    <div class="slds-col">
+        &nbsp;
+    </div>      
+    <div class="slds-grid">
+        <div class="slds-col slds-size_1-of-3">
+            
+            <lightning:select aura:id="QueueId" onchange="{!c.saveSelectedValue}" name="queue" label="Queue"  required="true" >
+                <option value="">--None--</option>
+                <aura:iteration items="{!v.optionList}" var="item">
+                    <option value="{!item.objB.buttonid__c}" >{!item.objB.Label}  </option>
+                </aura:iteration>
+                
+            </lightning:select></div>
+        <div class="slds-col slds-size_1-of-3">
+            <span>&nbsp;</span>
+        </div>
+        <div class="slds-col">  
+        </div>
+    </div>
+    <div class="slds-col">
+        &nbsp;
+    </div>   
+    <lightning:textarea aura:id="rsn" label="Description" name = "contactReason" />
+    
+    <div class="slds-col"> 
+        &nbsp;
+        &nbsp;
+    </div>
+    
+    <div class="slds-grid slds-grid_align-spread">
+        
+        <div class="slds-col">
+            <p>Customer Status</p>
+            <input  id="custStatus" type="checkbox" label="In chat or on phone" name="red" />&nbsp;In chat or on phone
+            <!--  <ui:inputCheckbox  aura:id="custStatus"  name="red"/>&nbsp;In phone or chat -->    
+        </div>
+        <div class="slds-col">
+            <span>&nbsp;</span>
+        </div> 
+        <div class="slds-col">
+            
+            
+            <lightning:button variant="brand" aura:id="btnText" label="Chat" onclick="{! c.startCollaborateChat }" />
+                 
+        </div>
+    </div>
+    
+</aura:component>

@@ -1,0 +1,26 @@
+<aura:component implements="force:hasRecordId,force:hasSObjectName,flexipage:availableForRecordHome" controller="CustomCoveoAgentPanelController">
+    <aura:attribute name="record" type="Object" access="global"/>
+    <aura:attribute name="userLanguage" type="String" access="global"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+<!--    <aura:registerEvent name="OpenInNewTab" type="c:OpenInNewTab"/> -->
+    
+                <force:recordData aura:id="theRecord" recordId="{!v.recordId}" fields="Id, Subject, Description, Status, Resolution_Summary__c, Product__c, Model__c" targetRecord="{!v.record}" recordUpdated="{!c.handleRecordUpdated}" />
+<!--
+    <aura:method name="openTab" action="{!c.openTab}" > 
+        <aura:attribute name="url" type="String"/> 
+        <aura:attribute name="sfid" type="String" /> 
+    </aura:method>
+-->    
+    <CoveoV2:AgentPanel aura:id="panel"
+                        name="coveoAgentPanel"
+                        recordFields="Case_Subject,Case_Description,Case_Resolution_Summary__c,Case_Product__c,Case_Model__c"
+                        recordId="{!v.recordId}"
+                        openResultsInSubTab="true"
+                        sObjectName="{!v.sObjectName}"
+                        customScripts="{!$Resource.CustomScriptCoveoAgentPanel}">
+        
+    </CoveoV2:AgentPanel>
+    
+    <ltng:require styles="{!$Resource.CustomStyleCoveoAgentPanel}" />
+</aura:component>

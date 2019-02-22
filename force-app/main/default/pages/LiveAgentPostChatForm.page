@@ -1,0 +1,63 @@
+<!--=================================================================================================================
+   |  HISTORY                                                                                                                                           
+   |  DATE             DEVELOPER         WR/DEFECT                    DESCRIPTION                               
+   |  ====             =========         =========                    =========== 
+   |  04th May 2018   Roselin Hephzibah   Lightning                   Initial Release for Story #
+   | =================================================================================================================-->
+<apex:page id="thePage" showHeader="false" language="English" controller="PostChatWindowController" action="{!onPageLoadAction}">
+ <apex:form > 
+    <style>
+        html, body {
+            width:100%;
+            height:100%;
+            margin:0;
+            border:none;
+            padding:0;
+            background:none;
+            overflow:hidden;
+            font-size:90%;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+    </style>         
+    <div>
+        
+      <b>  Please wait as we re-direct you to our Chat Customer Satisfaction Survey. 
+       If you are not automatically redirected within 5 seconds, <a id="urlClick" href="{!surveyURL}"> go directly to the survey.</a>
+        <br/><br/>
+       
+        “Note:  Your browser may require that you temporarily disable pop-up blockers to access the survey site.” </b>
+
+    </div>
+        <br/>
+        <span id="Redirecting" data-itcount="0" style="font-weight:bold; color:#1797c0;"></span>
+        <script>       
+            var _Interval =  setInterval(function(){
+                    var itretionCount =  document.getElementById("Redirecting").dataset.itcount;
+                    console.log(itretionCount);
+                    var DotSpan="";
+                    itretionCount = parseInt(itretionCount) +1;
+                    for(dotcount=1; dotcount<=itretionCount ; dotcount++) {
+                     DotSpan = DotSpan +" .";
+                    }
+                     document.getElementById("Redirecting").innerHTML = "Redirecting "+DotSpan ;
+                     
+                    if(itretionCount >=5) {
+                        clearInterval(_Interval );                  
+                     if({!setStartTime}){
+                            console.log('Inside setstarttime');
+                            //console.log("{!surveyURL}");
+                            console.log("{!JSENCODE(surveyURL)}");
+                            document.getElementById('urlClick').click();
+                            //window.open("{!surveyURL}","survey");                            
+                           }
+                       else{
+                           window.close();
+                           
+                       }
+                    }                              
+                    document.getElementById("Redirecting").setAttribute('data-itcount' , itretionCount);
+            
+            },1000);
+        </script>
+    </apex:form>
+</apex:page>

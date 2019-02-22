@@ -1,0 +1,22 @@
+.THIS .imgSize {
+    margin-left: 1.4rem;
+    width: 20px;
+    height: 20px;
+}
+
+.THIS .slds-gutters .slds-col {
+    padding-right: .75rem;
+    padding-left: 11.75rem;
+}
+
+.THIS .slds-m-left--x-small {
+    margin-left: 0.7rem;
+}
+
+.THIS .slds-m-left--y-small {
+    margin-right: 0.9rem;
+}
+
+.THIS .slds-align_absolute-center {
+    height: 5rem;
+}

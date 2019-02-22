@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AuraDefinitionBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>42.0</apiVersion>
+    <description>Story 4560890:SFDC Pilot Phase 2 :: Agent Console :: Need to capture the diagnosis steps
+Story 4656242:SFDC Phase2: Display if there are any Diagnostics alerts on an Asset and Case Page</description>
+</AuraDefinitionBundle>

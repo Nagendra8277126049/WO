@@ -1,0 +1,23 @@
+.THIS {
+    padding: 0 !important;
+}
+.THIS .slds-icon-text-default {
+    fill: white;
+    background-color: #68d874;
+   
+}
+.THIS .slds-p-around--large{
+    padding: 0rem !important;
+}
+.THIS .slds-button_icon-bare{
+    display: none;
+}
+.THIS [data-key="outbound_call"]{
+     padding: 5px !important;
+}
+
+.THIS #compHeader{
+    font-size: 1em !important;
+    line-height: 1.5;
+    font-weight: 700;
+}

@@ -1,0 +1,9 @@
+<design:component >
+	<design:attribute name="recordId" label="Work Order RecordID"/>
+    <design:attribute name="serviceTag" label="Service Tag" />
+    <design:attribute name="assetId" label="Service Tag ID" />
+   	<design:attribute name="addressBUID" label="Address BUID" />
+    <design:attribute name="commodityList" label="Commodity List" />
+    <design:attribute name="commodityArray" label="Commodity Array" />
+    <design:attribute name="searchText" label="Search Text" />
+</design:component>

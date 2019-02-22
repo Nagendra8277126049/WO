@@ -1,0 +1,45 @@
+<!--
+ - Created by tdavis on 10/5/18.
+ - Updated by PKumar, OAC Services INC. on 12/20/2018
+ -->
+
+<aura:component description="MassEditOrders" access="global" controller="MassEditOrdersController"
+                implements="flexipage:availableForRecordHome,force:hasRecordId">
+    <aura:handler name="init" value="{!this}" action="{!c.getOrdersList}"/>
+    <aura:attribute name="orderList" type="List"/>
+    <aura:attribute name="firstOrder" type="List"/>
+    <aura:attribute name="selectedOrders" type="List"/>
+    <aura:attribute name="milestoneLookupId" type="String"/>
+    <lightning:card title="Mass Edit Orders">
+        <p class="slds-p-horizontal_small">
+            <aura:iteration items="{!v.firstOrder}" var="order">
+                <lightning:recordEditForm recordId="{!order.Id}" objectApiName="Order">
+                    <div class="slds-box slds-theme_default">
+                        <lightning:helptext content="Choose a Milestone and click 'Update All'"/>&nbsp;&nbsp;
+                        <lightning:inputField aura:id="milestoneLookupId" fieldName="Milestone__c" value="{!null}"
+                                              onchange="{!c.setButtonVisibility}"/>
+                    </div>
+                </lightning:recordEditForm>
+            </aura:iteration>
+        </p>
+        <br/>
+        <p class="slds-p-horizontal_small">
+            <aura:iteration items="{!v.orderList}" var="order">
+                <lightning:recordEditForm recordId="{!order.Id}" objectApiName="Order">
+                    <div class="slds-box slds-theme_default">
+                        <ui:inputCheckbox text="{!order}" aura:id="selectedOrder" value="" />
+                        <lightning:outputField fieldName="OrderNumber"/>
+                        <lightning:inputField fieldName="Milestone__c"/>
+                        <br/>
+                        <lightning:button label="Save" type="submit" onclick="{!c.handleClick}"/>
+                    </div>
+                </lightning:recordEditForm>
+                <br/>
+            </aura:iteration>
+        </p>
+        <aura:set attribute="actions">
+            <lightning:button variant="brand" label="Update All" onclick="{!c.updateAllOrders}"
+                              aura:id="updateAllButton"/>
+        </aura:set>
+    </lightning:card>
+</aura:component>

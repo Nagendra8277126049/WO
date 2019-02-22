@@ -1,0 +1,247 @@
+<!--
+*******************************************************************************************************
+Name:       SupportAssist.cmp
+Apex Controller: SupportAssistController
+Description: Lightning component to display Support data stored in SATC through oData services
+    Story 4656242:SFDC Phase2: Display if there are any Diagnostics alerts on an Asset and Case Page
+
+*******************************************************************************************************
+Date         Version            Author                Summary of Changes 
+*******************************************************************************************************
+03/2/2018     1.0       	Amitabh Wankhede	         Initial Release
+05/29/2018    1.1			Srikanth Parvathareddy       Story 5067671 :SA Changes on Asset Details and Diagnostic Tab
+*******************************************************************************************************
+-->
+<aura:component implements="flexipage:availableForRecordHome,force:lightningQuickActionWithoutHeader,force:hasRecordId" access="global" controller="SupportAssistController" >
+    <aura:attribute name="supportAssistList" type="object"/>
+    <aura:attribute name="recId" type="String" />
+    <aura:attribute name="lastCollDate" type="String" />  
+    <aura:attribute name="Spinner" type="boolean" default="false"/>  
+    <aura:attribute name="CollectionStatusURL" type="String"/> 
+    
+    <!-- Labels-->
+    <aura:attribute name="SupportAssistLabel" type="String" />
+    <aura:attribute name="CollectionDateLabel" type="String" />
+    <aura:attribute name="ErrorMessage" type="String"/>
+    <aura:attribute name="SupportAssitUrlLabel" type="String"/>
+    <aura:attribute name="OpenParanthesis" type="String"/>
+    <aura:attribute name="CloseParanthesis" type="String"/>
+    <aura:attribute name="Paranthesis" type="String"/>
+    <aura:attribute name="noRecordsFoundMessage" type="string"/>
+    
+    <!-- Pagination -->
+    <aura:attribute name="currentList" type="object[]" />
+    <aura:attribute name="pageNumber" type="Integer" default="1"/>
+    <aura:attribute name="maxPage" type="Integer"/>
+    <aura:attribute name="pageSize" type="Integer" default="20"/>
+    <aura:handler name="change"	value="{!v.pageNumber}"	action="{!c.renderPage}"/> 
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <lightning:workspaceAPI aura:id="workspace" />
+    <article class="slds-card">
+        <div class="slds-media__body">
+            <!-- Spinner Code Begins Here -->
+            <aura:if isTrue="{!v.Spinner}">
+                <div aura:id="mySpinner" class="slds-spinner_container">
+                    <div class="slds-spinner--brand  slds-spinner slds-spinner--small slds-is-relative" role="alert">
+                        <span class="slds-assistive-text">Loading</span>
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
+                </div>
+            </aura:if>
+            <!-- Spinner Code Ends Here -->
+            <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-contact" title="Support">
+                            <lightning:icon iconName="standard:maintenance_plan" alternativeText="Support" size="small"/>
+                        </span>
+                    </div>
+                    <div class="slds-media__body slds-truncate" >
+                        <h3>
+                            <div class="slds-text-heading_small slds-truncate" title="SupportAssist"><b>{!v.SupportAssistLabel}</b></div>
+                        </h3>  
+                    </div>    
+                </header>
+            </div> 
+            <div class="slds-truncate" align="left" style="height:26px;padding-top:3px;" title="Report">
+                <span class="slds-text-body_regular">{!$Label.c.Report}</span>
+            </div> 
+            
+            <!-- Both CollectionDate and Results found scenario -->
+            <ui:scrollerWrapper class="scrollerSize">
+                <aura:if isTrue="{!and(or(v.lastCollDate!=null,v.lastCollDate!=undefined),or(v.supportAssistList[0].Name!=null,v.supportAssistList[0].Name!=undefined))}">	
+                    <div class="slds-card__body">
+                        <div class="slds-truncate"  align="left">
+                            <span>
+                                <b>
+                                    {!$Label.c.CollectionReport}&nbsp;
+                                    <ui:outputURL value="{!v.CollectionStatusURL}" target="_blank" label="{!v.lastCollDate}"/>
+                                </b>
+                            </span>      
+                        </div>
+                        <br/>
+                        <div class="slds-scrollable_y" style="height: 150px;">
+                            <table class="slds-table slds-table_bordered slds-no-row-hover">
+                                <thead >
+                                    <tr>
+                                        <th scope="col">
+                                            <div class="slds-truncate" title="eSupport Result"><b>{!$Label.c.RESULT}</b></div>
+                                        </th>
+                                    </tr>
+                                 </thead> 
+                                
+                                <tbody> 
+                                    <aura:iteration items="{!v.supportAssistList}" var="sAlist" indexVar="i">
+                                        <tr class="slds-p-around_x-small slds-text-body_small">
+                                            <td data-label="Status"> 
+                                                <aura:if isTrue="{!equals(sAlist.Status,'Critical')}">
+                                                    <div class="imgSize">
+                                                        <img src="{!$Resource.Critical_Icon}"/> &nbsp;
+                                                        <ui:outputURL value="{!sAlist.URL}" target="_blank" label="{!sAlist.Name}" />
+                                                    </div>
+                                                    <aura:set attribute="else">
+                                                        <div class="imgSize">
+                                                            <img src="{!$Resource.HB_Warning_ICON}"/> &nbsp;
+                                                             <ui:outputURL value="{!sAlist.URL}" target="_blank" label="{!sAlist.Name}" />
+                                                        </div>
+                                                    </aura:set>
+                                                </aura:if>
+                                            </td>
+                                            <!--<td data-label="Alert Name" class="slds-text-body_small slds-cell-wrap additionalSpace"> 
+                                                <ui:outputURL value="{!sAlist.URL}" target="_blank" label="{!sAlist.Name}" />
+                                            </td> -->
+                                        </tr>
+                                    </aura:iteration>
+                                </tbody>
+                            </table>
+                            <br/>
+                        </div>
+                    </div>
+                </aura:if> 
+            </ui:scrollerWrapper> 
+                      
+            <!-- CollectionDate Not found and Results found scenario -->
+            <ui:scrollerWrapper class="scrollerSize">
+                <aura:if isTrue="{!and(or(v.lastCollDate==null,v.lastCollDate==undefined),or(v.supportAssistList[0].Name!=null,v.supportAssistList[0].Name!=undefined))}">	
+                    <div class="slds-card__body">
+                        <div  align="left">
+                            <span>
+                                <b><h3>{!$Label.c.No_Available_Collections}
+                                    &nbsp;<ui:outputURL value="{!v.CollectionStatusURL}" target="_blank" label="{!v.SupportAssitUrlLabel}"/></h3>
+                                </b>
+                            </span>      
+                        </div>
+                        <br/>
+                        <div class="slds-scrollable_y" style="height: 150px;">
+                            <table class="slds-table slds-table_bordered slds-no-row-hover">
+                                <thead >
+                                    <tr class="slds-text-title_caps">
+                                        <th scope="col">
+                                            <div class="slds-truncate" title="eSupport Result"><b>{!$Label.c.RESULT}</b></div>
+                                        </th>
+                                    </tr>
+                                </thead> 
+                                
+                                <tbody> 
+                                    <aura:iteration items="{!v.supportAssistList}" var="sAlist" indexVar="i">
+                                        <tr class="slds-p-around_x-small slds-text-body_small">
+                                            <td data-label="Status" class="imgSpace"> 
+                                                <aura:if isTrue="{!equals(sAlist.Status,'Critical')}">
+                                                    <div class="imgSize">
+                                                        <img src="{!$Resource.Critical_Icon}"/> &nbsp;
+                                                        <ui:outputURL value="{!sAlist.URL}" target="_blank" label="{!sAlist.Name}" />
+                                                    </div>
+                                                    <aura:set attribute="else">
+                                                        <div class="imgSize">
+                                                            <img src="{!$Resource.HB_Warning_ICON}"/> &nbsp;
+                                                            <ui:outputURL value="{!sAlist.URL}" target="_blank" label="{!sAlist.Name}" />
+                                                        </div>
+                                                    </aura:set>
+                                                </aura:if>
+                                            </td>
+                                         <!--   <td data-label="Alert Name" class="slds-text-body_small slds-cell-wrap additionalSpace"> 
+                                                <ui:outputURL value="{!sAlist.URL}" target="_blank" label="{!sAlist.Name}" />
+                                            </td> -->
+                                        </tr>
+                                    </aura:iteration>
+                                </tbody>
+                            </table>
+                            <br/>
+                        </div>
+                    </div>
+                </aura:if> 
+            </ui:scrollerWrapper> 
+            
+            <!--No CollectionDate and No Results Found Scenario-->
+            <ui:scrollerWrapper class="scrollerSize">
+                <aura:if isTrue="{!and(or(v.lastCollDate==null,v.lastCollDate==undefined),or(v.supportAssistList[0].Name==null,v.supportAssistList[0].Name==undefined))}">
+                    <div class="slds-card__body">
+                        <div  align="left">
+                            <span>
+                                <b><h3>{!$Label.c.No_Available_Collections}
+                                    &nbsp;<ui:outputURL value="{!v.CollectionStatusURL}" target="_blank" label="{!v.SupportAssitUrlLabel}"/></h3>
+                                </b>
+                            </span>      
+                        </div>
+                        <br/>
+                        <div class="slds-scrollable_y" style="height: 150px;">
+                            <table class="slds-table slds-table_bordered slds-no-row-hover">
+                                <thead >
+                                    <tr class="slds-text-title_caps">
+                                        <th scope="col">
+                                            <div class="slds-truncate" title="eSupport Result"><b>{!$Label.c.RESULT}</b></div>
+                                        </th>
+                                    </tr>
+                                </thead>    
+                            </table>
+                            <br/>
+                            <br/>
+                            <div class="slds-text-body_regular" align="slds-text-align_center">
+                                <h6 align="center">
+                                    {!v.noRecordsFoundMessage}
+                                </h6>
+                            </div> 
+                        </div>
+                    </div>
+                </aura:if> 
+            </ui:scrollerWrapper>  
+            
+            <!-- CollectionDate Found but No Results Found Scenario-->
+            <ui:scrollerWrapper class="scrollerSize">
+                <aura:if isTrue="{!and(or(v.lastCollDate!=null,v.lastCollDate!=undefined),or(v.supportAssistList[0].Name==null,v.supportAssistList[0]==undefined))}">
+                    <div class="slds-card__body">
+                        <div align="left">
+                            <span>
+                                <b>{!$Label.c.CollectionReport}&nbsp;{!v.lastCollDate}.
+                                    &nbsp;<ui:outputURL value="{!v.CollectionStatusURL}" target="_blank" label="{!v.SupportAssitUrlLabel}"/>
+                                </b>
+                            </span>      
+                        </div>
+                        <br/>
+                        <div class="slds-scrollable_y" style="height:150px;">
+                            <table class="slds-table slds-table_bordered slds-no-row-hover">
+                                <thead >
+                                    <tr class="slds-text-title_caps">
+                                        <th scope="col">
+                                            <div class="slds-truncate" title="eSupport Result"><b>{!$Label.c.RESULT}</b></div>
+                                        </th>
+                                    </tr>
+                                </thead>    
+                            </table>
+                            <br/>
+                            <br/>
+                            <div class="slds-text-body_regular" align="slds-text-align_center">
+                                <h6 align="center">
+                                    {!$Label.c.SA_No_Records}
+                                </h6>
+                            </div> 
+                        </div>
+                    </div>
+                </aura:if> 
+            </ui:scrollerWrapper> 
+        </div>    
+    </article>
+</aura:component>

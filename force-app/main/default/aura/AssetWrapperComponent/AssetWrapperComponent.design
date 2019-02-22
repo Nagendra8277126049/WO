@@ -1,0 +1,10 @@
+<design:component label="AssetWrapperComponent">
+    <design:attribute name="AssetLocationHeading" label="Asset Location Component - Heading" description="Name of the Asset Location Component"/>
+    <design:attribute name="HeartBeatHeading" label="Heart Beat Component - Heading" description="Name of the Heart Beat Component"/>
+    <design:attribute name="AssetLocationErrorMessage" label="Error Message for Asset Location Component" description="Error Message to toast and show to User"/>
+    <design:attribute name="HeartBeatErrorMessage" label="Error Message for Heart Beat Component" description="Error Message to toast and show to User"/>
+    <design:attribute name="NoRecordsHeartBeatMessage" label="Message for No Records Heart beat Component" description="No records message toast and show to User"/>
+    <sfdc:objects >
+        <sfdc:object >Asset</sfdc:object>
+    </sfdc:objects>
+</design:component>

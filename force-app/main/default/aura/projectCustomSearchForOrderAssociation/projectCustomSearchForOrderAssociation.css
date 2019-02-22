@@ -1,0 +1,14 @@
+.THIS header.slds-card__header.slds-grid {
+    padding-left: 0px;
+    padding-top: 0px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+}
+
+.THIS .slds-card{
+    border: 0px !important;
+}
+
+.THIS .greenText{
+    color: #059429
+}

@@ -1,0 +1,24 @@
+<aura:component controller="ARRProposalApexController" implements="force:lightningQuickActionWithoutHeader,flexipage:availableForAllPageTypes,force:hasRecordId">
+    <!-- Creative code to override modal css sizing on actions/-->
+    <aura:html tag="style">
+        .slds-modal__container{
+        	width:35% !Important;
+        	max-width:35% !important;
+        }
+        .modal-body{ 
+        	height:auto !important;
+        	max-height:unset !important;
+        } 
+    </aura:html>
+    
+    <aura:attribute name="recordId" type="Id"/>
+    <aura:attribute name="Proposal" type="map"/>
+    <aura:attribute name="Account" type="Account"/>
+    <force:recordData aura:id="accountRecord" recordId="{!v.recordId}" targetFields="{!v.Account}" layoutType="FULL"/>
+    <force:recordData aura:id="proposalRecord" recordId="{!v.recordId}" targetFields="{!v.Proposal}" layoutType="FULL"
+                      recordUpdated="{!c.openOrderLink}"/>
+    
+    <p id="refresh-message">Opening Order system in new tab...</p>
+    
+    <lightning:overlayLibrary aura:id="redirectErrorNotification"/>
+</aura:component>

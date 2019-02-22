@@ -1,0 +1,356 @@
+<!--
+*******************************************************************************************************
+Name:       DispatchOverallSubPartLaborStatus.cmp
+Description:  lightning Component to display to Display WorkOrder Status
+*******************************************************************************************************
+Date         Version            Author              Summary of Changes 
+*******************************************************************************************************
+06/20/2017     1.0     		Megha Bhardwaj      	  Initial Release
+07/30/2017     1.1          Harsha Gangi Reddy        DEFECT 5405448
+*******************************************************************************************************
+-->
+<aura:component controller="Dispatch_WorkOrderDetails" implements="flexipage:availableForRecordHome,force:hasRecordId,force:hasSObjectName" access="global">
+
+    <!--<aura:handler name="init" action="{!c.doInit}" value="{!this}" />-->
+    <aura:attribute name="workOrderStatus" type="boolean" />
+    <aura:attribute name="subStatus" type="string" />
+    <aura:attribute name="partStatus" type="string" />
+    <aura:attribute name="laborStatus" type="string" />
+    <aura:attribute name="workorder" type="workOrder" />
+    <aura:attribute name="woStatusLastUpdatedDate" type="string" />
+    <aura:attribute name="subStatusLastUpdatedDate" type="string" />
+    <aura:attribute name="partsStatusLastUpdatedDate" type="string" />
+    <aura:attribute name="laborStatusLastUpdatedDate" type="string" />
+    <aura:attribute name="comments" type="string" />
+    <aura:attribute name="allWorkOrderStatusList" type="List" />
+    <aura:attribute name="commentsRequiredForCancelRequest" type="string" default=""/>
+    <aura:attribute name="workorderStatusToShowOnUI" type="string" default="" />
+    <aura:attribute name="markOverallStatusReadOnly" type="boolean" default="false" />
+    <aura:attribute name="showModal" type="boolean" default="false" />
+    <aura:attribute name="validationError" type="boolean" default="false" />
+    <aura:attribute name="errorMessage" type="string" default=" " />
+    <aura:attribute name="GCCUser" type="boolean" default="false" />
+
+    <aura:attribute name="record" type="Object"/>
+    <aura:attribute name="simpleRecord" type="Object"/>
+    <aura:attribute name="recordError" type="String"/>
+    
+    <aura:handler event="force:refreshView" action="{!c.doInit}" />
+    
+    <!-- Display Lightning Data Service errors, if any -->
+    <aura:if isTrue="{!not(empty(v.recordError))}">
+        <div class="recordError">
+            {!v.recordError}</div>
+    </aura:if>
+
+    <force:recordData 
+        aura:id="recordHandler" recordId="{!v.recordId}" 
+        fields="Status,Sub_Status__c,Labor_Status__c,Parts_Status__c, DispatchEvent__c, StatusCode__c,DispatchNumber__c"
+        targetRecord="{!v.record}" targetFields="{!v.simpleRecord}" targetError="{!v.recordError}"
+        mode="EDIT" recordUpdated="{!c.handleRecordUpdated}" />
+
+    <!--lightning:recordViewForm recordId="{!v.recordId}" objectApiName="WorkOrder"-->
+    <h3 class="slds-section-title--divider slds-theme_default">
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col">
+                <div class="slds-box" style="height:120px;">
+                    <div class="slds-text-link">Overall Status</div><br/>
+                    <div class="slds-border_top">
+                        <div class="slds-grid">
+                            <div class="slds-col"><br/>
+                                <table>
+                                    <tr>Status
+                                    </tr>
+                                    <tr>
+                                        <aura:if isTrue="{!v.workorderStatusToShowOnUI == 'Submitted'}">
+                                            <span>
+                                                <br/><span  class="greenDot"></span>&nbsp;
+                                            </span>
+
+                                        </aura:if>
+                                        <aura:if isTrue="{!v.workorderStatusToShowOnUI == 'In Progress'}">
+                                            <span> 
+                                                <br/><span class="yellowDot"></span>&nbsp;
+                                            </span>
+                                        </aura:if>
+                                        <aura:if isTrue="{!v.workorderStatusToShowOnUI == 'Not Delivered'}">
+                                            <span> 
+                                                <br/><span class="RedDot"></span>&nbsp;
+                                            </span>
+                                        </aura:if>
+                                        <aura:if isTrue="{!v.workorderStatusToShowOnUI == 'No Labor'}">
+                                            <span> 
+                                                <span class="grayDot"></span>&nbsp;
+                                            </span>
+                                        </aura:if>
+                                        <ui:outputText value="{!v.workorderStatusToShowOnUI}" />&nbsp;
+                                        <aura:if isTrue="{! and(!v.markOverallStatusReadOnly,empty(v.simpleRecord.DispatchNumber__c))}">
+                                            <lightning:buttonIcon aura:id="ServiceTypeEditBtn" title="Update Status" iconName="utility:edit"
+                                                variant="bare" onclick="{!c.OpenModalPopUp}"
+                                            />
+                                        </aura:if>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="slds-col">
+                                <br/>
+                                <table>
+                                    <tr>Last Update
+                                    </tr>
+                                    <tr>
+                                        <ui:outputText value="{!v.woStatusLastUpdatedDate}" />
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col">
+                <div class="slds-box" style="height:120px;">
+                    <div class="slds-text-link">Sub Status</div><br/>
+                    <div class="slds-border_top">
+                        <div class="slds-grid">
+                            <div class="slds-col"><br/>
+                                <table>
+                                    <tr>Status
+                                    </tr>
+                                    <tr>
+                                        <aura:if isTrue="{!v.subStatus == 'Submitted'}">
+                                            <span> 
+                                                <br/><span class="greenDot"></span>&nbsp;
+                                            </span>
+                                        </aura:if>
+                                        <aura:if isTrue="{!v.subStatus == 'In Progress'}">
+                                            <span> 
+                                                <br/><span class="yellowDot"></span>&nbsp;
+                                            </span>
+                                        </aura:if>
+                                        <aura:if isTrue="{!v.subStatus == 'Not Delivered'}">
+                                            <span> 
+                                                <br/><span class="RedDot"></span>&nbsp;
+                                            </span>
+                                        </aura:if>
+                                        <aura:if isTrue="{!v.subStatus == 'No Labor'}">
+                                            <span> 
+                                                <br/><span class="grayDot"></span>&nbsp;
+                                            </span>
+                                        </aura:if>
+                                        <ui:outputText value="{!v.workorder.Sub_Status__c}" />
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="slds-col">
+                                <br/>
+                                <table>
+                                    <tr>Last Update
+                                    </tr>
+                                    <tr>
+                                        <ui:outputText value="{!v.subStatusLastUpdatedDate}" />
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col">
+                <div class="slds-box" style="height:120px;">
+                    <div class="slds-text-link">Parts Status</div><br/>
+                    <div class="slds-border_top">
+                        <div class="slds-grid">
+                            <div class="slds-col"><br/>
+                                <table>
+                                    <tr>Status
+                                    </tr>
+                                    <tr>
+                                        <aura:if isTrue="{!v.partStatus == 'Submitted'}">
+                                            <span> 
+                                                    <br/><span class="greenDot"></span>&nbsp;
+                                            </span>
+                                        </aura:if>
+                                        <aura:if isTrue="{!v.partStatus == 'In Progress'}">
+                                            <span> 
+                                                    <br/><span class="yellowDot"></span>&nbsp;
+                                            </span>
+                                        </aura:if>
+                                        <aura:if isTrue="{!v.partStatus == 'Not Delivered'}">
+                                            <span> 
+                                                    <br/><span class="RedDot"></span>&nbsp;
+                                            </span>
+                                        </aura:if>
+                                        <aura:if isTrue="{!v.partStatus == 'No Labor'}">
+                                            <span> 
+                                                    <br/><span class="grayDot"></span>&nbsp;
+                                            </span>
+                                        </aura:if>
+                                        <ui:outputText value="{!v.workorder.Parts_Status__c}" />
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div class="slds-col">
+                                <br/>
+                                <table>
+                                    <tr>Last Update
+                                    </tr>
+                                    <tr>
+                                        <ui:outputText value="{!v.partsStatusLastUpdatedDate}" />
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="slds-col">
+                <div class="slds-box" style="height:120px;">
+                    <div class="slds-text-link">Labor Status</div><br/>
+                    <div class="slds-border_top">
+                        <div class="slds-grid">
+                            <div class="slds-col"><br/>
+                                <table>
+                                    <tr>Status
+                                    </tr>
+                                    <tr>
+                                        <aura:if isTrue="{!v.laborStatus == 'Submitted'}">
+                                            <span> 
+                                                    <br/><span class="greenDot"></span>&nbsp;
+                                            </span>
+                                        </aura:if>
+                                        <aura:if isTrue="{!v.laborStatus == 'In Progress'}">
+                                            <span> 
+                                                    <br/><span class="yellowDot"></span>&nbsp;
+                                            </span>
+                                        </aura:if>
+                                        <aura:if isTrue="{!v.laborStatus == 'Not Delivered'}">
+                                            <span> 
+                                                    <br/><span class="RedDot"></span>&nbsp;
+                                            </span>
+                                        </aura:if>
+                                        <aura:if isTrue="{!v.laborStatus == 'No Labor'}">
+                                            <span> 
+                                                    <br/><span class="grayDot"></span>&nbsp;
+                                            </span>
+                                        </aura:if>
+                                        <ui:outputText value="{!v.workorder.Labor_Status__c}" />
+                                    </tr>
+                                </table>
+                            </div>
+
+
+                            <div class="slds-col">
+                                <br/>
+                                <table>
+                                    <tr>Last Update
+                                    </tr>
+                                    <tr>
+                                        <ui:outputText value="{!v.laborStatusLastUpdatedDate}" />
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </h3>
+    <!--/lightning:recordViewForm-->
+    <!--force:recordData aura:id="record"
+                      recordId="{!v.recordId}"
+                      targetError="{!v.recordError}"
+                      targetRecord="{!v.record}"
+                      targetFields="{!v.WORecord}"
+                      layoutType="FULL"
+                      mode="VIEW"/-->
+
+
+
+    <aura:if isTrue="{!v.showModal}">
+        <!--
+        <div class="demo-only" style="height: 640px;">
+		commented by Harsha Gangi Reddy - DEFECT 5405448
+		-->
+        
+        <div class="demo-only">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header">
+                        <button class="slds-button slds-modal__close" title="Close" onclick="{!c.closeModalPopUp}">
+                            <lightning:icon class="white slds-icon_small" iconName="utility:close"/> 
+                            <span class="slds-assistive-text">
+                                Close
+                            </span>
+                        </button>
+
+                        <!--
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Close">
+                             
+                             <lightning:icon iconName="utility:close" style="background-color:white;" onclick="{!c.closeModalPopUp}"  />
+                
+                         	<span class="slds-assistive-text">Close</span>
+                             
+                        </button>
+                        -->
+                        <h2 id="header43" class="slds-text-heading--medium slds-text-link">Modify Work Order Status</h2>
+                    </div>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <article class="slds-card">
+                            <div class="slds-card__header slds-grid">
+                                <div class="demo-only demo-only--sizing slds-grid slds-wrap">
+                                    <!-- Section to display : Error Message -->
+                                    <aura:if isTrue="{!v.validationError}">
+                                        <div class="slds-text-color_error slds-p-left_x-small slds-align_absolute-center">
+                                            {!v.errorMessage}
+                                        </div>
+                                    </aura:if>
+                                    <div class="slds-size_2-of-2">
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label slds-text-link" for="combobox-unique-id-13">Work Order Status</label>
+                                            <div class="slds-form-element__control">
+                                                <div class="">
+                                                    <ui:inputSelect aura:id="statuses" change="{!c.handleOnChangeStatus}">
+                                                        <aura:iteration items="{!v.allWorkOrderStatusList}" var="status">
+                                                            <ui:inputSelectOption text="{!status}" label="{!status}" />
+                                                        </aura:iteration>
+                                                    </ui:inputSelect>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div class="slds-size_2-of-2">
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label slds-text-link" for="textarea-id-01">Comments</label>
+                                            <div class="slds-form-element__control">
+                                                <aura:if isTrue="{!v.commentsRequiredForCancelRequest.length > 0}">
+                                                    <div aura:id="errorForComments">
+                                                        <ui:outputText class="errorClass" value="{!v.commentsRequiredForCancelRequest}"></ui:outputText>
+                                                    </div>
+                                                </aura:if>
+                                              <Ui:inputText aura:id="commentsBox"  class="slds-textArea">
+                                                </Ui:inputText>  
+                                                           
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div class="slds-modal__footer">
+                        <footer>
+                            <lightning:button variant="brand" label="Save" onclick="{! c.handleSaveWorkOrder }"></lightning:button>
+                            <lightning:button label="Cancel" onclick="{! c.closeModalPopUp }"></lightning:button>
+                        </footer>
+                    </div>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </aura:if>
+
+</aura:component>

@@ -1,0 +1,75 @@
+<!--
+*******************************************************************************************************
+Name:       AssetHeartBeatComponent.cmp
+Apex Controller: AssetHeartBeatController
+Description:  This Lightning Component Display the Asset Last Connectivity Date on Asset Record Page - Story 4794544
+*******************************************************************************************************
+Date         Version           Author             Summary of Changes 
+***********************************************************************************************************
+03/14/2017     1.0     Sri Harsha Gangi Reddy      Initial Release
+05/21/2017     1.1     Srikanth Parvathareddy      Story #5091877-SFDC Phase 3 :SA Changes on Asset Details
+***********************************************************************************************************
+-->
+
+<aura:component controller="AssetHeartBeatController"> 
+    
+    <aura:attribute name="Heading" type="String"/>
+    <aura:attribute name="ErrorMessage" type="String"/>
+    <aura:attribute name="LastCollectionDate" type="String"/>
+    <aura:attribute name="recordId" type="string"/>
+    <aura:attribute name="noRecordsFound" type="Boolean" default="false"/>
+    <aura:attribute name="Status" type="String"/>
+    <aura:attribute name="URL" type="String"/>
+    <aura:attribute name="noRecordsFoundMessage" type="String"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>  
+    
+    <article class="slds-card">
+        <div class="slds-media__body">
+            <!-- Spinner -->
+            <lightning:spinner aura:id="mySpinner" variant="brand" size="small"/>            
+            <div>
+                <h3 class="slds-m-left--x-small slds-text-body_small">
+                    {#v.Heading}
+                </h3>
+            </div>
+            <!-- Hearbeat records found scenario - Enhanced for Story #5091877 - Srikanth Parvathareddy -->		
+            <aura:if isTrue="{!v.noRecordsFound==false}">
+                <div class="slds-grid slds-gutters slds-m-top_x-small">
+                    <aura:if isTrue="{!or(equals(v.Status,'Informational'),equals(v.Status,'Healthy'),equals(v.Status,'Info'))}"> 
+                        <div class="slds-size_1-of-5">
+                            <div class="imgSize">
+                                <img src="{!$Resource.HB_Healthy_ICON}"/> 
+                            </div>
+                        </div>
+                        <aura:set attribute="else">
+                            <aura:if isTrue="{!equals(v.Status,'Warning')}">
+                                <div class="imgSize">
+                                    <img src="{!$Resource.HB_Warning_ICON}"/>
+                                </div>
+                            </aura:if>
+                        </aura:set>
+                        <aura:set attribute="else">
+                            <aura:if isTrue="{!equals(v.Status,'Critical')}">
+                                <div class="imgSize">
+                                    <img src="{!$Resource.HB_Critical_ICON}"/>
+                                </div>
+                            </aura:if>
+                        </aura:set>
+                    </aura:if>
+                    <div class="slds-size_4-of-5 slds-m-left--x-small">
+                        <ui:outputURL value="{!v.URL}" target="_blank" label="{!v.LastCollectionDate}" />
+                    </div>
+                </div>
+            </aura:if>
+            <!-- No Hearbeat records found scenario - Enhanced for Story #5091877 - Srikanth Parvathareddy -->		
+            <aura:if isTrue="{!v.noRecordsFound==true}">
+                <div class="slds-m-around--x-small">
+                    <h3 class="slds-m-left--y-small slds-text-body_small">
+                        {#v.noRecordsFoundMessage}
+                    </h3>
+                </div>    
+            </aura:if>
+        </div>
+    </article>
+</aura:component>

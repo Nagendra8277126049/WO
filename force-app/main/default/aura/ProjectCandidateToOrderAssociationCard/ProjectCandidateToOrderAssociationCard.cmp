@@ -1,0 +1,32 @@
+<aura:component >
+    <aura:attribute name="orderNumber" type="Id" />
+    <aura:attribute name="proj" type="pse__Proj__c" />
+    <aura:attribute name="matchReason" type="string" />   
+    <aura:attribute name="stage" type="string" />  
+    
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}" />
+    
+    <div class="slds-media sdls-media_center"> 
+        <div class="slds-media__body">
+            <div class="slds-grid">
+                <a href="{!v.url+'/'+v.proj.Id}">
+                    <h3 class="slds-text-heading_small ">{!v.proj.Name}</h3>
+                </a>
+                <span class="{!'slds-badge slds-m-left--medium slds-shrink-none slds-align-middle slds-badge-stage-'+v.stage}">{!v.proj.pse__Stage__c}</span>
+            </div>
+            <div aura:id="projectDetails" class="slds-m-top_small">
+                <ul class="slds-grid slds-wrap">                    
+                    <li class="slds-list__item slds-size_1-of-2"><span class="slds-text-color_weak slds-m-right_small">Account:</span>{!v.proj.pse__Account__r.Name}</li>
+                    <li class="slds-list__item slds-size_1-of-2"><span class="slds-text-color_weak slds-m-right_small">Interval:</span>({!v.proj.pse__Start_Date__c}) - ({!v.proj.pse__End_Date__c})</li>
+                    <!-- <li class="slds-list__item slds-size_2-of-2"><span class="slds-text-color_weak slds-m-right_small">Reason:</span>{!v.matchReason}</li> -->
+                </ul>
+            </div>
+        </div>
+        
+        <div class="slds-media__figure">
+            <lightning:buttonIcon onclick="{!c.associate}" iconName="utility:link" alternativeText="Associate with Current Order"/>
+        </div>
+    </div>
+    
+    <lightning:flow aura:id="flowData" onstatuschange="{!c.handleStatusChange}"/>
+</aura:component>

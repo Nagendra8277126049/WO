@@ -1,0 +1,60 @@
+<!--
+*******************************************************************************************************
+Name:       SearchAsset.cmp
+Description:  This Lightning Component is a modal popup that allows agent to search the Asset that does not exist in Salesforce- Story 4645338
+*******************************************************************************************************
+Date         Version           Author             Summary of Changes 
+*******************************************************************************************************
+02/28/2017     1.0             Srikanth           Initial Release
+03/14/2017     1.1             Roselin Hephzibah  Updated the component based on story#4645338
+*******************************************************************************************************
+-->
+<aura:component controller="AssociateServiceTagHandler"  access="public" >
+    <aura:attribute name="newAsset" type="string"/>
+    <aura:attribute name="recordId" type="string"/>
+    <aura:attribute name="searchButtonName" type="String"/>
+    <aura:attribute name="searchAssetErrorMessage" type="String"/>
+    <aura:attribute name="accountNAErrorMessage" type="String"/>
+    <aura:attribute name="producttNAErrorMessage" type="String"/>
+    <aura:attribute name="successMessage" type="String"/>
+    <aura:attribute name="replaceButtonName" type="String"/>
+    <aura:attribute name="toggleSpinner" type="boolean" default="false"/>
+    
+    
+    <!--###### MODAL BOX Start From Here ######--> 
+    
+    <div role="dialog" tabindex="-1" aria-labelledby="header99" class="slds-modal slds-fade-in-open ">
+        
+        <div class="slds-modal__container">
+            <aura:if isTrue="{!v.toggleSpinner}">
+                <lightning:spinner class="slds-spinner_container" variant="brand" size="small" />
+            </aura:if>
+            <!-- ###### MODAL BOX HEADER Part Start From Here ######-->
+            <div class="slds-modal__header">
+                <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.closeMe}">
+                    <lightning:icon class="white slds-icon_small" iconName="utility:close" size="medium" />
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="header99" class="slds-text-heading--medium">{#v.searchButtonName}</h2>
+            </div>
+            <!--###### MODAL BOX BODY Part Start From Here ######-->
+            
+            <div class="slds-modal__content slds-p-around--medium">
+                <p> 
+                    <b>{!$Label.c.ModalPopupMessage}</b>
+                </p>
+                <div class="slds-m-bottom--medium">
+                    <lightning:input aura:id="assetName" type="Text" label="Service Tag" name="assetName" value="{!v.newAsset}" />
+                </div>  
+            </div>
+            
+            <!--###### MODAL BOX FOOTER Part Start From Here ######-->
+            <div class="slds-modal__footer">
+                <button class="slds-button slds-button--brand" onclick="{!c.Associate}">{#v.replaceButtonName}</button>
+            </div>
+        </div>
+    </div>
+    <div class="slds-backdrop slds-backdrop--open"></div>
+    <!--###### MODAL BOX Part END Here ######-->
+    
+</aura:component>

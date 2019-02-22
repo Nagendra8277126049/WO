@@ -1,0 +1,21 @@
+<aura:component controller="ARRInvoiceSenderFlowAction" implements="force:lightningQuickAction,flexipage:availableForAllPageTypes,force:hasRecordId">
+    <aura:html tag="style">
+        .slds-modal__container{
+        	width:35% !Important;
+        	max-width:35% !important;
+        }
+        .modal-body{ 
+        	height:auto !important;
+        	max-height:unset !important;
+        } 
+    </aura:html>
+    
+    <aura:attribute name="recordId" type="String"/>    
+    <aura:attribute name="transaction" type="ValueRecoveryTransaction__x"/>
+    <force:recordData aura:id="transactionRecord" recordId="{!v.recordId}" targetFields="{!v.transaction}" layoutType="FULL"
+                      recordUpdated="{!c.init}"/>
+
+    <p id="refresh-message">Shortly your transaction will be reversed!</p>
+    
+    <lightning:overlayLibrary aura:id="actionErrorNotification"/>
+</aura:component>

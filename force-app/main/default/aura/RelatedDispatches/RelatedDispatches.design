@@ -1,0 +1,13 @@
+<!-- 
+[Created By: Harsha Gangi Reddy - June 02nd, 2018] 
+[Modified By: Rajesh Guru - September 10th, 2018]
+-->
+<design:component label="Related Dispatches on Case/Asset">
+    <sfdc:objects >
+        <sfdc:object>Case</sfdc:object>
+        <sfdc:object>Asset</sfdc:object>
+        <sfdc:object>LiveChatTranscript</sfdc:object>
+       
+       
+    </sfdc:objects>
+</design:component>

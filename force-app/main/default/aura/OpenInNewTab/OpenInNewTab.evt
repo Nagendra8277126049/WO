@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="Open in new Tab event">
+    <aura:attribute name="url" type="String"/>
+    <aura:attribute name="recordId" type="String"/>
+</aura:event>

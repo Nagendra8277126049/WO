@@ -1,0 +1,136 @@
+<!--
+******************************************************************************************************************************
+Name:       EntitlementLicenses
+Description:  To Display DEE Entitlements - Story #4559894
+******************************************************************************************************************************
+Date         Version          Author             Summary of Changes 
+******************************************************************************************************************************
+02/19/2017     1.0     Sri Harsha Gangi Reddy       Initial Release
+******************************************************************************************************************************
+-->
+
+<aura:component access="global" controller="EntitlementLicensesController" >
+    <aura:attribute name="assetId" type='string'/> 
+    <aura:attribute name="entDetList" type="string[]" />
+  	<aura:attribute name="errorMessage" type="string" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>  
+    
+	<!-- section for the data display starts here -->
+  	<article class="slds-card">
+        <div class="slds-card__header slds-grid">
+    	    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-contact" title="Digital Entitlements">
+                        <lightning:icon iconName="standard:contract_line_item" 
+                                        alternativeText="Digital Entitlements" size="small"/>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2>          
+                        <span class="slds-text-heading_small"> {!$Label.c.LicenseEntitlementsName} </span>
+                    </h2>
+                </div>
+    		</header>
+    	</div>
+        <lightning:spinner aura:id="mySpinner" variant="brand" size="small" />  
+ 	  		<aura:if isTrue="{! or(v.entDetList != null, v.entDetList != undefined) }">
+        			<div style="height:250px;">
+                    <div class="slds-scrollable slds-grow" style="height: 100%;">
+            			<table class="slds-table slds-table_bordered slds-no-row-hover slds-scrollable_none" >
+                     			<thead>                  
+                                <tr class="slds-text-title--caps">
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Entitlement Reference">
+                                            <b>{!$Label.c.LIC_Entitlement_Reference}</b>
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Unique Id">
+                                            <b>{!$Label.c.LIC_Unique_Id}</b>
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Licence Type">
+                                            <b>{!$Label.c.LIC_Licence_Type}</b>
+                                        </div>
+                                    </th>                    
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Part Description">
+                                            <b>{!$Label.c.LIC_Part_Description}</b>
+                                        </div>
+                                    </th>  
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Binding Type">
+                                            <b>{!$Label.c.LIC_Binding_Type}</b>
+                                        </div>
+                                    </th>                   
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Status">
+                                            <b>{!$Label.c.LIC_Status}</b>
+                                        </div>
+                                    </th>
+                                    <!--
+                                    <th scope="col">
+                                        <div class="slds-truncates" title="DropDown">
+                                        </div>
+                                    </th>
+									-->
+                                </tr>
+                            </thead>
+                    
+                            <tbody>
+                                <aura:iteration items="{!v.entDetList}" var="el0" indexVar="i">  
+                                	<tr>
+                                       <th scope="row" data-label="Entitlement Reference">
+                                            <div class="slds-text-body_small slds-cell-wrap slds-c-fixed" title="ENTITLEMENT REFERENCE">
+                                            	{!el0.EntitlementReferenceId}
+                                            </div>
+                                        </th> 
+                                        <td data-label="Unique Id">
+                                            <div class="slds-text-body_small slds-cell-wrap slds-c-fixed" title="UNIQUE ID">
+                                                {!el0.UniqueId}
+                                            </div>
+                                        </td>
+                                        <td data-label="LICENCE TYPE">
+                                            <div class="slds-text-body_small slds-cell-wrap slds-c-fixed" title="LICENCE TYPE">
+                                                {!el0.LicenseType}
+                                            </div>
+                                        </td>
+                                        <td data-label="PART DESCRIPTION">
+                                            <div class="slds-text-body_small slds-cell-wrap slds-c-fixed" title="PART DESCRIPTION">
+                                                {!el0.PartDescription}                                                
+                                            </div>
+                                        </td>
+                                        <td data-label="BINDING TYPE">
+                                            <div class="slds-text-body_small slds-cell-wrap slds-c-fixed" title="BINDING TYPE">
+                                                {!el0.BindingType}
+                                            </div>
+                                        </td>
+                                        <td data-label="STATUS">
+                                            <div class="slds-text-body_small slds-cell-wrap slds-c-fixed" title="STATUS">
+                                                {!el0.Status}
+                                            </div>
+                                        </td>
+                                        <!--
+                                        <td data-label="dropDownMenu">
+                                            <div title="dropDownMenu">
+                                                <lightning:buttonMenu alternativeText="dropDownMenu"
+                                                                      menuAlignment="right" onselect="{! c.handleMenuSelect }">
+                                                    <lightning:menuItem label="Decrement" value="Decrement" />
+                                                    <lightning:menuItem label="Resend" value="Resend"/>
+                                                    <lightning:menuItem label="Regenerate" value="Regenerate" />
+                                                    <lightning:menuItem label="Software Key Voilation" value="Software Key Voilation"/>
+                                                </lightning:buttonMenu>
+                                            </div>
+                                        </td>
+										-->
+                                	</tr>
+                            	</aura:iteration>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+        	</aura:if>     
+  	</article>
+</aura:component>

@@ -1,0 +1,43 @@
+.THIS {
+    margin: 0rem 20%;
+    padding: 0rem 1rem;
+    border: none;
+    box-shadow: none;
+}
+
+.THIS .slds-box{
+    padding: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.THIS #param{
+    background: #f3f2f2;
+}
+
+.THIS .slds-icon-text-error{
+    fill : #007add;
+}
+
+.THIS #blindtext{
+    color: #007add;
+    font-size: 15px;
+}
+
+.THIS .slds-icon-text-warning{
+    fill : #f99500;
+}
+
+.THIS #warmtext{
+    color: #f99500;
+    font-size: 15px;
+}
+
+.THIS .customRequired{
+ 	font-weight: 400; 
+}
+.THIS .customRequired:before{    
+     content: "*";
+     margin: 0 0.125rem 0 0.125rem;
+     color: rgb(194, 57, 52);
+     float: left; 
+}

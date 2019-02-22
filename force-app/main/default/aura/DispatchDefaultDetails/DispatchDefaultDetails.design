@@ -1,0 +1,18 @@
+<design:component label="Work Order Configuration Details">
+   	<design:attribute name="ComponentLabel"  label="ComponentLabel"/>
+    <design:attribute name="ServiceTypeLabel" label="ServiceTypeLabel"/>
+    <design:attribute name="ServiceOptionsLabel" label="ServiceOptionsLabel"/>
+    <design:attribute name="SystemClassificationLabel" label="SystemClassificationLabel"/>
+    <design:attribute name="CategoryLabel" label="CategoryLabel"/>
+    <design:attribute name="KeepYourComponentsLabel" label="KeepYourComponentsLabel"/>
+    <design:attribute name="DSPOverideRequestLabel" label="DSPOverideRequestLabel"/>
+    <design:attribute name="ServiceProviderReasonLabel" label="ServiceProviderReasonLabel" />
+    <design:attribute name="AccidentalDamageLabel" label="AccidentalDamageLabel"/>
+    <design:attribute name="ADOverrideLabel" label="ADOverrideLabel"/>
+    <design:attribute name="BillToLabel" label="BillToLabel"/>
+    <design:attribute name="OrderNumberLabel" label="OrderNumberLabel"/>
+    <design:attribute name="KYHDLabel" label="KYHDLabel"/>
+    <sfdc:objects >
+        <sfdc:object>WorkOrder</sfdc:object>
+    </sfdc:objects>
+</design:component>

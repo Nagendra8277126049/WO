@@ -1,0 +1,22 @@
+<apex:page standardController="Campaign"
+        extensions="xecm.vfCreateOrUpdateWorkspaceController"
+        action="{!autoRun}">
+        
+    <!-- Technique taken from: http://sfdc.arrowpointe.com/2009/01/08/invoke-apex-from-a-custom-button-using-a-visualforce-page/ -->
+    
+    <!-- Call this page passing the Campaign's ID in the boId parameter of the
+         URL and the Campaign business object type in the boType parameter -->
+         
+    <!-- This page is normally called by a custom button on the Campaign
+         object. Create a new button, set the 'Display Type' to 'Detail Page
+         Button', set the 'Behavior' to 'Display in existing window with
+         sidebar', set the 'Content Source' to 'URL', and set the URL to
+         /apex/CampaignCreateOrUpdateWorkspace?boId={!Campaign.Id}&boType=Campaign -->
+        
+    <apex:sectionHeader title="Auto-Running Apex Code"/>
+    <apex:outputPanel >
+        You tried calling Apex Code from a button. If you see this page,
+        something went wrong.  You should have been redirected back to the
+        page from which you clicked the button.
+    </apex:outputPanel>
+</apex:page>

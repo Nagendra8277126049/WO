@@ -1,0 +1,32 @@
+<design:component label="DiagnosticStepsByCustomer">
+    <design:attribute name="FailedResultLabel" label="Text for header Failed Test Results" default="Failed Test Results" description="Label for Failed Test Results Section" />
+    <design:attribute name="PassedResultLabel" label="Text for header Passed Test Results" default="Passed Test Results" description="Label for Passed Test Results Section" />
+	<design:attribute name="eSupportLabel" label="Text for header eSupport" default="eSupport" description="Label for eSupport Header" />
+    <design:attribute name="TestResultLabel" label="Text for column Test Result" default="Test Result" description="Label for Field Column Test Result" />
+    <design:attribute name="TestNameLabel" label="Text for column Test Name" default="Test Name" description="Label for Field Column Test Name" />
+    <design:attribute name="TestDateLabel" label="Text for column Test Date" default="Test Date" description="Label for Field Column Test Date" />
+    <design:attribute name="ErrorCodeLabel" label="Text for column Error Code" default="Error Code" description="Label for Field Column Error Code" />   
+    <design:attribute name="eSupportErrorMessageText" label="Error Message for eSupport Diagnostic Steps" default="Error retrieving eSupport Diagnostic Steps" description="Text for showing errors on Toast"/>
+    <design:attribute name="TestResultEngPass" label="oData Service value for PASS TestResultEng" default="PASS" description="oData Service value for PASS TestResultEng" />
+    <design:attribute name="TestResultEngFail" label="oData Service value for FAIL TestResultEng" default="FAIL" description="oData Service value for FAIL TestResultEng"/>    
+	<design:attribute name="SupportAssistLabel" label="Text for Header Support Assist" default="Support Assist" description="Label for Support Assist Header"/>
+    <design:attribute name="CollectionDateLabel" label="Label for Collection Date field" default="Collection Date" description="Collection Date field label" />
+    <design:attribute name="SupportErrorMessageText" label="Text for Support Assist Error Message" default="Error retrieving Support Assist Diagnostic Steps" description="Text for Support Assist error Message"/>
+    <design:attribute name="SupportAssistPageSize" label="Numerical vale for Support Assist Page Size" default="20" description="Per page size of Support Assist Component"/>
+    <design:attribute name="ReportDateLabel" label="ReportDate Label" default="REPORT DATE" description="ReportDateLabel for eSupport Component"/>
+    <design:attribute name="eSupportURLLabel" label="eSupportURLLabel" default="" description="eSupportURLLabel for eSupport Component"/>
+    <design:attribute name="SupportAssitUrlLabel" label="SupportAssitUrlLabel" default="" description="SupportAssitUrlLabel for SupportAssist Component"/>
+    <design:attribute name="Critical" label="CriticalLabel" default="" description="CriticalLabel for eSupport Component"/>
+    <design:attribute name="NeedsAttention" label="NeedsAttentionLabel" default="" description="NeedsAttentionLabel for eSupport Component"/>
+    <design:attribute name="Recommended" label="RecommendedLabel" default="" description="RecommendedLabel for eSupport Component"/>
+    <design:attribute name="Paranthesis" label="ParanthesisLabel" default="" description="Paranthesis for eSupport and SA Component"/>
+    <design:attribute name="OpenParanthesis" label="OpenParanthesisLabel" default="" description="OpenParanthesis for eSupport and SA Component"/>
+    <design:attribute name="CloseParanthesis" label="CloseParanthesisLabel" default="" description="OpenParanthesis for eSupport and SA Component"/>
+    <design:attribute name="noRecordsFoundMessage" label="noRecordsFoundMessageLabel" default="" description="noRecordsFoundMessage for eSupport and SA Component"/>
+    
+    <sfdc:objects >
+        <sfdc:object >Asset</sfdc:object>
+        <sfdc:object >Case</sfdc:object>
+        <sfdc:object >LiveChatTranscript</sfdc:object>
+    </sfdc:objects>
+</design:component>

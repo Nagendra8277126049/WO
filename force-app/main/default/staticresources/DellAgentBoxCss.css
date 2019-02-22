@@ -1,0 +1,103 @@
+.CoveoCustomFacetPopup {
+  font-size: 12px;
+  position: relative;
+  vertical-align: middle;
+  margin: 0px 0px 5px 0px;
+  display: inline-block;
+}
+
+.CoveoCustomFacetPopup.coveo-opened:after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 47%;
+  z-index: 1;
+  height: 0;
+  width: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px;
+  border-bottom-color: #696969;
+}
+
+.CoveoCustomFacetPopup.coveo-opened.coveo-with-animation:after {
+  -webkit-animation: rotateIn 1s;
+  -moz-animation: rotateIn 1s;
+  animation: rotateIn 1s;
+}
+
+.CoveoCustomFacetPopup .coveo-box-popup-wrapper {
+  display: none;
+  position: absolute;
+  z-index: 1001;
+  margin-top: 10px;
+  border: 1px solid #cccccc;
+  background-color: white;
+  max-height: 500px;
+  overflow: auto;
+  border-radius: 4px;
+}
+
+.CoveoCustomFacetPopup.coveo-opened .coveo-box-popup-wrapper {
+  display: block;
+}
+
+.CoveoCustomFacetPopup.coveo-opened.coveo-with-animation .coveo-box-popup-wrapper {
+  -webkit-animation: rotateIn 1s;
+  -moz-animation: rotateIn 1s;
+  animation: rotateIn 1s;
+}
+
+.CoveoCustomFacetPopup .coveo-box-popup-toggle, .CoveoCustomFacetPopup .coveo-box-popup-title {
+  cursor: pointer;
+}
+
+.CoveoCustomFacetPopup .coveo-box-popup-toggle {
+  vertical-align: middle;
+}
+
+.CoveoCustomFacetPopup .coveo-box-popup-toggle.coveo-hidden {
+  display: none;
+}
+
+.CoveoCustomFacetPopup .coveo-box-popup-wrapper .coveo-facet-column {
+  margin: 10px;
+  min-width: 250px;
+}
+
+.CoveoCustomFacetPopup .coveo-box-popup-toggle {
+    position: relative;
+    display: inline-block;
+    padding: 0;
+    background: transparent;
+    background-clip: padding-box;
+    border: none;
+    border-radius: 0.25rem;
+    color: #0070d2;
+    font-size: inherit;
+    line-height: 2.125rem;
+    text-decoration: none;
+    -webkit-appearance: none;
+    white-space: normal;
+    user-select: none;
+    transition: color 0.05s linear, background-color 0.05s linear;
+}
+
+.CoveoCustomFacetPopup .coveo-box-popup-toggle {
+    line-height: 1.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.CoveoCustomFacetPopup .coveo-box-popup-toggle {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #d8dde6;
+    background-color: white;
+}
+
+.CoveoCustomFacetPopup .coveo-box-popup-toggle:hover {
+    background-color: #f4f6f9;
+}

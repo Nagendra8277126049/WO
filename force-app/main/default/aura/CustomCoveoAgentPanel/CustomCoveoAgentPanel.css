@@ -1,0 +1,144 @@
+.THIS header {
+    display: none;
+}
+
+.THIS.CoveoV2AgentPanel {
+     padding: 0 !important;
+}
+
+.THIS .CoveoSearchInterface.coveo-small-facets .coveo-facet-column.coveo-facet-dropdown-content {
+    max-height: 400px;
+}
+
+.THIS .CoveoExcerpt {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    width: calc(100% - 0px);
+}
+
+.THIS .CoveoResultLink {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+
+/* Reposition quickview icon */
+.THIS .coveo-icon-for-quickview-svg {
+    margin-top: 4px;
+    width: 17px;
+    height: 9px;
+}
+
+
+/* Remove white space from tab section */
+.THIS .coveo-tab-section {
+    border-bottom: none;
+    min-height: 0;
+}
+
+
+/* Resize searchbox */
+.THIS .CoveoSearchbox {
+    height: 35px;
+    margin-right: 5px;
+}
+.THIS .magic-box .magic-box-input {
+    height: 35px;
+}
+.THIS .magic-box .magic-box-clear {
+    line-height: 32px;
+}
+.THIS .magic-box .magic-box-input input {
+    height: 35px;
+}
+.THIS .magic-box .magic-box-input .magic-box-underlay {
+    height: 35px;
+}
+.THIS .magic-box .magic-box-input input::placeholder {
+    color: #b0adab;
+    opacity: 1;
+}
+
+
+/* Three-column header layout */
+.THIS .col {
+    float: left;
+}
+.THIS .left {
+    display: flex;
+    align-items: center;
+    font-family: 'Salesforce Sans',Arial,sans-serif;
+    font-size: 16px;
+    color: #080707;
+    line-height: 1.5;
+    margin-top: 6px;
+    width: 35%;
+}
+.THIS .mid {
+    width: calc(65% - 40px);
+}
+.THIS .right {
+    width: 40px;
+}
+
+
+/* Display icon in Searchbox */
+.THIS .magic-box .magic-box-input input {
+    background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGlkPSJzZWFyY2giIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjx0aXRsZT48L3RpdGxlPjxwYXRoIHN0eWxlPSJmaWxsOiNiMGFkYWI7IiBkPSJNMjIuOSAyMC45bC02LjItNi4xYzEuMy0xLjggMS45LTQgMS42LTYuNC0uNi0zLjktMy44LTcuMS03LjgtNy40QzUgLjQuNCA1IDEgMTAuNWMuMyA0IDMuNSA3LjMgNy40IDcuOCAyLjQuMyA0LjYtLjMgNi40LTEuNWw2LjEgNi4xYy4zLjMuNy4zIDEgMGwuOS0xYy4zLS4zLjMtLjcuMS0xek0zLjcgOS42YzAtMy4yIDIuNy01LjkgNS45LTUuOSAzLjMgMCA2IDIuNyA2IDUuOSAwIDMuMy0yLjcgNi02IDYtMy4yIDAtNS45LTIuNi01LjktNnoiPjwvcGF0aD48L3N2Zz4=');;
+    background-repeat: no-repeat;
+    background-size: 15px 15px;
+    background-position-x: 10px;
+    background-position-y: 10px;
+    text-indent: 34px;
+}
+
+
+/* Hide facet button text */
+.THIS .CoveoSearchInterface.coveo-small-tabs .coveo-dropdown-header p, .THIS .CoveoSearchInterface.coveo-small-facets .coveo-dropdown-header p, .THIS .CoveoSearchInterface.coveo-small-recommendation .coveo-dropdown-header p {
+    visibility: hidden;
+    width: 15px;        
+}
+
+
+/* Reshape button */
+.THIS .coveo-facet-dropdown-header {
+    height: 36px !important;
+    padding: 10px 9px !important;
+}
+
+
+/* Replace facet button text with icon */
+.THIS .CoveoSearchInterface.coveo-small-tabs .coveo-dropdown-header p:before, .THIS .CoveoSearchInterface.coveo-small-facets .coveo-dropdown-header p:before, .THIS .CoveoSearchInterface.coveo-small-recommendation .coveo-dropdown-header p:before {
+    content: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGlkPSJmaWx0ZXJMaXN0IiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj48cGF0aCBzdHlsZT0iZmlsbDojM2UzZTNjOyIgZD0iTTIyLjMgMS44SDEuOGMtLjcgMC0xIC44LS42IDEuM2w5IDEwLjVjLjIuMy40LjguNCAxLjJ2Ni43YzAgLjMuMy43LjcuN2gxLjRjLjQgMCAuNi0uNC42LS43di02LjdjMC0uNC4yLS45LjUtMS4ybDkuMS0xMC41Yy40LS41LjEtMS4zLS42LTEuM3oiPjwvcGF0aD48L3N2Zz4=');
+    height: 14px;
+    width: 14px;
+    padding-top: 5px;
+    visibility: visible;
+}
+
+
+/* Facet modal placement */
+.THIS .CoveoV2SearchUI .coveo-facet-column.coveo-facet-dropdown-content.coveo-dropdown-content {
+    top: 60px!important
+}
+.THIS .coveo-dropdown-header-wrapper {
+    display: block !important;
+}
+
+
+/* ResultActionsMenu icons size */
+.THIS .CoveoResultActionsMenu .coveo-result-actions-menu-menu-item svg {
+    height: 14px;
+    width: 14px;
+}
+.THIS .CoveoAttachToCase svg.coveo-attach-icon {
+    height: 14px;
+    width: 14px;        
+}
+.THIS .CoveoResultActionsMenu .coveo-result-actions-menu-menu-item {
+    padding: 3px 9px;
+}

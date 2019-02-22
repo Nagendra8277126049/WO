@@ -1,0 +1,148 @@
+<!--
+*******************************************************************************************************
+Name:       AssetContactDetails.cmp
+Description:  This Lightning Component displays the asset contact details.  - story #4150193
+*******************************************************************************************************
+Date         Version    Author                  Summary of Changes 
+*******************************************************************************************************
+11/02/2017     1.0     Rodrigo Carpio           Initial Release
+12/21/2017     1.1     Rodrigo Carpio           Remove the section for the loading of modal dialog
+05/15/2018     1.1     Srikanth Parvathareddy   Story #4918471 - Contact Field Addition Due to BIL PCF Changes
+*******************************************************************************************************
+-->
+<aura:component controller="AssetContactDetails" implements="flexipage:availableForRecordHome,force:hasRecordId">
+    <!--
+    <aura:attribute name="contacts" type="AssetContactDetails.AssetContactDetailsWrapper"/>
+	-->
+    <aura:attribute name="contacts" type="object" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="conSpinner1" type="boolean" default="false" />
+    <aura:attribute name="conAlert1" type="boolean" default="false" />
+    <aura:attribute name="editWhichContact" type="string" />
+    <!-- Note that name="cmpContactUpdateEvent" in aura:registerEvent in AssetContactDetailsUpdate.cmp -->
+    <aura:handler name="cmpContactUpdateEvent" event="c:AssetContactUpdateEvt" action="{!c.handleComponentEvent}" />
+
+    <!-- section for the data display starts here -->
+    <lightning:card>
+        <ui:scrollerWrapper class="scrollerSize">
+            <table class="slds-table">
+                <tr>
+                    <td colspan="4">
+                        <div class="slds-media slds-media--center slds-has-flexi-truncate" style="margin-bottom: 10px;">
+                            <div class="slds-media__figure">
+                                <lightning:icon iconName="standard:contact" alternativeText="Contact" size="small" />
+                            </div>
+                            <div class="slds-media__body">
+                                <h2 class="slds-text-heading--small slds-truncate">{!$Label.c.AssetContacts}</h2>
+                            </div>
+                        </div><!-- Spinner Code Begins Here -->
+                        <aura:if isTrue="{!v.conSpinner1}">
+                            <div aura:id="spinnerId" class="slds-spinner-container">
+                                <div class="slds-spinner--brand  slds-spinner slds-spinner--small slds-is-relative" role="conAlert1">
+                                    <span class="slds-assistive-text">Loading</span>
+                                    <div class="slds-spinner__dot-a"></div>
+                                    <div class="slds-spinner__dot-b"></div>
+                                </div>
+                            </div>
+                        </aura:if>
+                        <!-- Spinner Code Ends Here -->
+                    </td>
+                </tr>
+                <tr>
+                </tr>
+                <!--
+        <aura:if isTrue="{!v.contacts != null}">
+		-->
+                <aura:if isTrue="{! !empty(v.contacts)}">
+                    <!-- primary contact section -->
+                    <tr class="font-size-text-xx-small  slds-text-color_weak">
+                        <td class="sdls-asset-con-header-name">{!$Label.c.AssetContactPrimary}</td>
+                        <td class="sdls-asset-con-header-phone">{!$Label.c.AssetContactPhone}</td>
+                        <td class="sdls-asset-con-header-email">{!$Label.c.AssetContactEmail}</td>
+                        <td>
+                            <div align="right">
+                                <aura:if isTrue="{!v.contacts.isReadOnly != true}">
+                                    <lightning:buttonIcon aura:id="priConEditBtn" class="icn" variant="bare" iconName="utility:edit" size="small" title='Edit Primary Contact' onclick="{!c.openModalWindow}" />
+                                </aura:if>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="sdls-asset-con-header-name slds-contact__spacing">
+                            <ui:outputText value="{!v.contacts.fullName}" />
+                        </td>
+                        <td class="sdls-asset-con-header-phone slds-contact__spacing">
+                            <ui:outputText value="{!v.contacts.fullPhone}" />
+                        </td>
+                        <td class="sdls-asset-con-header-email slds-contact__spacing">
+                            <div style="word-wrap:break-word">
+                                <ui:outputText value="{!v.contacts.email}" />
+                            </div>
+                        </td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <!-- secondary contact section -->
+                    <tr class="font-size-text-xx-small slds-text-color_weak">
+                        <td class="sdls-asset-con-header-name">{!$Label.c.AssetContactSecondary}</td>
+                        <td class="sdls-asset-con-header-phone">{!$Label.c.AssetContactPhone}</td>
+                        <td class="sdls-asset-con-header-email">{!$Label.c.AssetContactEmail}</td>
+                        <td>
+                            <div align="right">
+                                <aura:if isTrue="{!v.contacts.isReadOnly != true}">
+                                    <lightning:buttonIcon aura:id="secConEditBtn" variant="bare" iconName="utility:edit" size="small" title='Edit Secondary Contact' onclick="{!c.openModalWindow}" />
+                                </aura:if>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr style="padding: 1.25rem;">
+                        <td class="sdls-asset-con-header-name slds-contact__spacing">
+                            <ui:outputText value="{!v.contacts.secondaryFullName}" />
+                        </td>
+                        <td class="sdls-asset-con-header-phone slds-contact__spacing">
+                            <ui:outputText value="{!v.contacts.secondaryFullPhone}" />
+                        </td>
+                        <td class="sdls-asset-con-header-email slds-contact__spacing">
+                            <div class="slds-grid">
+                                <ui:outputText value="{!v.contacts.secondaryEmail}" class="sdls-asset-con-header-email-wrp" />
+                            </div>
+                        </td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <!-- tertiary contact section -->
+                    <tr class="font-size-text-xx-small slds-text-color_weak">
+                        <td class="sdls-asset-con-header-name">{!$Label.c.AssetContactTertiary}</td>
+                        <td class="sdls-asset-con-header-phone">{!$Label.c.AssetContactPhone}</td>
+                        <td class="sdls-asset-con-header-email">{!$Label.c.AssetContactEmail}</td>
+                        <td>
+                            <div align="right">
+                                <aura:if isTrue="{!v.contacts.isReadOnly != true}">
+                                    <lightning:buttonIcon aura:id="triConEditBtn" variant="bare" iconName="utility:edit" size="small" title='Edit Tertiary Contact' onclick="{!c.openModalWindow}" />
+                                </aura:if>
+                            </div>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td class="sdls-asset-con-header-name slds-contact__spacing">
+                            <ui:outputText value="{!v.contacts.tertiaryFullName}" />
+                        </td>
+                        <td class="sdls-asset-con-header-phone slds-contact__spacing">
+                            <ui:outputText value="{!v.contacts.tertiaryFullPhone}" />
+                        </td>
+                        <td class="sdls-asset-con-header-email slds-contact__spacing">
+                            <div style="word-wrap:break-word">
+                                <ui:outputText value="{!v.contacts.tertiaryEmail}" />
+                            </div>
+                        </td>
+                        <td>&nbsp;</td>
+                    </tr>
+                </aura:if>
+            </table>
+        </ui:scrollerWrapper>
+        <!-- section for the data display ends here -->
+    </lightning:card>
+    <!--set component in the varible {!v.body}-->
+    <div aura:id="cmpBody">
+        {!v.body}
+    </div>
+</aura:component>

@@ -1,0 +1,34 @@
+<aura:component controller="HardwareAndServicesProjectInfoController" implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="OrderItems" type="Object[]" />
+    <aura:attribute name="columns" type="List" />
+    <aura:attribute name="isLoading" type="boolean" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.getItems}" />	
+    
+    <div class="slds-clearfix">
+        <lightning:button class="slds-m-bottom_small slds-float_right" 
+                          label="Download" 
+                          iconName="utility:download" 
+                          iconPosition="left" 
+                          onclick="{!c.downloadCsv}" />
+    </div>
+    
+    <div class="slds-box" onkeyup="{! c.handleKeyUp }">
+    	<lightning:input
+            aura:id="enter-search"
+            name="enter-search"
+            type="search"
+            label="Filter items by Item Class/LOB Description" />
+    </div>
+
+    <lightning:datatable
+            aura:id="orderItemsTable"
+            keyField="Id"
+            data="{! v.OrderItems }"
+            columns="{! v.columns }"
+            hideCheckboxColumn="true"
+            isLoading="{! v.isLoading }" />
+
+</aura:component>

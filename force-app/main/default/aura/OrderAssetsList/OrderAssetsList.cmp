@@ -1,0 +1,64 @@
+<aura:component controller="GetOrderAssets" implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global">
+    
+    <!-- injecting record ID -->
+    <aura:attribute name="recordId" type="String" />
+    
+    <!-- attributes -->
+    <aura:attribute name="assets" type="Asset[]" />
+    <aura:attribute name="columns" type="List" />
+    
+    <!-- handler -->
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+    
+    <!-- datatable displaying related Asset information -->
+    
+    <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+        <thead>
+            <tr class="slds-text-title--caps">
+                <th scope="col">
+                    <div class="slds-truncate" title="Service Tag">SERVICE TAG</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Product LOB Description">PRODUCT LOB DESCRIPTION</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Product Line Description">PRODUCT LINE DESCRIPTION</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Warranty Date">WARRANTY DATE</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Tie Number">TIE NUMBER</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="PSNT">PSNT</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <aura:iteration items="{!v.assets}" var="assets">
+                <tr>
+                    <th scope="row" data-label="Name">
+                        <div class="slds-truncate" title="{! assets.Name }">{! assets.Name }</div>
+                    </th>
+                    <td data-label="Product LOB Description">
+                        <div class="slds-truncate" title="{! assets.Product2.LOB_Description__c }">{! assets.Product2.LOB_Description__c }</div>
+                    </td>
+                    <td data-label="Product Line Description">
+                        <div class="slds-truncate" title="{! assets.Product2.LOB_Description__c }">{! assets.Product2.LOB_Description__c }</div>
+                    </td>
+                    <td data-label="Warranty Date">
+                        <div class="slds-truncate" title="Warranty Date"></div>
+                    </td>
+                    <td data-label="Tie Number">
+                        <div class="slds-truncate" title="{! assets.Order_Tie_Number__c }">{! assets.Order_Tie_Number__c }</div>
+                    </td>
+                    <td data-label="PSNT">
+                        <div class="slds-truncate" title="{! assets.PSNT__c }">{! assets.PSNT__c }</div>
+                    </td>                    
+                </tr>
+            </aura:iteration>
+        </tbody>
+	</table>
+    
+</aura:component>

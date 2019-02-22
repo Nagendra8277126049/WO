@@ -1,0 +1,94 @@
+<aura:component controller="AddGroupMember" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    
+    <aura:attribute name="reg" type="Group[]"/>
+     <aura:attribute name="selectedRecord" type="sObject" default="{}" description="Use,for store SELECTED sObject Record"/>
+    <aura:handler name="init" value="{!this}" action="{!c.myAction}"/>
+     <aura:attribute name="usr" type="User[]"/>
+    <aura:attribute name="selecteduser" type="String[]" default="0"/>
+    <aura:attribute name="groupid" type="string"/>
+    <aura:attribute name="selectedLookUpRecord" type="sObject" default="{}"/>
+     <!--<ui:button label="Get Public Group" press="{!c.myAction}"/>-->
+    <!--declare events hendlers-->  
+    <aura:handler name="oSelectedRecordEvent" event="c:selectedsObjectRecordEvent" action="{!c.getSelectid}"/>
+    <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+<thead>
+<tr class="slds-text-title_caps">.
+
+<th scope="col">
+<div class="slds-truncate" title="Group Name">Group Name</div>
+</th>
+<th scope="col">
+<div class="slds-truncate" title="Created Date">Created Date</div>
+</th>
+
+
+</tr>
+</thead>
+<tbody>
+<aura:iteration var="r" items="{!v.reg}" >
+<tr>
+     <td scope="col">       
+        <lightning:button  variant="brand"
+                          label="Add User"
+                          title="test"
+                          name="{!r.Id}"
+                           onclick="{!c.openModel}" /> 
+  </td>
+<td data-label="Group Name">
+<div class="slds-truncate" title="Cloudhub">{!r.Name}</div>
+</td>
+    <td data-label="Created Date">
+<div class="slds-truncate" title="4/14/2015">{!r.CreatedDate}</div>
+</td>
+  
+</tr>
+</aura:iteration>
+</tbody>
+</table>
+  <!--use boolean attribute for Store true/false value,
+    make default to "false" so modal box are not display on the load of component. 
+    --> 
+    <aura:attribute name="isOpen" type="boolean" default="false"/>
+    
+    <!--Use "slds-m-around_xx-large" class to add standard X-Large padding to the component--> 
+    <div class="slds-m-around_xx-large">
+
+        <!--Use aura:if tag to display Model Box, on the bese of conditions. [isOpen boolean attribute] -->   
+        <aura:if isTrue="{!v.isOpen}">
+             
+            <!--###### MODAL BOX Start######--> 
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- ###### MODAL BOX HEADER Start ######-->
+                    <header class="slds-modal__header">
+                        <lightning:buttonIcon iconName="utility:close"
+                                              onclick="{! c.closeModel }"
+                                              alternativeText="close"
+                                              variant="bare-inverse"
+                                              class="slds-modal__close"/>
+                       
+                    </header>
+                    <!--###### MODAL BOX BODY Part Start######-->
+                    <div style="height: 200px;" class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                   <c:PublicGroupCustomLookup objectAPIName="user" IconName="standard:user" selectedRecord="{!v.selectedLookUpRecord}" label="User Name"/>
+                    </div>
+                    <!--###### MODAL BOX FOOTER Part Start ######-->
+                    <footer class="slds-modal__footer">
+                        <lightning:button variant="neutral" 
+                                          label="Cancel"
+                                          title="Cancel"
+                                          onclick="{! c.closeModel }"/>
+                        <lightning:button variant="brand" 
+                                          label="Add Users"
+                                          title="Add Users"
+                                          onclick="{! c.likenClose }"/>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+            <!--###### MODAL BOX Part END Here ######-->
+            
+        </aura:if>
+    </div> 
+    
+</aura:component>

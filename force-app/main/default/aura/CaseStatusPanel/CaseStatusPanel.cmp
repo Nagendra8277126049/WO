@@ -1,0 +1,36 @@
+<!--
+************************************************************************************************************************************************************
+Name:         CaseStatusPanel.cmp
+Description:  This Lightning Component that will be the place holder for Case Status Update User Story 5820178 & 5820681
+          
+************************************************************************************************************************************************************
+Date         Version    Author             Summary of Changes 
+************************************************************************************************************************************************************
+12/31/2018     1.0     Brundha Rajkumar        Initial Release
+************************************************************************************************************************************************************
+-->
+
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId" Controller="CaseStatusController" access="global">
+    <aura:attribute name="SubmitReviewMessage" type="String" />
+    <aura:attribute name="SubmitButtonLabel" type="String" />
+    <aura:attribute name="CancelButtonLabel" type="String" />
+    <div class="custom-background">
+        <lightning:card class="backColor">
+            <lightning:layout horizontalAlign="spread">
+                <lightning:layoutItem flexibility="auto" padding="around-small">
+                    {#v.SubmitReviewMessage}
+                </lightning:layoutItem>
+                <lightning:layoutItem flexibility="auto" padding="around-small">
+                    <div class="slds-float_right">
+                        <lightning:button label="{#v.CancelButtonLabel}" onclick="{!c.handleCancel}" />
+                        <lightning:button label="{#v.SubmitButtonLabel}" onclick="{!c.handleSubmit}" variant="brand" />
+                    </div>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </lightning:card>
+    </div>
+    <!--set component in the varible {!v.body}-->
+    <div aura:id="cmpBody">
+        {!v.body}
+    </div>
+</aura:component>

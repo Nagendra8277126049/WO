@@ -1,0 +1,125 @@
+<!--
+   *******************************************************************************************************
+   Name:       DispatchServiceProviderEdit.cmp
+   Description:  This Lightning Component will have Edit Screen to allow Rescheduling on Work In Progress 
+				 Status - STORY 5587160
+   *******************************************************************************************************
+   Date         Version    Author             Summary of Changes 
+   *******************************************************************************************************
+   09/24/2018     1.0     Harsha Reddy      Added Logic for Rescheduling
+   *******************************************************************************************************
+-->
+<aura:component controller="DispatchServiceProviderController">
+    <aura:attribute name="ComponentLabel" type="String" default=""/>
+    <aura:attribute name="DSPFieldLabel" type="String" default=""/>
+    <aura:attribute name="ScheduleStartDateFieldLabel" type="String" default=""/>
+    <aura:attribute name="ScheduleEndDateFieldLabel" type="String" default=""/>
+    <aura:attribute name="TimezoneFieldLabel" type="String" default=""/>
+    <aura:attribute name="EntitlementStartDateFieldLabel" type="String" default=""/>
+    <aura:attribute name="EntitlementEndDateFieldLabel" type="String" default=""/>
+    <aura:attribute name="WorkOrderRecord" type="Object" />
+    <aura:attribute name="apexResult" type="DispatchServiceProviderController.responseWrapper" />
+    <aura:attribute name="recordId" type="string" default="" />
+    <aura:attribute name="dateOptions" type="List" default="[ {'label': '-- None --', 'value': '', 'selected':'true'} ]" />
+    <aura:attribute name="timeOptions" type="List" default="[ {'label': '-- None --', 'value': '','selected':'true'} ]" />
+    <aura:attribute name="selectedDate" type="string" default=""/>
+    <aura:attribute name="selectedTime" type="string" default=""/>
+    <aura:attribute name="errorMessage" type="string" default="" />
+    <aura:attribute name="EntitlementEndDateValue" type="String" default=""/>
+    <aura:attribute name="EntitlementStartDateValue" type="String" default=""/>
+    <aura:attribute name="IsSpinner" type="boolean" default="false"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:registerEvent name="openReadFormEvent" type="c:DispatchServiceProviderEditClose" />
+
+    <lightning:card iconName="standard:work_order">
+        <aura:if isTrue="{!v.IsSpinner}">
+            <lightning:spinner variant="brand" size="Small" />
+        </aura:if>
+        <aura:set attribute="footer">
+            <lightning:button label="Save" onclick="{!c.handleSave}" variant="brand" />
+            <lightning:button label="Cancel" onclick="{!c.destroyComp}" />
+        </aura:set>
+
+        <!-- Section to display : Error Message -->
+        <aura:if isTrue="{! not(empty(v.errorMessage))}">
+            <div class="slds-text-color_error slds-p-left_x-small slds-align_absolute-center">
+                {!v.errorMessage}
+            </div>
+        </aura:if>
+        <!-- Section Ends: Error Message -->
+
+        <div class="c-container">
+            <lightning:layout multipleRows="true">
+                <lightning:layoutItem flexibility="auto" padding="around-small" size="6">
+               		<div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                        <div class="test-id__field-label-container">
+                            <span class="test-id__field-label slds-form-element__label">
+                                {#v.DSPFieldLabel}
+                            </span>
+                        </div>
+                        <div class="slds-form-element__control slds-grid itemBody">
+                            <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                <span class="uiOutputText">
+                                    {!v.WorkOrderRecord.DSPName__c}
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem flexibility="auto" padding="around-small" size="6">
+                	<div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                        <div class="test-id__field-label-container">
+                            <span class="test-id__field-label slds-form-element__label">
+                                {#v.TimezoneFieldLabel}
+                            </span>
+                        </div>
+                        <div class="slds-form-element__control slds-grid itemBody">
+                            <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                <span class="uiOutputText">
+                                    {!v.WorkOrderRecord.Timezone__c}
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem flexibility="auto" padding="around-small" size="6">
+                    <lightning:combobox name="date" label="Scheduling Date" value="{!v.selectedDate}" onchange="{! c.handleChange }" options="{!v.dateOptions}" />
+                </lightning:layoutItem>
+                <lightning:layoutItem flexibility="auto" padding="around-small" size="6">
+                    <lightning:combobox name="time" label="Scheduling Time" value="{!v.selectedTime}" onchange="{! c.handleChange }" options="{!v.timeOptions}" />
+                </lightning:layoutItem>
+                <lightning:layoutItem flexibility="auto" padding="around-small" size="6">
+                    <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                        <div class="test-id__field-label-container">
+                            <span class="test-id__field-label slds-form-element__label">
+                                {#v.EntitlementStartDateFieldLabel}
+                            </span>
+                        </div>
+                        <div class="slds-form-element__control slds-grid itemBody">
+                            <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                <lightning:formattedDateTime value="{!v.EntitlementStartDateValue}" timeZone="GMT" year="numeric" month="numeric" day="numeric" hour="2-digit" minute="2-digit" hour12="true"/>
+                            </span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem flexibility="auto" padding="around-small" size="6">
+                    <div class="slds-form-element slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                        <div class="test-id__field-label-container">
+                            <span class="test-id__field-label slds-form-element__label">
+                                {#v.EntitlementEndDateFieldLabel}
+                            </span>
+                        </div>
+                        <div class="slds-form-element__control slds-grid itemBody">
+                            <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                <lightning:formattedDateTime value="{!v.EntitlementEndDateValue}" timeZone="GMT" year="numeric" month="numeric" day="numeric" hour="2-digit" minute="2-digit" hour12="true"/>
+                            </span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </div>
+        <aura:set attribute="title">
+            {#v.ComponentLabel}
+        </aura:set>
+    </lightning:card>
+</aura:component>

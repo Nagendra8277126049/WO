@@ -1,0 +1,13 @@
+<design:component label="Work Order Service Provider Details">
+	<design:attribute name="ComponentLabel" label="Service Provider"/>
+	<design:attribute name="DSPFieldLabel" label="DSP Field Label" />
+    <design:attribute name="ScheduleStartDateFieldLabel" label="ScheduleStartDateFieldLabel" />
+    <design:attribute name="ScheduleEndDateFieldLabel" label="ScheduleEndDateFieldLabel" />
+    <design:attribute name="TimezoneFieldLabel" label="TimezoneFieldLabel" />
+    <design:attribute name="EntitlementStartDateFieldLabel" label="EntitlementStartDateFieldLabel" />
+    <design:attribute name="EntitlementEndDateFieldLabel" label="EntitlementEndDateFieldLabel" />
+    <design:attribute name="IsDefferedFieldLabel"  label="IsDefferedFieldLabel"/>
+    <sfdc:objects >
+        <sfdc:object >WorkOrder</sfdc:object>
+    </sfdc:objects>
+</design:component>

@@ -1,0 +1,53 @@
+.THIS .sdls-asset-con-input-half{
+    width:50%;
+}
+.THIS .sdls-asset-con-input-whole{
+    width:100%;
+}
+
+.THIS .sdls-asset-con-header-name{
+    width:40%;    
+}
+.THIS .sdls-asset-con-header-email{
+    width:25%;
+    align:left; 
+    
+}
+.THIS .sdls-asset-con-header-email-wrp{
+    word-wrap: break-word; 
+}
+.THIS .sdls-asset-con-header-phone{
+    align:left;
+    
+}
+.THIS .sdls-asset-con-country-code{
+    width:10px !important;
+}
+.THIS .sdls-asset-con-area-code{
+    width:30px !important;
+}
+.THIS .sdls-asset-con-table-name{
+    width:100%;
+}
+.THIS.icn svg{
+    fill:red;
+}
+
+.THIS .slds-card__header {
+    padding: 0 0 0;
+}
+.THIS .headerBack {
+background: linear-gradient(to right, #e5f0fa , #ffffff);
+}
+.THIS .slds-contact__spacing{
+    padding-top:0 !important;
+    padding-bottom: .75rem !important;
+}
+
+.THIS .additionalSpace{
+    padding-left:4px;
+}
+
+.THIS .slds-popup__spacing{
+	padding: .30rem !important;
+}

@@ -1,0 +1,135 @@
+<aura:component >
+    <aura:attribute name="summary" type="Map"/>
+    <aura:attribute name="currency" type="String" default="USD" />
+    <aura:attribute name="partner" type="String"/>
+    <aura:attribute name="insideMessage" type="String"/>
+    <aura:attribute name="feesSummantion" type="Decimal" default="0"/>
+
+    <aura:handler name="change" value="{!v.summary}" action="{!c.initHandler}" />
+    
+    <lightning:card title="Summary" iconName="standard:contract_line_item" class="slds-theme">
+        <p class="slds-p-horizontal--small">
+            
+            <aura:if isTrue="{!v.insideMessage &#38;&#38; v.summary.items[0]}">
+                <div>
+                    <div>
+                        <span style="color:red">{!v.insideMessage}</span>
+                    </div>
+                </div>
+            </aura:if>
+            
+            <aura:if isTrue="{!v.summary.items[0]}">
+                <div aria-labelledby="summary-item-section">
+                    
+                    <div class="slds-p-bottom_small slds-p-top_small">                    
+                    	<aura:if isTrue="{!v.partner}">
+                            <div class="slds-grid">
+                                <div class="slds-col slds-size_4-of-12">
+                                    Selected Partner: 
+                                </div>
+                                <div class="slds-col slds-size_8-of-12">
+                                    {!v.partner} 
+                                </div>
+                            </div>
+                        </aura:if>
+                        <aura:if isTrue="{!v.partner}">
+                            <div class="slds-grid">
+                                <div class="slds-col slds-size_4-of-12">
+                                    Currency: 
+                                </div>
+                                <div class="slds-col slds-size_8-of-12">
+                                    {!v.currency} 
+                                </div>
+                            </div>
+                            <br/>
+                        </aura:if>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_4-of-12">
+                                TotalValue: 
+                            </div>
+                            <div class="slds-col slds-size_8-of-12">
+                                <lightning:formattedNumber currencyCode="{!v.currency}" value="{!v.summary.totalValue}" style="currency"/>
+                            </div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_4-of-12">
+                                DellPortion: 
+                            </div>
+                            <div class="slds-col slds-size_8-of-12">
+                                <lightning:formattedNumber currencyCode="{!v.currency}" value="{!v.summary.dellPortion}" style="currency"/>
+                            </div>
+                        </div>
+                        <aura:if isTrue="{!v.summary.fees[0]}">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_4-of-12">
+                                Fees Value(-): 
+                            </div>
+                            <div class="slds-col slds-size_8-of-12">
+                                <lightning:formattedNumber currencyCode="{!v.currency}" value="{!v.feesSummantion}" style="currency"/>
+                            </div>
+                        </div>
+                        </aura:if>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_4-of-12">
+                                <b>Net Value:</b>
+                            </div>
+                            <div class="slds-col slds-size_8-of-12">
+                                <b><lightning:formattedNumber currencyCode="{!v.currency}" value="{!v.summary.netValue}" style="currency"/></b>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <fieldset class="slds-box slds-theme--default slds-container">
+                        <legend id="summary-item-section" class="slds-text-heading--small slds-p-vertical--x-small">
+                            Items
+                        </legend>
+                        
+                        <div style="margin-top:-15px">
+                            <aura:iteration items="{!v.summary.items}" var="summaryItem">
+                                <div class="slds-grid">
+                                    <div class="slds-size_1-of-4 overflowSection">
+                                        <b title="{!summaryItem.type}">{!summaryItem.type}</b>(s)
+                                    </div>
+                                    <div class="slds-col">
+                                        <lightning:formattedNumber currencyCode="{!v.currency}" value="{!summaryItem.totalValue}" style="currency"/>
+                                    </div>
+                                    <div class="slds-col">
+                                        -<lightning:formattedNumber currencyCode="{!v.currency}" value="{!summaryItem.dellPortion}" style="currency"/>
+                                    </div>
+                                    <div class="slds-col">
+                                        <b><lightning:formattedNumber currencyCode="{!v.currency}" value="{!summaryItem.netValue}" style="currency"/></b>
+                                    </div>
+                                </div>
+                            </aura:iteration>
+                        </div>
+                    </fieldset>
+                </div>
+            </aura:if>
+            
+            <aura:if isTrue="{!v.summary.fees[0]}">
+                <div aria-labelledby="summary-fee-section">
+                    <fieldset class="slds-box slds-theme--default slds-container">
+                        <legend id="summary-fee-section" class="slds-text-heading--small slds-p-vertical--x-small">
+                            Fees
+                        </legend>
+                        
+                        <div style="margin-top:-15px">
+                            <aura:iteration items="{!v.summary.fees}" var="feeItem">
+                                <div class="slds-grid">
+                                    <div class="slds-size_1-of-4 overflowSection">
+                                        <b title="{!feeItem.type}">{!feeItem.type}</b> 
+                                    </div>
+                                    <div class="slds-size_1-of-4">
+                                        -<lightning:formattedNumber currencyCode="{!v.currency}" value="{!feeItem.totalValue}" style="currency"/>
+                                    </div>
+                                </div>
+                            </aura:iteration>
+                        </div>
+                        
+                    </fieldset>
+                </div>
+            </aura:if>
+            
+        </p>
+    </lightning:card>
+</aura:component>

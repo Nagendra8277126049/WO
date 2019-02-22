@@ -1,0 +1,161 @@
+<aura:component controller="EntitlementDashboardController" access="global">
+    
+    <aura:attribute name="assetId" type='string' required="true"/> 
+    <aura:attribute name="entDetList" type="string[]" />
+  	<aura:attribute name="next" type="boolean" default="false"/>
+  	<aura:attribute name="previous" type="boolean" default="false"/>
+  	<aura:attribute name="errorMessage" type="string" />
+  	<aura:attribute name="page" type="integer" description="pageNumber"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />  
+           
+    <article class="slds-card">
+		<div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-contact" title="description of icon when needed">
+                        <lightning:icon iconName="standard:entitlement" alternativeText="Basic Entitlements" size="small"/>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2>
+                        <span class="slds-text-heading_small">{!$Label.c.Entitlement_Details}</span>
+                    </h2>
+                </div>
+            </header>
+        </div>
+            
+        <lightning:spinner aura:id="mySpinner" variant="brand" size="small" />  
+        
+        
+        <aura:if isTrue="{! or(v.entDetList != null, v.entDetList != undefined) }">
+            <div class="" style="height:250px;">
+                <div class="slds-scrollable--y" style="height: 100%;"> 
+                    <table class="slds-table slds-table_bordered slds-no-row-hover" >
+                        <thead>                  
+                            <tr class="slds-text-title--caps">
+                                <th scope="col">
+                                    <div class="slds-truncate" title="icon"></div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Entitlement Name"><b>{!$Label.c.Entitlement_Details_Service}</b></div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Start Date"><b>{!$Label.c.Entitlement_Details_StartDate}</b></div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Expires"><b>{!$Label.c.Entitlement_Details_Expires}</b></div>
+                                </th>                    
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Type"><b>{!$Label.c.Entitlement_Details_Type}</b></div>
+                                </th>  
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Order Number"><b>{!$Label.c.Entitlement_Details_OrderNo}</b></div>
+                                </th>   
+                                <th scope="col">
+                                    <div class="slds-truncate" title=""><b>{!$Label.c.Entitlement_Details_DateCreated}</b></div>
+                                </th> 
+                            </tr>
+                        </thead>
+                        
+                        <tbody>               
+                            <aura:iteration items="{!v.entDetList}" var="el0" indexVar="i">    
+                                <tr>                                                
+                                    <td data-label="Status">
+                                        <aura:if isTrue="{!or(el0.entDetRemDays!= null, el0.entDetRemDays != undefined) }">
+                                            <aura:if isTrue="{!(el0.status=='Active')}">
+                                                <aura:if isTrue="{! greaterthan(el0.entDetRemDays,0)}">
+                                                    <aura:if isTrue="{!lessthan(el0.entDetRemDays,90)}">
+                                                        <div class="imgSize">
+                                                            <img src="{!$Resource.Entitlement_SoonToBeExpired_Icon}"/>
+                                                        </div>
+                                                        <aura:set attribute="else">
+                                                            <div class="imgSize">
+                                                                <img src="{!$Resource.Entitlement_Valid_ICON}"/>
+                                                            </div>
+                                                        </aura:set>
+                                                    </aura:if>
+                                                    <aura:set attribute="else">
+                                                        <!--
+                                                        <aura:if isTrue="{!(el0.entDetRemDays=='0')}">
+                                                        -->
+                                                            <div class="imgSize">
+                                                                <img src="{!$Resource.Entitlement_Expired_ICON}"/>
+                                                            </div>
+                                                        <!--
+                                                        </aura:if>
+                                                        -->
+                                                    </aura:set>
+                                                </aura:if>
+                                                <aura:set attribute="else">
+                                                    <div class="imgSize">
+                                                    	<img src="{!$Resource.Entitlement_Expired_ICON}"/>
+                                                	</div>
+                                                </aura:set>
+                                            </aura:if>
+                                        </aura:if>
+                                    </td>
+                                                            
+                                    <td data-label="Entitlement Name">
+                                        <div class="slds-truncate slds-text-body_small slds-cell-wrap" title="Entitlement Name">
+                                            {!el0.entName}
+                                        </div>
+                                    </td> 
+                                    <td data-label="Start Date">
+                                        <div class="slds-truncate slds-text-body_small slds-cell-wrap" title="Start Date">
+                                            {!el0.entStartDate}
+                                        </div>
+                                    </td>
+                                    <td data-label="End Date">
+                                        <div class="slds-truncate slds-text-body_small slds-cell-wrap" title="Expires">
+                                            {!el0.entEndDate}
+                                            <!--
+                                            <aura:if isTrue="{!greaterthan(el0.entDetRemDays,0)}">
+                                                <aura:if isTrue="{!lessthan(el0.entDetRemDays,90)}"> 
+                                                <br></br>
+                                                    <div class="daysLeft">{!el0.entDetRemDays}
+                                                        <span class="additionalSpace"></span>{!$Label.c.DaysLeft}
+                                                    </div>
+                                                </aura:if>
+                                            </aura:if> 
+											-->
+                                        </div>
+                                    </td>
+                                                 
+                                    <td data-label="Type">
+                                        <div class="slds-truncate slds-text-body_small slds-cell-wrap" title="Type">
+                                            {!el0.entType}
+                                        </div>
+                                    </td>
+                                    <td data-label="Order Number">
+                                        <div class="slds-truncate slds-text-body_small slds-cell-wrap" title="Order Number">
+                                            {!el0.entOrderNumber}
+                                        </div>
+                                    </td>
+                                    <td data-label="Date Created">
+                                        <div class="slds-truncate slds-text-body_small slds-cell-wrap" title="Date Created">
+                                            {!el0.entDateCreated}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </aura:iteration>                  
+                        </tbody>
+                    </table>
+                </div> 
+            </div>
+        </aura:if>
+        <!-- Button Code -->
+        <aura:if isTrue="{!or(v.previous, v.next)}" >
+            <footer class="slds-card__footer">
+                <!-- Button's Logic Begins Here -->  
+                <aura:if isTrue="{!v.previous}" >
+                    <ui:button press="{!c.previousPage}" label="Previous"/>
+                </aura:if>
+                <aura:if isTrue="{!v.next}">
+                    <ui:button aura:id="nextbtn" press="{!c.nextPage}" label="Next"/>
+                </aura:if>
+                <!-- Button's Logic Ends Here -->
+            </footer>
+        </aura:if>
+    </article> 
+</aura:component>

@@ -1,0 +1,18 @@
+.THIS .slds_wrap_text {
+  white-space: normal;
+  word-wrap: break-word;
+}
+.THIS .eimgSize {
+    width: 25px;
+    height: 25px;
+}
+.THIS .additionalSpace{
+    padding-left:4px;
+    margin-left:10rem;
+}
+.THIS .textHeight{
+    height: 12.5px;;
+}
+.THIS .titlespace{
+    padding-right:20rem;
+}

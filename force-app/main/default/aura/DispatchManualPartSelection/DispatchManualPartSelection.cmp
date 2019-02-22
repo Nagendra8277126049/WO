@@ -1,0 +1,128 @@
+<!--
+*******************************************************************************************************
+Name:       DispatchManualPartSelection.cmp
+Description:  This Lightning Component that will be the place holder for the dispatch manual part selection
+  - Story 4913343 
+*******************************************************************************************************
+Date         Version    Author             Summary of Changes 
+*******************************************************************************************************
+04/04/2018     1.0     Rodrigo Carpio      Initial Release
+*******************************************************************************************************
+-->
+<aura:component access="global" implements="lightning:availableForFlowScreens" controller="DispatchManualPartSelection">
+    <!-- Record Id - Work Order -->
+    <aura:attribute name="recordId" type="string"/><!-- Work Order Id of the record-->
+    <aura:attribute name="serviceTag" type="string" />
+    <aura:attribute name="assetId" type="string" />
+    <aura:attribute name="addressBUID" type="string"/>
+    <aura:attribute name="commodityList" type="List"/>
+    <aura:attribute name="commodityListCopy" type="List"/>
+    <aura:attribute name="selectedCommodityList" type="List"/>
+    <aura:attribute name="selectedCommodityArray" type="string[]"/>
+    <aura:attribute name="SearchKeyWord" type="string"/>
+    <aura:attribute name="loadSection" type="boolean" default='false'/>
+    <aura:attribute name="renderComponent" type="Boolean" default="true"/>
+    <aura:attribute name="searchText" type="string"/>
+    <aura:attribute name="mySpinner" type="Boolean" default="false"/>
+    <aura:attribute name="canPause" type="Boolean" />
+    <aura:attribute name="canBack" type="Boolean" />
+    <aura:attribute name="canNext" type="Boolean" />
+    <aura:attribute name="canFinish" type="Boolean" />
+    <aura:attribute name="spmdLink" type="String" access="global"/>	<!-- will hold the dynamic value of SPMD url-->
+    <lightning:spinner aura:id="mySpinner" variant="brand" size="medium" class="slds-hide"/>   
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <lightning:flow aura:id="flowData" />
+    <div aura:id = "c-searchbox" style="{!v.renderComponent ? 'display:block' : 'display:none'}">
+        <!--<lightning:spinner aura:id="mySpinner" variant="brand" size="medium" class="slds-hide"/>-->
+        <!--  <div onclick="{! c.handleKeyUp }"-->
+        <lightning:input aura:id="enter-search"
+                         name="enter-search"
+                         label="Advance Search for Parts"
+                         type="search"
+                         value="{!v.SearchKeyWord}"
+                         placeholder="Search with defective component"
+                         onchange="{!c.handleChange}"
+                         />
+        
+        <aura:if isTrue="{!v.selectedCommodityList.length>0}">
+            <br/>
+            Selected Defective Components
+            <br/>
+            <ul class="slds-listbox slds-listbox_horizontal" role="listbox" aria-label="Selected Options:" aria-orientation="horizontal">
+                <aura:iteration items="{!v.selectedCommodityList}" var="Def" indexVar="index">
+                    <li class="slds-listbox-list">
+                        <span class="slds-pill" role="option" tabindex="0" aria-selected="true">
+                            <span class="slds-pill__label" title="{!Def}">{!Def}</span>
+                        </span>
+                    </li>
+                </aura:iteration>
+            </ul>
+            <br/>
+        </aura:if>
+    </div>
+    <!-- </div>-->
+    <!-- https://www.lightningdesignsystem.com/components/lookups/ -->
+    <div style="{!v.renderComponent ? 'display:block' : 'display:none'}">
+        <!--<label class="slds-form-element__label" for="lookup-348"> Search  </label><div onclick="{! c.handleKeyUp }" aura:id = "c-searchbox"><div class="slds-input-has-icon slds-input-has-icon-/-right"><div aura:id="lookupField" class="slds-show"><ui:inputText class="slds-lookup__search-input slds-input .slds-scrollable_y" value="{!v.SearchKeyWord}" placeholder="Click here to Search with defective component."/></div></div></div>-->
+        <aura:if isTrue="{!v.loadSection}">
+            <!--<lightning:accordion activeSectionName="DefCmp">
+    <lightning:accordionSection name="DefCmp" label="Defective Components">-->
+            <div aura:id = "c-container" class = "divStyle slds-grid slds-wrap slds-text-align_center custom-container" style="margin-top: 5px">
+                <aura:iteration items="{!v.commodityList}" var="Def" indexVar="index">
+                    <div class="slds-size_5-of-12" style="margin-top: 3px">
+                        <span class="slds-list_horizontal">
+                            <ui:inputCheckbox aura:id="cboxRowInput" text="{!index}" class="cBox" disabled="{!and(v.selectedCommodityList.length>=3,Def.value!=true)}" value="{!Def.value}" change="{!c.checkboxChangeHandler}"/>
+                            <p style="margin-left: 3px" id="commodity" class="commodity" name="commodity">{!Def.camelLabel} </p>
+                        </span>
+                    </div>
+                </aura:iteration>
+            </div>
+            <!--</lightning:accordionSection>
+    <lightning:accordionSection name="pof" label="Parts Of Failure">
+     <div aura:id = "c-container-Pof" class = "divStyle slds-grid slds-wrap slds-text-align_center custom-container" style="margin-top: 5px">
+      <aura:iteration items="{!v.commodityListPof}" var="Def" indexVar="index">
+       <div class="slds-size_1-of-2" style="margin-top: 3px">
+        <span class="slds-list_horizontal">
+         <ui:inputCheckbox aura:id="cboxRowInput" text="{!index}" class="cBox" disabled="{!and(v.selectedCommodityList.length>=3,Def.value!=true)}" value="{!Def.value}" change="{!c.handlePofCheckboxChange}"/>
+         <p style="margin-left: 3px" id="commodity" class="commodity" name="commodity">{!Def.label} </p>
+        </span>
+       </div>
+      </aura:iteration>
+     </div>
+    </lightning:accordionSection>
+   </lightning:accordion>-->
+            <!--<div aura:id = "c-container" class = "divStyle c-container_hide slds-grid slds-wrap slds-text-align_center custom-container" style="margin-top: 5px;"><br/><h2 class="slds-size_1-of-1 slds-card__header-link slds-text-heading_small" align="left"><strong> Defective Components</strong></h2><br/><aura:iteration items="{!v.commodityList}" var="commodity" indexVar="index"><div class="slds-size_1-of-2 slds-max-small-size_1-of-1" style="margin-top: 3px"><span class="slds-list_horizontal"><ui:inputCheckbox aura:id="cboxRowInput" text="{!index}" class="cBox" change="{!c.checkboxChangeHandler}" value="{!commodity.value}"/><p style="margin-left: 3px" class="commodity">{!commodity.label} </p></span></div></aura:iteration></div>-->
+            <div class="slds-p-top--xx-large"></div>
+            <!--<div class="slds-form-element__control"><div class="slds-input-has-icon slds-input-has-icon-right"><lightning:icon iconName="utility:search" size="small" alternativeText="Search Icon"/><div aura:id="lookupField" class="slds-show"><ui:inputText updateOn="keyup" class="slds-lookup__search-input slds-input .slds-scrollable_y" value="{!v.SearchKeyWord}" placeholder="search.."/></div></div></div>-->
+            <div>
+                
+                
+                <lightning:input aura:id="enter-search" name="enter-search" label="Advance Search for Part Number" placeholder="Search with Part Number" type="search" value="{!v.searchText}" onfocus="{!c.handleSearchWithPPID}"/>
+            </div>
+            <div align="right" aura:id="buttonSectionNext" class="divStyle" style="margin-top: 5px" >
+                <!--
+                    <lightning:button label="Cancel" title="Cancel" aura:id="clearButton" onclick="{! c.handleClear }" /><lightning:button label="Add Selected Parts" title="Add Selected Parts" variant="brand" aura:id="selectParts" onclick="{! c.handleSelectParts }"/> 
+                    -->
+            </div>
+        </aura:if>
+        <div align="right" aura:id="buttonSection" class="slds-show" style="margin-top: 5px" >
+            <lightning:button label="Return to Default Search" title="Return to Default Search" aura:id="clearButton" onclick="{! c.handleClear }" />
+            <aura:if isTrue="{!v.canNext}">
+                <!--aura:if isTrue="{!or(v.selectedCommodityArray.length > 0, v.searchText.length > 0)}"-->
+                <lightning:button aura:id="NEXT" label="Next" variant="brand" onclick="{!c.onButtonPressed}" disabled="{!!or(v.selectedCommodityArray.length > 0, v.searchText.length > 0)}"/>
+                <!--/aura:if-->
+            </aura:if>
+        </div>
+        <div class="slds-clearfix">
+            <div class="slds-clearfix">
+                <div class="slds-float_right">
+                    <a href="{!v.spmdLink}" target="_blank"><span>
+                        <lightning:buttonIcon aura:id="ServiceTypeEditBtn" iconName="utility:link" variant="bare"/>
+                        Go to SPMD
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>

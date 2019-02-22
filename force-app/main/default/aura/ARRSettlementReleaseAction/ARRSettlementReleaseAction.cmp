@@ -1,0 +1,17 @@
+<aura:component controller="ARROrderApexController" implements="force:lightningQuickAction,flexipage:availableForAllPageTypes,force:hasRecordId">
+    <aura:html tag="style">
+        .slds-modal__container{
+        	width:35% !Important;
+        	max-width:35% !important;
+        }
+        .modal-body{ 
+        	height:auto !important;
+        	max-height:unset !important;
+        } 
+    </aura:html>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <p id="message">Releasing given Settlement...</p>
+    
+    <lightning:overlayLibrary aura:id="errorNotification"/>
+</aura:component>

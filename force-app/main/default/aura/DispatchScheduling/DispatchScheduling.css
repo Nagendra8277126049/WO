@@ -1,0 +1,29 @@
+.THIS .slds-spinner_container {  
+  z-index: 10000;
+  position: fixed;   
+}
+.THIS .unselectedbutton {  
+  height:70px; 
+  width:100%;   
+}
+.THIS .heaherbutton {  
+  height:50px; 
+  width:100%;   
+}
+.THIS .selectedbutton {  
+  height:70px; 
+  width:100%;     
+  background-color: #3398FF;
+}
+.THIS .processbutton {  
+  width:100px;  
+  height:30px; 
+  color: #ffff00;  
+  background-color: #2574a9;
+}
+.THIS .scrollerSize {
+    height: 520px;
+}
+.THIS .unselectedbutton:hover {
+    background-color: lightblue;
+}

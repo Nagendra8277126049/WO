@@ -1,0 +1,9 @@
+<aura:component implements="lightning:availableForFlowScreens">
+	<aura:attribute name="ErrorMessage" type="String"  default="Dell corporate policy prohibits Work Orders for assets located in embargoed countries"/>
+    <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+                        <span class="slds-m-right_x-small">
+                            <lightning:icon iconName="utility:error" variant="inverse" size="xx-small" />
+                        </span>
+                        <ui:outputText value="{!v.ErrorMessage}" />
+                    </div>
+</aura:component>

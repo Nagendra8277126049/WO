@@ -1,0 +1,10 @@
+<aura:event type="COMPONENT">
+    <aura:attribute name="firstName" type="String"/>
+    <aura:attribute name="lastName" type="String"/>
+    <aura:attribute name="countryCode" type="String"/>
+ <!-- <aura:attribute name="areaCode" type="String"/> -->
+    <aura:attribute name="phoneNumber" type="String"/>
+    <aura:attribute name="emailAddress" type="String"/>
+    <aura:attribute name="updateStatus" type="String"/>
+    <aura:attribute name="editWhichContact" type="String"/>
+</aura:event>

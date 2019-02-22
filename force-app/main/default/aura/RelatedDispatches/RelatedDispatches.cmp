@@ -1,0 +1,111 @@
+<!--
+*******************************************************************************************************
+Name:       RelatedDispatches.cmp
+Description:  This Lightning Component displays the related dispatches page.  - Story 4150193
+*******************************************************************************************************
+Date         Version    Author             Summary of Changes 
+*******************************************************************************************************
+12/04/2017     1.0     Rodrigo Carpio      Initial Release
+06/02/2017     1.1     Harsha Reddy  	   Created aura-Design - Restricted component visibility to Case 
+                                           and Asset Page on Lightning App Builder
+08/07/2018     1.1     Harsha Reddy        DEFECT 5443199 - Updated the Code to Use 
+										   Lightning:Navigation Insted of 
+										   force:NavigateToComponent(Deprecated in Summer'18)
+*******************************************************************************************************
+-->
+<aura:component controller="ReletadDispatchController" implements="flexipage:availableForAllPageTypes,force:hasRecordId">
+
+    <aura:attribute name="dispatchList" type="object" />
+    <aura:attribute name="assetId" type="string" />
+    <!-- Buttom Attributes -->
+    <aura:attribute name="page" type="integer" description="pageNumber" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <!-- Navigation -->
+    <!-- Added by Harsha - 08/07/2018 --> 
+  	<lightning:navigation aura:id="navService"/>
+    
+    <!--
+    <lightning:workspaceAPI aura:id="dispWorkspace" />
+	-->
+    
+    <!-- section for the data display starts here -->
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-contact" title="Dispatches">
+             <lightning:icon iconName="standard:service_appointment" alternativeText="Dispatches" size="small"/>
+            </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2>          
+                <span class="slds-text-heading_small"> {!$Label.c.RelatedDispatchHeader} </span>
+            </h2>
+                </div>
+                <div align="right">
+                    <lightning:button class="slds-button_neutral" aura:id="dispViewDetail" label="View Details" onclick="{!c.navigateToMyComponent}" />
+                </div>
+            </header>
+        </div>
+
+        <div class="slds-align--absolute-center">
+            <lightning:spinner aura:id="mySpinner" variant="brand" size="small" />
+        </div>
+        <aura:if isTrue="{! !empty(v.dispatchList)}">
+            <ui:scrollerWrapper class="scrollerSize">
+                <div class="slds-card__body">
+                    <div class="slds-scrollable--y" style="height: 150px;">
+                        <table class="slds-table slds-table_bordered slds-no-row-hover">
+                            <thead>
+                                <tr class="slds-text-title--caps">
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Dispatch Number"><b>{!$Label.c.DispatchNumber}</b></div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Entitlement Name"><b>{!$Label.c.DispatchStatus}</b></div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="End Date"><b>{!$Label.c.DispatchOption}</b></div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Tracking Number"><b>{!$Label.c.DispatchTrackingNumber}</b></div>
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <aura:iteration items="{!v.dispatchList}" var="el" indexVar="i">
+                                    <tr>
+                                        <td data-label="Dispatch Number">
+                                            <div class='slds-truncate no-text-overflow'>
+                                                {!el.dispatchNumber}
+                                            </div>
+                                        </td>
+                                        <td data-label="Status">
+                                            <div class='slds-truncate no-text-overflow'>
+                                                {!el.status}
+                                            </div>
+                                        </td>
+                                        <td data-label="Option">
+                                            <div class='slds-truncate no-text-overflow'>
+                                                {!el.option}
+                                            </div>
+                                        </td>
+                                        <td data-label="Tracking Number">
+                                            <div class='slds-truncate no-text-overflow'>
+                                                {!el.trackingNumber}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </aura:iteration>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </ui:scrollerWrapper>
+        </aura:if>
+    </article>
+    <!-- section for the data display ends here -->
+</aura:component>

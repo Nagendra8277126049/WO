@@ -1,0 +1,141 @@
+<!--
+*******************************************************************************************************
+Name:       DispatchSelectedpartsAll.cmp
+Description:  This Lightning Component will show selected parts. - 5119832 - QE-Lightning_SIT_ In WO details 
+			screen under parts tab the parts section is not as per the mock up
+*******************************************************************************************************
+Date         Version    Author             Summary of Changes 
+*******************************************************************************************************
+05/26/2018     1.0     Bikram Bebarta      Initial Release
+07/12/2018     1.1     Prachi Thube        Req# 5223525 - queried new fields to display on Part Section
+07/16/2018     1.2     Harsha Reddy        Adjusted Component MarkUp, Controller/Helper JS and Design also 
+										   - Defect #5345225
+**************************************************************************DispatchDefaultDetailsController*****************************
+-->
+<aura:component implements="lightning:isUrlAddressable" controller="DispatchDefaultDetailsController">
+	<!-- Label -->
+    <aura:attribute name="Label_PARTSORDERED" type="String" default="PARTS ORDERED"/>
+    <aura:attribute name="Label_ISP_TYPE" type="String" default="TYPE"/>
+    <aura:attribute name="Label_PARTSHIPPED" type="String" default="PART SHIPPED"/>
+    <aura:attribute name="Label_DESCRIPTIONOFPARTSHIPPED" type="String" default="DESCRIPTION OF PART SHIPPED"/>
+    <aura:attribute name="Label_QUANTITYORDERED" type="String" default="QTY ORDERED"/>
+    <aura:attribute name="Label_QUANTITYSHIPPED" type="String" default="QTY SHIPPED"/>
+    <aura:attribute name="Label_STATUS" type="String" default="STATUS"/>
+    <!-- Added new atributes as part of Story -5223525 -->
+    <aura:attribute name="Label_DefectivePPID" type="String" default="DEFECTIVE PPID"/>
+    <aura:attribute name="Label_ETA" type="String" default="ETA"/>
+    <aura:attribute name="Label_InStock" type="String" default="IN STOCK"/>
+    <aura:attribute name="Label_SHIPPED" type="String" default="SHIPPED"/>
+    <aura:attribute name="Label_AttemptedDelivery" type="String" default="ATTEMPTED DELIVERY"/>
+    <aura:attribute name="Label_AtPUDO" type="String" default="AT PUDO"/>
+    <aura:attribute name="Label_DeliveredSignature" type="String" default="DELIVERED SIGNATURE"/>
+    <aura:attribute name="Label_Returned" type="String" default="RETURNED"/>
+    <aura:attribute name="Label_PUDOHUB" type="String" default="PUDO/HUB"/>
+    <aura:attribute name="Label_NewPPID" type="String" default="NEW PPID"/>
+    <aura:attribute name="Label_WithCarrier" type="String" default="WITH CARRIER"/>
+    <aura:attribute name="Label_UnitPrice" type="String" default="UNIT PRICE (PART COST)"/>
+    <aura:attribute name="Label_ServiceTag" type="String" default="SERVICE TAG"/>
+    <aura:attribute name="Label_Waybill" type="String" default="WAY BILL"/>
+    <aura:attribute name="Label_JobNumber" type="String" default="JOB NUMBER"/>
+    <aura:attribute name="Label_Mode" type="String" default="MODE" />
+    <aura:attribute name="Label_PartSelectionReason" type="String" default="Part Selection Reason" />
+    <aura:attribute name="Label_DoNotSub" type="String" default="Do not SUB"/>
+    <!-- story 5223525 ends-->
+    <aura:attribute name="SelectedPartItems" type="List"/>
+    <aura:attribute name="width" type="String"/>
+    <aura:attribute name="workOrderId" type="string" default="{!v.pageReference.state.workOrderId}"/>
+    
+    <!-- Handler -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler event="force:refreshView" action="{!c.doInit}" />
+    
+    <lightning:workspaceAPI aura:id="detailWorkspace" />
+    
+	<article class="slds-card slds-card_boundary">
+		<div class="slds-card__header slds-grid">
+    		<header class="slds-media slds-media_center slds-has-flexi-truncate">
+      			<div class="slds-media__figure">
+        			<span class="slds-icon_container slds-icon-standard-contact" >
+               			<lightning:icon iconName="standard:work_order_item" size="small" alternativeText="Parts"/>
+              		</span>
+      			</div>
+      			<div class="slds-media__body">
+        			<h2 class="slds-card__header-title">
+          				<a href="javascript:void(0);" class="slds-card__header-link slds-truncate">
+            				<span class="slds-text-heading_small">Parts Ordered And Shipped ({!v.SelectedPartItems.length})</span>
+          				</a>
+        			</h2>
+      			</div>
+    		</header>
+		</div>
+        <aura:if isTrue="{! not(empty(v.SelectedPartItems))}">
+            <div class="slds-card__body slds-card__body_inner">
+                <div class="slds-scrollable" style="height:20rem; width:100%;">
+                    <table class="slds-table slds-table--bordered slds-table--striped slds-table--cell-buffer">
+                        <thead>
+                            <tr class="slds-text-heading--label">
+                                <th scope="col"><div class="slds-truncate">{#v.Label_PARTSORDERED}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_ISP_TYPE}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_PARTSHIPPED}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_DESCRIPTIONOFPARTSHIPPED}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_QUANTITYORDERED}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_QUANTITYSHIPPED}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_STATUS}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_DefectivePPID}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_ETA}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_InStock}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_SHIPPED}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_AttemptedDelivery}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_AtPUDO}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_DeliveredSignature}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_Returned}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_PUDOHUB}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_NewPPID}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_WithCarrier}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_UnitPrice}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_ServiceTag}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_Waybill}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_JobNumber}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_Mode}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_PartSelectionReason}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_DoNotSub}</div></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <aura:iteration items="{!v.SelectedPartItems}" var="selectedPartItem">
+                                <tr>
+                                    <td><div class="slds-truncate" title="{!selectedPartItem.woLineItem.PartNumber__c}"><ui:outputURL label="{!selectedPartItem.woLineItem.PartNumber__c}" value="{!selectedPartItem.woLineItem.URLLInk__c}" target="_blank"/></div></td>
+                                    <td><div class="slds-truncate" title="{!selectedPartItem.partsOrderLineItem.ISP_Type__c}">{!selectedPartItem.partsOrderLineItem.ISP_Type__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!selectedPartItem.partsOrderLineItem.ISP_Part__c}">{!selectedPartItem.partsOrderLineItem.ISP_Part__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!selectedPartItem.woLineItem.PartDescription__c}">{!selectedPartItem.woLineItem.PartDescription__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!selectedPartItem.woLineItem.Part_Quantity__c}">{!selectedPartItem.woLineItem.Part_Quantity__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!selectedPartItem.partsOrderLineItem.ISP_Qty__c}">{!selectedPartItem.partsOrderLineItem.ISP_Qty__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!selectedPartItem.partsOrderLineItem.ISP_Status__c}">{!selectedPartItem.partsOrderLineItem.ISP_Status__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!selectedPartItem.woLineItem.Defective_PPID__c}">{!selectedPartItem.woLineItem.Defective_PPID__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!selectedPartItem.partsOrderLineItem.ISP_ETA_Date_Time__c}">{!selectedPartItem.partsOrderLineItem.ISP_ETA_Date_Time__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!selectedPartItem.partsOrderLineItem.ISP_COM_Date_Time__c}">{!selectedPartItem.partsOrderLineItem.ISP_COM_Date_Time__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!selectedPartItem.partsOrderLineItem.ISP_SHP_Date_Time__c}">{!selectedPartItem.partsOrderLineItem.ISP_SHP_Date_Time__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!selectedPartItem.partsOrderLineItem.ISP_Attempted_Delivery_Date_Time__c}">{!selectedPartItem.partsOrderLineItem.ISP_Attempted_Delivery_Date_Time__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!selectedPartItem.partsOrderLineItem.ISP_OHP_Date_Time__c}">{!selectedPartItem.partsOrderLineItem.ISP_OHP_Date_Time__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!selectedPartItem.partsOrderLineItem.ISP_POD_Signatory__c}">{!selectedPartItem.partsOrderLineItem.ISP_POD_Signatory__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!selectedPartItem.partsOrderLineItem.ISP_REC_Date_Time__c}">{!selectedPartItem.partsOrderLineItem.ISP_REC_Date_Time__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!selectedPartItem.partsOrderLineItem.ISP_FSD_HUB__c}">{!selectedPartItem.partsOrderLineItem.ISP_FSD_HUB__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!selectedPartItem.partsOrderLineItem.ISP_New_PPID__c}">{!selectedPartItem.partsOrderLineItem.ISP_New_PPID__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!selectedPartItem.partsOrderLineItem.ISP_With_Carrier_Date_Time__c}">{!selectedPartItem.partsOrderLineItem.ISP_With_Carrier_Date_Time__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!selectedPartItem.woLineItem.PartPrice__c}">{!selectedPartItem.woLineItem.PartPrice__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!selectedPartItem.partsOrderLineItem.ISP_Service_Tag__c}">{!selectedPartItem.partsOrderLineItem.ISP_Service_Tag__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!selectedPartItem.partsOrderLineItem.ISP_Waybill__c}">{!selectedPartItem.partsOrderLineItem.ISP_Waybill__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!selectedPartItem.partsOrderLineItem.ISP_Job_Number__c}">{!selectedPartItem.partsOrderLineItem.ISP_Job_Number__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!selectedPartItem.woLineItem.SelectionMethod__c}">{!selectedPartItem.woLineItem.SelectionMethod__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!selectedPartItem.woLineItem.Reason_for_Advanced_Search__c}"><aura:if isTrue="{!selectedPartItem.woLineItem.SelectionMethod__c!='Auto'}">{!selectedPartItem.woLineItem.Reason_for_Advanced_Search__c}</aura:if></div></td>
+									<td><div class="slds-truncate">{!selectedPartItem.woLineItem.Do_not_Sub__c} </div>
+									</td>
+                                </tr>
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </aura:if>
+	</article>
+</aura:component>

@@ -1,0 +1,26 @@
+<design:component label="WorkOrder Details Selected Parts">
+    <design:attribute name="Label_PARTSORDERED" label="PARTS ORDERED"/>
+    <design:attribute name="Label_PARTSHIPPED" label="PART SHIPPED"/>
+    <design:attribute name="Label_DESCRIPTIONOFPARTSHIPPED" label="DESCRIPTION OF PART SHIPPED"/>
+    <design:attribute name="Label_QUANTITYORDERED" label="QTY ORDERID"/>
+    <design:attribute name="Label_QUANTITYSHIPPED" label="QTY SHIPPED"/>
+    <design:attribute name="Label_STATUS" label="STATUS"/>
+    <design:attribute name="Label_DefectivePPID" label="DEFECTIVE PPID"/>
+    <design:attribute name="Label_ETA" label="ETA"/>
+    <design:attribute name="Label_InStock" label="IN STOCK"/>
+    <design:attribute name="Label_SHIPPED" label="SHIPPED"/>
+    <design:attribute name="Label_AttemptedDelivery" label="ATTEMPTED DELIVERY"/>
+    <design:attribute name="Label_AtPUDO" label="AT PUDO"/>
+    <design:attribute name="Label_DeliveredSignature" label="DELIVERED SIGNATURE"/>
+    <design:attribute name="Label_Returned" label="RETURNED"/>
+    <design:attribute name="Label_PUDOHUB" label="PUDO/HUB"/>
+    <design:attribute name="Label_NewPPID" label="NEW PPID"/>
+    <design:attribute name="Label_WithCarrier" label="WITH CARRIER"/>
+    <design:attribute name="Label_UnitPrice" label="UNIT PRICE (PART COST)"/>
+    <design:attribute name="Label_ServiceTag" label="SERVICE TAG"/>
+    <design:attribute name="Label_Waybill" label="WAY BILL"/>
+    <design:attribute name="Label_JobNumber" label="JOB NUMBER"/>
+	<sfdc:objects>
+        <sfdc:object>WorkOrder</sfdc:object>
+    </sfdc:objects>
+</design:component>

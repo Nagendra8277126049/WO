@@ -1,0 +1,295 @@
+<aura:component controller="ARRProposalApexController" implements="force:lightningQuickAction,force:appHostable,force:hasRecordId,lightning:actionOverride,flexipage:availableForAllPageTypes" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    
+    <aura:attribute name="brandOptions" type="Object[]"/>
+    <aura:attribute name="typeOptions" type="Object[]"/>
+    <aura:attribute name="processorOptions" type="Object[]"/>
+    
+    <aura:attribute name="countryOptions" type="map"/>
+    <aura:attribute name="stateOptions" type="map"/>
+    <aura:attribute name="currencyOptions" type="map"/>
+    <aura:attribute name="countryInput" type="map"/>
+    <aura:attribute name="stateInput" type="map"/>
+    <aura:attribute name="selectedCurrencyValue" type="map"/>
+
+    
+    <!--
+old way: country via odata
+    <aura:attribute name="countryInput" type="Country__x"/>
+	<aura:attribute name="countryOptions" type="Country__x[]"/>
+    -->
+    
+    <aura:attribute name="titleInput" type="String"/>
+    <aura:attribute name="serviceTagsInput" type="String"/>
+    <aura:attribute name="assetInputList" type="Object[]"/>
+    
+    <aura:attribute name="proposalResponse" type="Map"/>
+    <aura:attribute name="redirectUrl" type="Url"/>
+    
+    
+    <aura:attribute name="recordId" type="Id"/>
+    <aura:attribute name="account" type="Account"/>
+    <force:recordData aura:id="accountRecord" recordId="{!v.recordId}" targetFields="{!v.account}" layoutType="FULL"/>
+    
+    <lightning:layout  multipleRows="true" verticalAlign="stretch">
+        <lightning:layoutItem padding="around-small" class="desktop-small-size" size="7" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="7" >
+        	<div aria-labelledby="proposal-form">
+                
+        		<fieldset class="slds-box slds-theme--default slds-container">
+        			<legend id="proposal-form" class="slds-text-heading--small slds-p-vertical--medium">
+          				Create Proposal
+                    </legend>
+  
+        			 <form class="slds-form--stacked slds-p-bottom--medium"> 
+                         
+                         <!--
+                         <lightning:select aura:id="proposal-form" 
+                                           name="country" 
+                                           label="Country" 
+                                           required="true"
+                                           value="{!v.countryInput}"
+                                           onchange="{!c.handleCountryChange}">
+                             <option value=""> None </option>
+                             <aura:iteration items="{!v.countryOptions}" var="item">
+                                 <option value="{!item.CountryID__c}" text="{!item.Name__c}"></option>
+                             </aura:iteration>
+                         </lightning:select>
+                         -->
+                         
+                        <lightning:select aura:id="proposal-form" 
+                                          name="country" 
+                                          label="Country" 
+                                          required="true"
+                                          value="{!v.countryInput}"
+                                          onchange="{!c.handleCountryChange}">
+                            <option value="">-- None --</option>
+                            <aura:iteration items="{!v.countryOptions}" var="item">
+                                <option value="{!item.countryCode}" text="{!item.name}"></option>
+                            </aura:iteration>
+                         </lightning:select>
+                         
+                         <lightning:select aura:id="proposal-form"
+                                           name="State" 
+                                           label="State" 
+                                           required="{! v.countryInput == 'US' || v.countryInput == 'CN' }"
+                                           disabled="{! !v.countryInput}"
+                                           value="{!v.stateInput}">
+                             <option value="">-- None --</option>
+                             <aura:iteration items="{!v.stateOptions}" var="item">
+                                 <option value="{!item.stateCode}" text="{!item.name}"></option>
+                             </aura:iteration>
+                         </lightning:select>
+                         
+                                                  
+                         <lightning:select aura:id="proposal-form" 
+                                           name="Currency" 
+                                           label="Currency" 
+                                           required="true"
+                                           disabled="{! !v.countryInput}"
+                                           value="{!v.selectedCurrencyValue}">
+                             <option value="">-- None --</option>
+                             <aura:iteration items="{!v.currencyOptions}" var="item">
+                                 <option value="{!item.currencyCode}" text="{!item.name}" selected="{!item.selected}"></option>
+                             </aura:iteration>
+                         </lightning:select>
+                         
+                         <lightning:input aura:id="proposal-form" 
+                                          label="Title"
+                                          name="title"
+                                          value="{!v.titleInput}"
+                                          required="true"
+                                          /> 
+                    </form>
+                    
+                    <div aria-labelledby="proposal-servicetag-form" class="slds-p-bottom--medium">
+                        <fieldset class="slds-box slds-theme--default slds-container">
+                            <legend id="proposal-servicetag-form" class="slds-text-heading--small slds-p-vertical--xx-small">
+                                By Service Tags
+                            </legend>
+                            
+                            <div id="lookup-button">
+
+                                
+                            	<c:ARRModalSection
+                            		disabled="{! !v.account.AccountNumber }"
+                                	callback="{!c.handleCustomerLookup}"
+                                	label="Asset Lookup"
+                                	title="Customer Asset Lookup"
+                                	confirmLabel="Confirm">
+                               		<aura:set attribute="child">
+                                    	<c:ARRCustomerLookupView 
+                                    		customerNumber="{!v.account.AccountNumber}" 
+                                        	buid="{!v.account.BUID__c}" 
+                                    	/>
+                                	</aura:set>
+                            	</c:ARRModalSection>
+                            </div>
+
+                            <form class="slds-form--stacked" >
+                                <lightning:textarea 
+                                                    aura:id="proposal-form"
+                                                    name="assetsServiceTags" 
+                                                    label="Assets Service Tags" 
+                                                    value="{!v.serviceTagsInput}"
+                                                    />
+                            </form>
+                        </fieldset>
+                    </div>
+                    
+                    <div aria-labelledby="proposal-questions-form">
+                        <fieldset class="slds-box slds-theme--default slds-container">
+                            <legend id="proposal-questions-form" class="slds-text-heading--small slds-p-vertical--xx-small">
+                                By Qualified Questions
+                            </legend>
+                            
+                            <aura:iteration items="{!v.assetInputList}" var="item">
+                                <lightning:layout horizontalAlign="spread">
+                                    <lightning:layoutItem size="2">
+                                        
+                                        <lightning:select aura:id="proposal-form" 
+                                                          name="{!'Brand-' + _index}" 
+                                                          label="Brand" 
+                                                          required="true"
+                                                          value="{!item.brand}"
+                                                          onchange="{! c.questionsInputChange }">
+                                            <option value="">-- None --</option>
+                                            <aura:iteration items="{!v.brandOptions}" var="opt">
+                                                <option value="{!opt}" text="{!opt}"></option>
+                                            </aura:iteration>
+                                        </lightning:select> 
+                                        
+                                        </lightning:layoutItem>
+                                    <lightning:layoutItem size="2">
+                                        
+                                        <lightning:select aura:id="proposal-form" 
+                                                          name="{!'Type-' + _index}" 
+                                                          label="Product Type" 
+                                                          required="true"
+                                                          value="{!item.productType}"
+                                                          onchange="{! c.questionsInputChange }">
+                                            <option value="">-- None --</option>
+                                            <aura:iteration items="{!v.typeOptions}" var="opt">
+                                                <option value="{!opt}" text="{!opt}"></option>
+                                            </aura:iteration>
+                                        </lightning:select> 
+                                        
+                                    </lightning:layoutItem>
+                                    <lightning:layoutItem size="2">
+                                        
+                                        <lightning:select aura:id="proposal-form" 
+                                                          name="{!'BaseUnit-' + _index}" 
+                                                          label="Base Unit" 
+                                                          disabled="{! !item.brand || !item.productType}"
+                                                          required="true"
+                                                          value="{!item.baseUnit}">
+                                            <option value="">-- None --</option>
+                                            <aura:iteration items="{!item.baseUnitOptions}" var="opt">
+                                                <option value="{!opt.partNumber}">{!opt.description}</option>
+                                            </aura:iteration>
+                                        </lightning:select> 
+                                        
+                                    </lightning:layoutItem>
+                                    <lightning:layoutItem size="2">
+                                        
+                                         <lightning:select aura:id="proposal-form" 
+                                                          name="{!'Processor-' + _index}" 
+                                                          label="Processor" 
+                                                          disabled="{! !item.brand || !item.productType}"
+                                                          required="true"
+                                                          value="{!item.processor}">
+                                            <option value="">-- None --</option>
+                                            <aura:iteration items="{!v.processorOptions}" var="opt">
+                                                <option value="{!opt.partNumber}">{!opt.description}</option>
+                                            </aura:iteration>
+                                        </lightning:select> 
+                                        
+                                    </lightning:layoutItem>
+                                    <lightning:layoutItem size="1">
+                                        <lightning:input aura:id="proposal-form" label="Quantity"
+                                                         name="{!'Quantity-' + _index}"
+                                                         type="number"
+                                                         min="1"
+                                                         value="{!item.quantity}"
+                                                         /> 
+                                    </lightning:layoutItem>
+                                    <lightning:layoutItem size="1">
+										<lightning:button variant="destructive" 
+                                                          class ="grid-icon"
+                                                          name="{!_index}"
+                                                          label="&times;" 
+                                                          title="Remove Asset" 
+                                                          onclick="{! c.removeAsset }"/>
+                                    </lightning:layoutItem>
+                                </lightning:layout>
+                            </aura:iteration>
+                            
+							<lightning:layout horizontalAlign="spread">
+                                    <lightning:layoutItem size="1">
+										<lightning:button variant="brand" 
+                                                          class ="add-icon"
+                                                          label="&#43;" 
+                                                          title="Add Asset" 
+                                                          onclick="{! c.addAsset }"/>
+                                    </lightning:layoutItem>
+                                </lightning:layout>
+                                                        
+                        </fieldset>
+                    </div>
+                    
+                    <lightning:button label="New Quote" 
+                                      class="slds-m-top--medium"
+                                      variant="brand"
+                                      onclick="{!c.makeRequest}"
+                                      />
+      			</fieldset>
+                
+    		</div>
+        </lightning:layoutItem>
+        
+        
+        
+        
+        
+        <lightning:layoutItem padding="around-small" class="desktop-small-size" size="5" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="5">
+        	<div aria-labelledby="proposal-result">
+                <fieldset class="slds-box slds-theme--default slds-container">
+                    <legend id="proposal-result" class="slds-text-heading--small slds-p-vertical--medium">
+          				Proposal Result
+        			</legend>
+                    
+                    <aura:if isTrue="{!v.redirectUrl}">
+                        <div class="redirectButton">
+                            <div>
+                                <ui:button label="Open in New window" press="{!c.openActionWindow}"/>
+                            </div>
+                            <div>
+                                <span style="color:red">*The values listed here are just estimated.</span>
+                            </div>
+                        </div>
+                    </aura:if>
+                    
+                    <c:ARRProposalSummarySection 
+                    	currency="{!v.proposalResponse.currency}" 
+                    	summary="{!v.proposalResponse.summary}" 
+                        partner="{!v.proposalResponse.partnerName}"
+                    />
+                    
+                    <c:ARRProposalAssetsSection 
+                    	currency="{!v.proposalResponse.currency}" 
+                    	assets="{!v.proposalResponse.assets}" 
+                    />
+                    
+                    <div id="loading-spinner" style="display:none" role="status" class="slds-spinner slds-spinner_medium">
+                        <span class="slds-assistive-text">Loading</span>
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
+ 
+                </fieldset>
+    		</div>
+            
+        </lightning:layoutItem>
+    </lightning:layout>
+    
+    <lightning:overlayLibrary aura:id="errorNotification"/>
+</aura:component>

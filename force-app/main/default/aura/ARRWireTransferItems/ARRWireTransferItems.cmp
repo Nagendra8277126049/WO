@@ -1,0 +1,134 @@
+<aura:component implements="lightning:availableForFlowScreens" access="global" controller="ARRInvoiceSenderFlowAction">
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:attribute name="output" type="string" access="global"/>
+    <aura:attribute name="accountName" type="string" access="global"/>
+    <aura:attribute name="accountNumber" type="string" access="global"/>
+    <aura:attribute name="bankNumber" type="string" access="global"/>
+    <aura:attribute name="bankBranch" type="string" access="global"/>
+    <aura:attribute name="country" type="string" access="global"/>
+    <aura:attribute name="ItemList" type="Object[]" access="global"/>
+    <aura:attribute name="countryTaxes" type="Object[]" access="global"/>
+    <aura:attribute name="inputMaximumAmount" type="Decimal" access="global"/>
+    <aura:attribute name="message" description="Message content" type="String" default=""/>
+	<aura:attribute name="type" description="Message type" type="String" default="info"/>
+    <aura:attribute name="errorMessage" description="Show Error" type="Boolean" default="false"/>
+    <fieldset >
+        <aura:if isTrue="{!v.errorMessage}">
+        	<div class="{!'slds-box slds-theme–alert-texture slds-theme--' + v.type}">
+                <lightning:icon iconName="{!'utility:warning'}" size="medium"/>&nbsp;
+                <span class="slds-text-body–regular" style="color: black">
+                    <aura:unescapedHtml value="{!v.message}"/>
+                </span>
+            </div>
+        </aura:if>
+        <legend class="slds-text-heading--small slds-p-vertical--xx-small">
+            Bank Information
+        </legend>
+        
+        <lightning:layout>
+            <lightning:layoutItem padding="around-small" size="4">
+                <lightning:input aura:id="toValidate" name="Name" label="Customer Name" value="{!v.accountName}" required="true"/>
+            </lightning:layoutItem>
+            
+            <lightning:layoutItem padding="around-small" size="4">
+                <lightning:select aura:id="toValidate" name="country" label="Country" required="true" value="{!v.country}" onchange="{!c.changeTaxes}">
+                    <option value="">-- None --</option>
+                    <option value="US" text="United States" ></option>
+                    <option value="CA" text="Canada" ></option>
+                    <option value="AR" text="Argentina" ></option>
+                    <option value="JP" text="Japan" ></option>
+                    <!--aura:iteration items="{!v.currencyOptions}" var="item">
+                        <option value="{!item.currencyCode}" text="{!item.name}" selected="{!item.selected}"></option>
+                    </aura:iteration-->
+                </lightning:select>
+            </lightning:layoutItem>
+        </lightning:layout>
+            
+        <lightning:layout>
+            <lightning:layoutItem padding="around-small" size="4">
+                <lightning:input aura:id="toValidate" name="AccountNumber" label="Account #" value="{!v.accountNumber}" required="true"/>
+            </lightning:layoutItem>
+            
+            <lightning:layoutItem padding="around-small" size="4">
+                <lightning:input aura:id="toValidate" name="BankNumber" label="Bank #" value="{!v.bankNumber}" required="true"/>
+            </lightning:layoutItem>
+            
+            <lightning:layoutItem padding="around-small" size="4">
+                <lightning:input aura:id="toValidate" name="bankBranch" label="Bank Branch" value="{!v.bankBranch}" required='true' disabled="{!v.country == 'US' || v.country == 'CA'}"/>
+            </lightning:layoutItem>
+        </lightning:layout>
+                
+        <legend class="slds-text-heading--small slds-p-vertical--xx-small">
+            Wire Transfer Items
+        </legend>
+        
+        <aura:iteration items="{!v.ItemList}" var="item" indexVar="itemIndex">
+            <lightning:layout>
+                <lightning:layoutItem padding="around-small" size="4">
+                    <lightning:input aura:id="toValidate" name="Description" label="Description" value="{!item.item.description}"/>
+                </lightning:layoutItem>
+                
+                <lightning:layoutItem padding="around-small" size="4">
+                    <lightning:input aura:id="toValidate" name="Amount" label="Amount" type="number" value="{!item.item.amount}" step="0.001" required="true"/>
+                </lightning:layoutItem>
+                
+                <lightning:layoutItem size="1" class="slds-m-top_large slds-p-around_small">
+                    <lightning:button variant="destructive" class ="grid-icon" name="{!itemIndex}" label="&times;" title="Remove Asset" onclick="{!c.removeItem}"/>
+                </lightning:layoutItem>
+                
+                <lightning:layoutItem padding="around-small" class="slds-m-top_large" size="4">
+                    <lightning:button variant="brand" class ="add-icon" label="Add Tax" title="Add Asset" name="{!itemIndex}" onclick="{!c.addItemTax}"/>
+                </lightning:layoutItem>
+                
+            </lightning:layout>
+            
+            <aura:iteration items="{!item.taxes}" var="tax" indexVar="taxIndex">
+                    <lightning:layout>
+                            <lightning:layoutItem padding="around-small" class="paddingTax" size="3">
+                                <lightning:input aura:id="toValidate" name="Description" label="Description" 
+                                                 value="{!tax.description}" />
+                            </lightning:layoutItem>
+                            
+                            <lightning:layoutItem padding="around-small"  size="2">
+                                <lightning:input aura:id="toValidate" name="Amount" type="number" label="Amount" 
+                                                 value="{!tax.amount}" step="0.001" required="true"/>
+                            </lightning:layoutItem>
+                            
+                            <lightning:layoutItem padding="around-small" size="2">
+                                <lightning:input aura:id="toValidate" name="taxRate" type="number" label="Tax Rate" 
+                                                 value="{!tax.taxRate}" step="0.001" required="true"/>
+                            </lightning:layoutItem>
+                        
+                            <lightning:layoutItem padding="around-small" size="3">
+                                <lightning:select aura:id="toValidate" name="taxType" label="Tax Type" required="true" value="{!tax.taxType}">
+                                    <option value="">-- None --</option>
+                                    <aura:iteration items="{!v.countryTaxes}" var="item">
+                                        <option value="{!item.taxType}" text="{!item.name}" selected="{!item.selected}"></option>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </lightning:layoutItem>
+                        
+                            <lightning:layoutItem size="1" class="slds-m-top_large slds-p-around_small">
+                                <lightning:button variant="destructive" class ="grid-icon" name="{!itemIndex + '-' + taxIndex}" 
+                                                  label="&times;"  title="Remove Tax" onclick="{!c.removeTax}"/>
+                            </lightning:layoutItem>
+                    </lightning:layout>
+            </aura:iteration>
+        </aura:iteration>
+        
+        <lightning:layout horizontalAlign="spread">
+            <lightning:layoutItem size="1"  padding="around-small">
+                <lightning:button variant="brand" class ="add-icon" label="&#43;" title="Add Asset" onclick="{! c.addItem }"/>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </fieldset>
+    
+    <div aura:id="actionButtonBar" class="slds-clearfix slds-p-top_medium">
+        <div class="slds-float_left">
+            <lightning:button aura:id="BACK" label="Previous" variant="neutral" onclick="{!c.flowAction}" />
+        </div>
+        <div class="slds-float_right">
+            <lightning:button aura:id="NEXT" label="Next" variant="brand" onclick="{!c.flowAction}" />
+        </div>
+    </div>
+</aura:component>

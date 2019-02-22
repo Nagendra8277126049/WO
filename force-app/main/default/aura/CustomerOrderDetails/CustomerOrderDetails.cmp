@@ -1,0 +1,98 @@
+<!--
+*******************************************************************************************************
+Name:       CustomerOrderDetails.cmp
+Apex Controller: CustomerOrdersController.apx
+Description:  This Lightning Component Display the CustomerOrderDetails on Account Record Page - Story #4150201
+*******************************************************************************************************
+Date         Version          Author              Summary of Changes 
+*******************************************************************************************************
+11/17/2017     1.0     Sri Harsha Gangi Reddy      Initial Release
+*******************************************************************************************************
+-->
+
+<aura:component implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global" controller="CustomerOrdersController"> 
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="orders" type="String[]"/>
+    <aura:attribute name="pageSize" type="string" default="10" />
+    <aura:attribute name="errorMessage" type="string" />
+    <!-- Buttom Attributes -->
+    <aura:attribute name="next" type="boolean" default="false"/>
+    <aura:attribute name="previous" type="boolean" default="false"/>
+    <!-- Spinner Attributes -->
+    <aura:attribute name="Spinner" type="boolean" default="false"/>    
+  	<aura:attribute name="alerts" type="boolean" default="false"/>
+    
+    <aura:attribute name="page" type="integer" description="using for store page Number"/>
+    
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+              <div class="slds-media__figure">
+                <span class="slds-icon_container slds-icon-product" title="Orders">
+                    <lightning:icon iconName="custom:custom57" alternativeText="Orders" size="small" />
+                </span>
+              </div>
+                
+              <div class="slds-media__body">
+                <h2>          
+                    <span class="slds-text-heading_small"> <b> {!$Label.c.CustomerOrderDetailsName}</b> </span>
+                </h2>
+              </div>
+              
+              <div class="slds-align--absolute-center">
+                  
+              	<!-- Spinner Code Begins Here -->
+                  <aura:if isTrue="{!v.Spinner}">
+                     <div aura:id="spinnerId" class="slds-spinner_container" >
+                        <div class="slds-spinner--brand  slds-spinner slds-spinner--small" role="alert">
+                           <span class="slds-assistive-text">Loading</span>
+                           <div class="slds-spinner__dot-a"></div>
+                           <div class="slds-spinner__dot-b"></div>
+                        </div>
+                     </div>
+                  </aura:if>
+                <!-- Spinner Code Ends Here -->
+              </div>
+            </header>
+        </div>
+        <aura:if isTrue="{!v.orders != null}" >
+               <div class="slds-scrollable--y" style="height: 300px;">
+                   <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal">
+                        <!--Table must be responsive-->
+                        <thead>
+                            <tr class="slds-text-heading--label ">                    
+                                  <th class="slds-is-sortable" scope="col">{!$Label.c.CustomerOrder_Order}</th>                    
+                                  <th class="slds-is-sortable" scope="col">{!$Label.c.CustomerOrder_BUID}</th>
+                                  <th class="slds-is-sortable" scope="col">{!$Label.c.CustomerOrder_Ass_Order}</th>
+                                  <th class="slds-is-sortable" scope="col">{!$Label.c.CustomerOrder_OrderDate}</th>
+                                  <th class="slds-is-sortable" scope="col">{!$Label.c.CustomerOrder_InvoiceDate}</th>
+                            </tr>  
+                        </thead>
+                      
+                        <tbody>
+                          <aura:iteration items="{!v.orders}" var="ord">
+                            <tr class="slds-hint-parent">                        
+                                <td data-label="OrderNumber">{!ord.OrderNumber}</td>
+                                <td data-label="BUID">{!ord.OrderBuid}</td>
+                                <td data-label="AssocOrder">{!ord.AssocOrder}</td>
+                                <td data-label="OrderDate">{!ord.OrderDate}</td>
+                                <td data-label="InvoiceDate">{!ord.InvoiceDate}</td>
+                            </tr>
+                          </aura:iteration>     
+                        </tbody>
+                    </table>
+                </div>
+    
+                <footer class="slds-card__footer">
+                        <!-- Button's Logic Begins Here -->  
+                        <aura:if isTrue="{!v.previous}" >
+                            <ui:button press="{!c.previousPage}" label="Previous"/>
+                        </aura:if>
+                        <aura:if isTrue="{!v.next}">
+                            <ui:button aura:id="nextbtn" press="{!c.nextPage}" label="Next"/>
+                        </aura:if>
+                        <!-- Button's Logic Ends Here -->
+                </footer>
+            </aura:if>
+	</article>
+</aura:component>

@@ -1,0 +1,68 @@
+<apex:component ><div id="search-attached-results" class="CoveoSearchInterface" data-design="new" data-results-per-page="100" data-excerpt-length="150" data-enable-history="false" data-auto-trigger-query="false" style="border: 1px solid rgb(221, 219, 218); border-radius: .25rem;">
+    <div style="font-family: 'Salesforce Sans',Arial,sans-serif; font-size: 1rem; font-weight: 700; line-height: 1.25; padding: 15px;">Attached Articles</div>
+    <div class="CoveoAnalytics" data-search-hub="DellAgentAttachedResults"></div>
+    <div class="coveo-main-section">
+        <div class="coveo-results-column">
+            <div class="CoveoErrorReport"></div>
+            <div class="CoveoAttachedResultsFilter"></div>
+            <div class="CoveoResultList" data-auto-select-fields-to-include="false" data-layout="list" data-enable-infinite-scroll="true" style="overflow-y: scroll; max-height: 500px;">
+                <div class="coveo-show-if-no-results">Nothing is attached yet.</div>
+                <script id="Inquira" class="result-template" type="text/html" data-layout="list" data-field-okbtype="" ><div class="coveo-result-frame">
+    <div class="CoveoResultActionsMenu" style="position: relative; margin-top: -16px;">
+        <div class="CoveoAttachToCase"></div>
+    </div>
+    <div class="coveo-result-row" style="margin-bottom:7px;">
+        <div class="coveo-result-cell" style="vertical-align:top;width:32px;">
+            <span class="CoveoIcon" data-small="true" data-with-label="false"></span>
+        </div>
+        <div class="coveo-result-cell" style="vertical-align:middle;font-size:14px;padding-left:10px;">
+            <div class="coveo-result-row" style="font-size:15px;margin:0;"></div>
+            <a class="CoveoResultLink" data-open-in-sub-tab="true" data-always-open-in-new-window="true" data></a>
+            <div class="CoveoAttachToCase" data-readonly="true"></div>
+        </div>
+    </div>
+    <div class="coveo-result-row">
+        <div class="coveo-result-cell">
+            <span class="CoveoExcerpt"></span>
+        </div>
+    </div>
+    <div class="coveo-result-row">
+        <div class="coveo-result-row">
+            <div class="coveo-result-cell">
+                <div><span style="color: #67768b; margin-right: 10px;">Source:</span>OKB</div>
+            </div>
+        </div>
+    </div>
+</div></script>
+                <script id="Default" class="result-template" type="text/html" data-layout="list"  ><div class="coveo-result-frame">
+    <div class="CoveoResultActionsMenu" style="position: relative; margin-top: -16px;">
+        <div class="CoveoAttachToCase"></div>
+    </div>
+    <div class="coveo-result-row" style="margin-bottom:7px;">
+        <div class="coveo-result-cell" style="vertical-align:top;width:32px;">
+            <span class="CoveoIcon" data-small="true" data-with-label="false"></span>
+        </div>
+        <div class="coveo-result-cell" style="vertical-align:middle;font-size:14px;padding-left:10px;">
+            <div class="coveo-result-row" style="font-size:15px;margin:0;"></div>
+            <a class="CoveoResultLink" data-open-in-sub-tab="true" data-always-open-in-new-window="true" data></a>
+            <div class="CoveoAttachToCase" data-readonly="true"></div>
+        </div>
+    </div>
+    <div class="coveo-result-row">
+        <div class="coveo-result-cell">
+            <span class="CoveoExcerpt"></span>
+        </div>
+    </div>
+    <div class="coveo-result-row">
+        <div class="coveo-result-row">
+            <div class="coveo-result-cell">
+                <div class="CoveoFieldValue" data-text-caption="Source:" data-field="@syssource" data-facet="null"></div>
+            </div>
+        </div>
+    </div>
+</div></script>
+            </div>
+        </div>
+    </div>
+</div>
+</apex:component>

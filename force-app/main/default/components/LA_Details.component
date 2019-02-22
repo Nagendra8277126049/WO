@@ -1,0 +1,32 @@
+<apex:component >
+    
+    <apex:attribute name="objcase" type="Case" description=""/>
+    <apex:attribute name="objContact" type="Contact" description=""/>
+    <apex:attribute name="objAsset" type="Asset" description=""/>
+    
+    <script type='text/javascript' src='https://c.la2-c2cs-ord.salesforceliveagent.com/content/g/js/41.0/deployment.js'></script>
+
+
+    <script type='text/javascript'>
+    
+    liveagent.addCustomDetail('Contact E-mail', '{!objContact.email}');
+    liveagent.addCustomDetail('First Name', '{!objContact.firstName}');
+    liveagent.addCustomDetail('Last Name', '{!objContact.lastname}');
+    liveagent.addCustomDetail('Phone Number', '{!objContact.phone}');
+    liveagent.addCustomDetail('Case Subject','{!objcase.subject}');
+    liveagent.addCustomDetail('Case Description','{!objcase.Description}');
+    liveagent.addCustomDetail('Service Tag','{!objcase.Service_Tag__c}');
+    liveagent.addCustomDetail('Asset Number','{!objAsset.Asset_Number__c}');
+    liveagent.addCustomDetail('Case Status','New');
+    liveagent.addCustomDetail('Origin','Case Origin');
+        
+    liveagent.findOrCreate('Contact').map('Email','Contact E-mail',true,true,true).map('FirstName','First Name',false,false,true).map('LastName','Last Name',false,false,true).map('Phone','Phone Number',false,false,true);
+    liveagent.findOrCreate('Case').map('Subject','Case Subject',false,false,true).map('Description','Case Description',false,false,true).map('Service_Tag__c','Service Tag',true,true,true).map('Status','Case Status',false,false,true).map('Origin','Case Origin',false,false,true).saveToTranscript('CaseId').showOnCreate();
+    liveagent.findOrCreate('Asset').map('Asset_Number__c','Asset Number',true,true,true);//.saveToTranscript('AssetId__c').showOnCreate();
+    liveagent.findOrCreate('Contact').saveToTranscript('ContactId').showOnCreate().linkToEntity('Case','ContactId');
+  
+   liveagent.init('https://d.la2-c2cs-ord.salesforceliveagent.com/chat', '5722a000000001I', '00D2a0000000OgD');
+
+    </script>
+    
+</apex:component>

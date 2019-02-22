@@ -1,0 +1,32 @@
+<!--
+*******************************************************************************************************
+Name:       LogDispatch.cmp
+Description:  This Lightning Component that will be the place holder for the dispatch creation.  - Story 4191821 
+*******************************************************************************************************
+Date         Version    Author             Summary of Changes 
+*******************************************************************************************************
+12/04/2017     1.0     Rodrigo Carpio      Initial Release
+01/30/2018     2.0     Rodrigo Carpio      added the button that launch Delta Story#4597865 
+03/28/2018     3.0     Rodrigo Carpio      added design control for story #4316154 
+04/09/2018     4.0     Harsha Reddy        Defect 4930941:SFDC Lightning-UAT-<<SFDC non responsive during Delta initial load>>
+*******************************************************************************************************
+-->
+<aura:component implements="lightning:availableForFlowScreens" access="global" >
+	<aura:attribute name="record" type="Object" description="The record object to be displayed"/>
+	<aura:attribute name="simpleRecord" type="Object" description="A simplified view record object to be displayed"/>
+	<aura:attribute name="recordError" type="String" description="An error message bound to force:recordData"/>
+	<aura:attribute name="caseId" type="String" default="caseid" access="global"/>
+    
+    <lightning:card >
+        <table>
+            <tr><td><div >
+             {!$Label.c.LogDispatchMessage}
+            <br/>
+            <p>&nbsp;</p>
+        </div></td></tr>
+            <tr><td align="right"><div align="right">
+                <br/>
+            <p>&nbsp;</p></div></td></tr>
+        </table>        
+    </lightning:card>
+</aura:component>

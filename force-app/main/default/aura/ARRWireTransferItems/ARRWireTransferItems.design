@@ -1,0 +1,9 @@
+<design:component>
+    <design:attribute name="output" label="output" />    
+    <design:attribute name="accountName" label="accountName"/>
+    <design:attribute name="accountNumber" label="accountNumber"/>
+    <design:attribute name="bankNumber" label="bankNumber"/>
+    <design:attribute name="bankBranch" label="bankBranch"/>
+    <design:attribute name="country" label="country"/>
+    <design:attribute name="inputMaximumAmount" label="inputMaximumAmount"/>
+</design:component>

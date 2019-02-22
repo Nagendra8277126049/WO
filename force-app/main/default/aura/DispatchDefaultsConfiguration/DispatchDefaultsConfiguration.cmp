@@ -1,0 +1,595 @@
+<!--
+*******************************************************************************************************
+Name:       DispatchDefaultsConfiguration.cmp
+Description:  This Lightning Component that will be the place holder for the dispatch default.  - Story 4346869 
+*******************************************************************************************************
+Date         Version    Author             Summary of Changes 
+*******************************************************************************************************
+04/30/2018     1.0     Rodrigo Carpio      Initial Release
+04/30/2018     1.0     Harsha Reddy        Initial Release
+*******************************************************************************************************
+-->
+<aura:component implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global" controller="DispatchDefaultsConfiguration">
+    <!-- Label -->
+    <aura:attribute name="ComponentLabel" type="String" />
+    <aura:attribute name="ServiceTypeLabel" type="String" />
+    <aura:attribute name="ServiceOptionsLabel" type="String" />
+    <aura:attribute name="SystemClassificationLabel" type="String" />
+    <aura:attribute name="CategoryLabel" type="String" />
+    <aura:attribute name="KeepYourComponentsLabel" type="String" />
+    <aura:attribute name="DSPOverideRequestLabel" type="String" />
+    <aura:attribute name="AccidentalDamageLabel" type="String" />
+    <aura:attribute name="BillToLabel" type="String" />
+    <aura:attribute name="OrderNumberLabel" type="String" />
+    <aura:attribute name="InstructionLabel" type="String" />
+    <aura:attribute name="KYHDLabel" type="String" />
+    <aura:attribute name="reasonForDamageLabel" type="String" default="Reason for the Damage" />
+    <aura:attribute name="DASPLabel" type="String" default="DASP"/>
+
+    
+    <aura:attribute name="ADOverrideReasonPicklistLabel" type="String" />
+    <aura:attribute name="showAddressUpdateModalBox" type="boolean" default="false" />
+    <aura:attribute name="preventRecursionAddressUpdate" type="boolean" default="true" />
+
+	<aura:attribute name="streetOldValue" type="String" />
+	<aura:attribute name="cityOldValue" type="String" />
+	<aura:attribute name="stateOldValue" type="String" />
+	<aura:attribute name="countryOldValue" type="String" />
+	<aura:attribute name="countryCodeOldValue" type="String" />
+	<aura:attribute name="stateCodeOldValue" type="String" />
+	<aura:attribute name="postalCodeOldValue" type="String" />
+    <aura:attribute name="CitynewOldvalue" type="String"/>
+    
+    <aura:attribute name ="changedFieldsMap" type="Map" />
+	<aura:attribute name="latamCountryOldValue" type="String" />
+	<aura:attribute name="latamCityOldValue" type="String" />
+	<aura:attribute name="latamPostalCodeOldValue" type="String" />
+	<aura:attribute name="latamStateOldValue" type="String" />
+	<aura:attribute name="latamAddressLine1OldValue" type="String" />
+	<aura:attribute name="latamAddressLine2OldValue" type="String" />
+	<aura:attribute name="latamAddressLine3OldValue" type="String" />
+	<aura:attribute name="latamAddressLine4OldValue" type="String" />
+    
+    
+    <!-- Response -->
+    <aura:attribute name="response" type="object" />
+    <aura:attribute name="openReadForm" type="boolean" default="true" />
+    <aura:attribute name="Spinner" type="boolean" default="false" />
+    <aura:attribute name="record" type="Object" />
+	<aura:attribute name="groundShipmentrecord" type="Object" />
+    <aura:attribute name="simpleRecord" type="Object" />
+    <aura:attribute name="groundShipmentsimpleRecord" type="Object" />
+    <aura:attribute name="recordError" type="String" />
+    <aura:attribute name="groundShipmentrecordError" type="String" />
+    <aura:attribute name="hasNoAddress" type="boolean" default="false" />
+    <aura:attribute name="addressErrorMessage" type="string" default="Please enter the Delivery Location to continue."/>
+    
+    <aura:attribute name="DASPEnable" type="boolean" default="false"/>
+    <aura:attribute name="DASPValues" type="list"/>
+    <aura:attribute name="Region" type="String"/>
+    
+    <aura:attribute name="EditButtonFlag" type="boolean" default="false"/>
+    <aura:attribute name="isTriggerFlag" type="boolean" default="false"/>
+    <aura:attribute name="entitledServiceLabel" type="String" default="Entitled Service" />
+    <aura:attribute name="showChooseCityPopUp" type="boolean" default="false" />
+    <aura:attribute name="availableCitiesList" type="List" />
+    <aura:attribute name="chosenCity" type="String" default=""/>
+	<aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+
+    <force:recordData aura:id="recordHandler" recordId="{!v.recordId}" fields="City,Country,CountryCode,State,StateCode,Street,PostalCode,Override_Ground_Shipment__c,Ground_Shipment_Flag__c,Country__c,City_new__c,Zip_Code__c,State__c,Address_Line_1__c,Address_Line_2__c,Address_Line_3__c,Address_Line_4__c,Full_Address__c,DPS_Region__c,Postal_Code_Changed__c,Available_Cities__c,City_APJ__c,State_APJ__c"
+                      targetRecord="{!v.record}" targetFields="{!v.simpleRecord}" targetError="{!v.recordError}"
+                      mode="EDIT" recordUpdated="{!c.handleRecordUpdated}" />
+    
+    <!--aura:attribute name="change" value="{!v.ContactAlertUpdates__c}" action="{!c.onValueChange}" /-->
+    <!-- Display Lightning Data Service errors, if any -->
+    <aura:if isTrue="{!not(empty(v.recordError))}">
+        <div class="recordError">
+            <ui:message title="Error" severity="error" closable="true">
+                {!v.recordError}
+            </ui:message>
+        </div>
+    </aura:if>
+    
+    
+    <!-- on Page Load Handler(doInit) -->
+    <!--
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    -->
+    <aura:if isTrue="{!v.hasNoAddress}">
+        <div class="slds-size_3-of-7 slds-notify slds-notify_alert  slds-theme_error">
+            <span class="slds-m-right_x-small">
+               <lightning:icon iconName="utility:error" variant="inverse" size="xx-small" class="slds-icon-text-error"/>
+            </span>
+            <ui:outputText value="{!v.addressErrorMessage}" />
+        </div>
+    </aura:if>
+    
+    <!-- Component Event Handler -->
+    <aura:handler name="updateDisDefaultEvent" event="c:DispatchDefaultEvent" action="{!c.handleComponentEvent}"/>
+    <aura:handler name="openReadFormEvent" event="c:DispatchDefaultEditClose" action="{!c.closeEditForm}"/>
+    
+    <aura:handler name="render" value="{!this}" action="{!c.onRender}"/>
+    <!--<aura:handler event="c:OverrideGroundShipmentEvent" action="{!c.handleOverrideGroundShipment}"/>-->
+<!--Akhil: Adding logic for address update modal box-->
+    <aura:if isTrue="{!v.showAddressUpdateModalBox}">
+		           <!--###### MODAL BOX Start######--> 
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- ###### MODAL BOX HEADER Start ######-->
+                    <header class="slds-modal__header">
+                        <lightning:buttonIcon iconName="utility:close"
+                                              onclick="{! c.closeAddressUpdateModel }"
+                                              alternativeText="close"
+                                              variant="bare-inverse"
+                                              class="slds-modal__close"/>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Update Address?</h2>
+                    </header>
+                    <!--###### MODAL BOX BODY Part Start######-->
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <p><b>Updating the address will remove Work Order Configuration and Scheduling details. Do you want to proceed?
+                            </b>
+                        </p>
+                    </div>
+                    <!--###### MODAL BOX FOOTER Part Start ######-->
+                    <footer class="slds-modal__footer">
+                        <lightning:button variant="neutral" 
+                                          label="Cancel"
+                                          title="Cancel"
+                                          onclick="{! c.closeAddressUpdateModel}"/>
+                        <lightning:button variant="brand" 
+                                          label="Update"
+                                          title="Update"
+                                          onclick="{! c.updateAddress }"/>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+            <!--###### MODAL BOX Part END Here ######-->
+	</aura:if>
+	<!--Akhil Ends :Adding logic for address update modal box-->
+    <aura:if isTrue="{!v.openReadForm}">
+        <article class="slds-card">
+            <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container" title="description of icon when needed">
+                            <lightning:icon iconName="standard:work_order" size="small" alternativeText="Dispatch Configuration Icon"/>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <h2>
+                            <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title="[object Object]">
+                                <span class="slds-text-heading_small">{#v.ComponentLabel}</span>
+                            </a>
+                        </h2>
+                    </div>
+                </header>
+            </div>
+            
+            <!-- Spinner Code Begins Here -->
+          <aura:if isTrue="{!v.Spinner}">
+                <lightning:spinner variant="brand" size="Small" />
+            </aura:if>
+            <!-- Spinner Code Ends Here -->
+            
+            <aura:if isTrue="{!not(empty(v.response.locationCoverageLevel))}">
+                <lightning:icon iconName="utility:warning" variant="warning" size="small" /> This work order requires a minimum of {!v.response.locationCoverageLevel}
+                service because the location is in an extended delivery area.
+            </aura:if>
+            
+        <!-- <aura:if isTrue="{!not(v.hasNoAddress)}">-->
+                
+                <div class="slds-card__body slds-card__body_inner">
+                    <div class="slds-grid mdp forcePageBlockSectionRow">
+                        <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView"
+                             role="listitem">
+                            <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                <div class="test-id__field-label-container">
+                                    <span class="test-id__field-label slds-form-element__label">
+                                        {#v.ServiceTypeLabel}
+                                    </span>
+                                    
+                                </div>
+                                <div class="slds-form-element__control slds-grid itemBody" ondblclick="{!c.openModalWindow}">
+                                    <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                        <span class="uiOutputText">
+                                            {!v.response.serviceType}
+                                        </span>
+                                    </span>
+                                    <aura:if isTrue="{!not(v.hasNoAddress)}">
+                                    <lightning:buttonIcon aura:id="ServiceTypeEditBtn" iconName="utility:edit" variant="bare"
+                                                          onclick="{!c.openModalWindow}"  alternativeText="Edit Button"/>
+                                    </aura:if>
+                                </div>
+                       		 </div>
+                        </div>
+                        
+                        <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView"
+                             role="listitem">
+                            <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                <div class="test-id__field-label-container">
+                                    <span class="test-id__field-label slds-form-element__label">
+                                        {#v.ServiceOptionsLabel}
+                                    </span>
+                                </div>
+                                <div class="slds-form-element__control slds-grid itemBody" ondblclick="{!c.openModalWindow}">
+                                    <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                        <span class="uiOutputText">
+                                            {!v.response.selectedServiceOpt}
+                                        </span>
+                                    </span>
+                                    <aura:if isTrue="{!not(v.hasNoAddress)}">
+                                    <lightning:buttonIcon aura:id="ServiceOptionsEditBtn" iconName="utility:edit" variant="bare"
+                                                          onclick="{!c.openModalWindow}"  alternativeText="Edit Button"/>
+                                    </aura:if>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="slds-grid mdp forcePageBlockSectionRow">
+                        <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView"
+                             role="listitem">
+                            <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                <div class="test-id__field-label-container">
+                                    <span class="test-id__field-label slds-form-element__label">
+                                        {#v.CategoryLabel}
+                                    </span>
+                                </div>
+                                <div class="slds-form-element__control slds-grid itemBody" ondblclick="{!c.openModalWindow}">
+                                    <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                        <span class="uiOutputText">
+                                            {!v.response.specialOpnsValue}
+                                        </span>
+                                    </span>
+                                    <aura:if isTrue="{!not(v.hasNoAddress)}">
+                                    <lightning:buttonIcon aura:id="SystemClassEditBtn" iconName="utility:edit" variant="bare"
+                                                          onclick="{!c.openModalWindow}"  alternativeText="Edit Button"/>
+                                    </aura:if>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView"
+                             role="listitem">
+                            <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                <div class="test-id__field-label-container">
+                                    <span class="test-id__field-label slds-form-element__label">
+                                        {#v.SystemClassificationLabel}
+                                    </span>
+                                </div>
+                                <div class="slds-form-element__control slds-grid itemBody" ondblclick="{!c.openModalWindow}">
+                                    <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                        <span class="uiOutputText">
+                                            {!v.response.productClassification}
+                                        </span>
+                                    </span>
+                                    <aura:if isTrue="{!not(v.hasNoAddress)}">
+                                    <lightning:buttonIcon aura:id="PONumberEditBtn" iconName="utility:edit" variant="bare"
+                                                          onclick="{!c.openModalWindow}"  alternativeText="Edit Button"/>
+                                    </aura:if>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Megha: started code changes from here for Aug release MailIn/Depot -->
+                    
+                    <aura:if isTrue="{!v.response.serviceType == 'Mail-In'}" >
+                        
+                        <div class="slds-grid mdp forcePageBlockSectionRow">         
+                            <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView"
+                                 role="listitem">
+                                <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                    <div class="test-id__field-label-container">
+                                        <span class="test-id__field-label slds-form-element__label">
+                                            Alternate Return Address
+                                        </span>
+                                    </div>
+                                    <div class="slds-form-element__control slds-grid itemBody" ondblclick="{!c.openModalWindow}">
+                                        <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                            <ui:outputCheckbox value="{!v.response.alternateReturnAddressChkBx}"/>
+                                        </span>
+                                        <lightning:buttonIcon aura:id="altReturnAddressChkbox" iconName="utility:edit" variant="bare"
+                                                              onclick="{!c.openModalWindow}"  alternativeText="Edit Button"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <aura:if isTrue="{!v.response.alternateReturnAddressChkBx}">
+                            <div class="slds-grid mdp forcePageBlockSectionRow">
+                                <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView"
+                                     role="listitem">
+                                    <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                        <div class="test-id__field-label-container">
+                                            <span class="test-id__field-label slds-form-element__label">
+                                                Address
+                                            </span>
+                                        </div>
+                                        <div class="slds-form-element__control slds-grid itemBody" ondblclick="{!c.openModalWindow}">
+                                            <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                                <!--
+                                                    <span style="color:#006dcc;" class="uiOutputText">
+                                                        {!v.response.alternateReturnStreet}<br/>
+                                                     {!v.response.alternateReturnCity}, {!v.response.alternateReturnState}&nbsp; {!v.response.alternateReturnPostalCode}<br/>
+               										 {!v.response.alternateReturnCountry}
+                                                    </span>
+                                                    -->
+                                                <lightning:formattedAddress
+                                                                            street="{!v.response.alternateReturnStreet}"
+                                                                            city="{!v.response.alternateReturnCity}"
+                                                                            country="{!v.response.alternateReturnCountry}"
+                                                                            province="{!v.response.alternateReturnState}"
+                                                                            postalCode="{!v.response.alternateReturnPostalCode}"
+                                                                            />
+                                            </span>
+                                            <lightning:buttonIcon aura:id="altReturnAddressEdit" iconName="utility:edit" variant="bare"
+                                                                  onclick="{!c.openModalWindow}"  alternativeText="Edit Button"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>    
+                        </aura:if>
+                    </aura:if>
+                    <!--Megha:code changes end here-->
+                    
+                    <div class="slds-grid mdp forcePageBlockSectionRow">
+                        <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView"
+                             role="listitem">
+                            <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                <div class="test-id__field-label-container">
+                                    <span class="test-id__field-label slds-form-element__label">
+                                        {#v.KeepYourComponentsLabel}
+                                    </span>
+                                </div>
+                                <div class="slds-form-element__control slds-grid itemBody" ondblclick="{!c.openModalWindow}">
+                                    <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                        <ui:outputCheckbox value="{!v.response.keepYComp}"/>
+                                    </span>
+                                    <aura:if isTrue="{!not(v.hasNoAddress)}">
+                                    <lightning:buttonIcon aura:id="KeepYourCompEditBtn" iconName="utility:edit" variant="bare"
+                                                          onclick="{!c.openModalWindow}"  alternativeText="Edit Button"/>
+                                    </aura:if>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView"
+                             role="listitem">
+                            <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                <div class="test-id__field-label-container">
+                                    <span class="test-id__field-label slds-form-element__label">
+                                        {#v.KYHDLabel}
+                                    </span>
+                                </div>
+                                <div class="slds-form-element__control slds-grid itemBody" ondblclick="{!c.openModalWindow}">
+                                    <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                        <ui:outputCheckbox value="{!v.response.KYHDFlag}"/>
+                                    </span>
+                                    <aura:if isTrue="{!not(v.hasNoAddress)}">
+                                    <lightning:buttonIcon aura:id="DSPOverideReqEditBtn" iconName="utility:edit" variant="bare"
+                                                          onclick="{!c.openModalWindow}"  alternativeText="Edit Button"/>
+                                    </aura:if>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--June release: Added slds-hide in this section for June release to hide the AD.Need to remove them for Aug Dattaa1/Megha-->
+                    <!--Aug release: Megha reverted above mentioned change -->
+                    <div class="slds-grid mdp forcePageBlockSectionRow">
+                        <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView"
+                             role="listitem">
+                            <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                <div class="test-id__field-label-container">
+                                    <span class="test-id__field-label slds-form-element__label">
+                                        {#v.AccidentalDamageLabel}
+                                    </span>
+                                </div>
+                                
+                                <div class="slds-form-element__control slds-grid itemBody" ondblclick="{!c.openModalWindow}">
+                                    <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                        <ui:outputCheckbox value="{!v.response.accidentalDamage1}"/>
+                                    </span>
+                                    <aura:if isTrue="{!not(v.hasNoAddress)}">
+                                    <lightning:buttonIcon aura:id="DSPOverideReqEditBtn" iconName="utility:edit" variant="bare"
+                                                          onclick="{!c.openModalWindow}" alternativeText="Edit Button"/>
+                                    </aura:if>
+                                </div>
+                            </div>
+                        </div>
+                        <aura:if isTrue="{!and(v.response.ADOverrideReason!=null,v.response.ADOverrideReason!=undefined)}">
+                            <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView"
+                                 role="listitem">
+                                <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                    <div class="test-id__field-label-container">
+                                        <span class="test-id__field-label slds-form-element__label">
+                                            {#v.ADOverrideReasonPicklistLabel}
+                                        </span>
+                                    </div>
+                                    <div class="slds-form-element__control slds-grid itemBody" ondblclick="{!c.openModalWindow}">
+                                        <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                            <span class="uiOutputText">
+                                                {!v.response.ADOverrideReason}
+                                            </span>
+                                        </span>
+                                        <aura:if isTrue="{!not(v.hasNoAddress)}">
+                                        <lightning:buttonIcon aura:id="ADOverrideReasonEditButtn" iconName="utility:edit"
+                                                              variant="bare" onclick="{!c.openModalWindow}"  alternativeText="Edit Button"
+                                                              />
+                                        </aura:if>
+                                    </div>
+                                </div>
+                            </div>
+                        </aura:if>
+                    </div>
+                    <div class="slds-grid mdp forcePageBlockSectionRow">
+                        <aura:if isTrue="{!v.response.accidentalDamage1}">
+                            <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView"
+                                 role="listitem">
+                                <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                    <div class="test-id__field-label-container">
+                                        <span class="test-id__field-label slds-form-element__label">
+                                            {#v.reasonForDamageLabel}
+                                        </span>
+                                    </div>
+                                    <div class="slds-form-element__control slds-grid itemBody" ondblclick="{!c.openModalWindow}">
+                                        <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                            <span class="uiOutputText">
+                                                {!v.response.reasonForDamage}
+                                            </span>
+                                        </span>
+                                        <aura:if isTrue="{!not(v.hasNoAddress)}">
+                                        <lightning:buttonIcon aura:id="ADOverrideReasonEditButtn" iconName="utility:edit"
+                                                              variant="bare" onclick="{!c.openModalWindow}"  alternativeText="Edit Button"
+                                                              />
+                                        </aura:if>
+                                    </div>
+                                </div>
+                            </div>
+                        </aura:if>
+                    </div>
+                    <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView"
+                         role="listitem">
+                        <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                            <div class="test-id__field-label-container">
+                                <span class="test-id__field-label slds-form-element__label">
+                                    {#v.DSPOverideRequestLabel}
+                                </span>
+                            </div>
+                            <div class="slds-form-element__control slds-grid itemBody" ondblclick="{!c.openModalWindow}">
+                                <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                    <ui:outputCheckbox value="{!v.response.dSPOverideReq}"/>
+                                </span>
+                                <aura:if isTrue="{!not(v.hasNoAddress)}">
+                                <lightning:buttonIcon aura:id="DSPOverideReqEditBtn" iconName="utility:edit" variant="bare"
+                                                      onclick="{!c.openModalWindow}"  alternativeText="Edit Button" />
+                                </aura:if>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-grid mdp forcePageBlockSectionRow">
+                        <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView"
+                             role="listitem">
+                            <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                <div class="test-id__field-label-container">
+                                    <span class="test-id__field-label slds-form-element__label">
+                                        {#v.BillToLabel}
+                                    </span>
+                                </div>
+                                <div class="slds-form-element__control slds-grid itemBody" ondblclick="{!c.openModalWindow}">
+                                    <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                        <span class="uiOutputText">
+                                            {!v.response.billTo}
+                                        </span>
+                                    </span>
+                                    <aura:if isTrue="{!not(v.hasNoAddress)}">
+                                    <lightning:buttonIcon aura:id="BillToEditBtn" iconName="utility:edit" iconClass="color: rgb(236, 235, 234)"
+                                                          onclick="{!c.openModalWindow}" alternativeText="Edit Button"
+                                                          variant="bare"/>
+                                    </aura:if>
+                                </div>
+                            </div>
+                        </div>
+                        <aura:if isTrue="{!v.response.billTo == 'Customer'}">
+                            <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView"
+                                 role="listitem">
+                                <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                                    <div class="test-id__field-label-container">
+                                        <span class="test-id__field-label slds-form-element__label">
+                                            {#v.OrderNumberLabel}
+                                        </span>
+                                    </div>
+                                    <div class="slds-form-element__control slds-grid itemBody" ondblclick="{!c.openModalWindow}">
+                                        <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                            <span class="uiOutputText">
+                                                {!v.response.orderNumber}
+                                            </span>
+                                        </span>
+                                        <aura:if isTrue="{!not(v.hasNoAddress)}">
+                                        <lightning:buttonIcon aura:id="OrderNumberEditBtn" iconName="utility:edit" variant="bare"
+                                                              onclick="{!c.openModalWindow}" alternativeText="Edit Button"/>
+                                        </aura:if>
+                                    </div>
+                                </div>
+                            </div>
+                        </aura:if>
+                    </div>
+                    <aura:if isTrue="{!v.DASPEnable}">
+                    <div class="slds-grid mdp forcePageBlockSectionRow">
+                        <div class="slds-has-flexi-truncate slds-p-horizontal_x-small full forcePageBlockItem forcePageBlockItemView"
+                        role="listitem">
+                       <div class="slds-form-element slds-form-element_readonly slds-m-bottom_xx-small slds-form-element_edit slds-grow slds-hint-parent override--slds-form-element">
+                           <div class="test-id__field-label-container">
+                               <span class="test-id__field-label slds-form-element__label">
+                                   {#v.DASPLabel}
+                               </span>
+                               
+                           </div>
+                           <div class="slds-form-element__control slds-grid itemBody" ondblclick="{!c.openModalWindow}">
+                               <span class="test-id__field-value slds-form-element__static slds-grow slds-form-element_separator">
+                                   <span class="uiOutputText">
+                                       {!v.response.DASPValue}
+                                   </span>
+                               </span>
+                               <aura:if isTrue="{!not(v.hasNoAddress)}">
+                               <lightning:buttonIcon aura:id="DASPEditBtn" iconName="utility:edit" variant="bare"
+                                                     onclick="{!c.openModalWindow}"  alternativeText="Edit Button"/>
+                               </aura:if>
+                           </div>
+                           </div>
+                   </div>
+                    </div>
+                    </aura:if>
+                    
+                </div>
+                <aura:if isTrue="{!v.showChooseCityPopUp}">
+                <div class="demo-only">
+                    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                            <div class="slds-modal__header">
+                                <!--<button class="slds-button slds-modal__close" title="Close" onclick="{!c.closeChooseCityPopUp}">
+                                    <lightning:icon class="white slds-icon_small" iconName="utility:close"/> 
+                                    <span class="slds-assistive-text">
+                                        Close
+                                    </span>
+                                </button>-->
+                            </div>
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                
+                                <h2 id="header43" class="slds-text-heading--medium slds-text-link">Please choose the city available for this postal code: </h2>
+                            	
+                                    <lightning:radioGroup name="radioGroup"
+                                                      label="Select City"
+                                                      options="{!v.availableCitiesList }"
+                                                  value="{!v.chosenCity }"
+                                                  type="radio"/>
+                            
+                            
+                            </div>
+                            <div class="slds-modal__footer">
+                                <footer>
+                                    <lightning:button variant="brand" label="Save" aura:id="updateCityOnWorkOrder" disabled="{!(empty(v.chosenCity))}" onclick="{! c.updateCityOnWorkOrder }"></lightning:button>
+                                    <!--<lightning:button label="Cancel" aura:id="dontSaveCity" onclick="{! c.closeChooseCityPopUp }"></lightning:button>-->
+                                </footer>
+                            </div>
+                        </div>   
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open"></div>
+                </div>
+            </aura:if>
+            <!--</aura:if>-->
+        </article>
+    </aura:if>
+    <!--set component in the varible {!v.body}-->
+    <div aura:id="cmpBody">
+        {!v.body}
+    </div>
+    
+</aura:component>

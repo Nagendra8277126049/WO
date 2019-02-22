@@ -1,0 +1,137 @@
+<aura:component controller="AutoSelectPartController"
+   implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,lightning:availableForFlowScreens" access="global" >
+   <aura:attribute name="renderComponent" type="Boolean" default="true"/>
+   <aura:attribute name="renderSearchBox" type="Boolean" default="true"/>
+   <aura:attribute name="displayPartSearch" type="Boolean" default="true"/>
+   <!--control the view of button Get this 'part'y started-->
+   <aura:attribute name="enablePartSearch" type="Boolean" default="false"/>
+   <!--Activate the button Get this 'part'y started-->
+   <aura:attribute name="displayLaborSearch" type="Boolean" default="false"/>
+   <aura:attribute name="serviceTag" type="String" access="global"/>
+   <!--Input param for the component-->
+   <aura:attribute name="addressBUID" type="String" access="global"/>
+   <!--Input param for the component-->
+   <aura:attribute name="workOrderId" type="String" access="global"/>
+   <!--Input param for the component-->
+   <aura:attribute name="DefCmp" type="List"/>
+   <!--DefCmp will Display the Defective components in the page-->
+   <aura:attribute name="DefCmpCopy" type="List"/>
+   <!--DefCmpCopy will keep a copy of Defective components in the page-->
+   <aura:attribute name="SelectedDC" type="List"/>
+   <!--SelectedDC will hold the selected Defective commodities-->
+   <aura:attribute name="searchText" type="String"/>
+   <!--will store the search keyword-->
+   <aura:attribute name="selectedString" type="String" access="global"/>
+   <!-- Output param for the second component-->
+   <aura:attribute name="spmdLink" type="String" access="global"/>
+   <!-- will hold the dynamic value of SPMD url-->
+   <aura:attribute name="PartList" type="List"/>
+   <aura:attribute name="selectedPartList" type="List"/>
+   <aura:attribute name="displayAdvancedSearch" type="Boolean" default="false"/>
+   <!--this will help to diplay the advanced Search/mps -->
+   <!-- // ADDED   BY Harsha - DEFECT 5446043 // Starts Here-->
+   <aura:attribute name="record" type="Object" />
+   <aura:attribute name="simpleRecord" type="Object" />
+   <aura:attribute name="recordError" type="String" />
+   <!-- // ADDED   BY Harsha - DEFECT 5446043 // Ends Here-->
+   <!--<lightning:spinner aura:id="mySpinnerAps1" variant="brand" size="medium" class="slds-hide"/>-->
+   <force:recordData aura:id="recordHandler" recordId="{!v.workOrderId}" fields="Service_Type__c"
+      targetRecord="{!v.record}" targetFields="{!v.simpleRecord}" targetError="{!v.recordError}"
+      mode="VIEW" recordUpdated="{!c.recordUpdated}" />
+   <!-- // cOMMENTED  BY Harsha - DEFECT 5446043
+      <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+      -->
+   <lightning:flow aura:id="flowOnClick" />
+    <!--
+   <aura:if isTrue="{!v.checkServiceType}">
+	-->
+      <aura:if isTrue="{!v.displayLaborSearch}">
+         <div class="slds-size_1-of-7 slds-notify--toast slds-theme_shade slds-text-color_default" role="alert">
+            <span class="slds-size_1-of-8 ">
+               <lightning:icon iconName="utility:info" variant="base" />
+            </span>
+            Parts cannot be added to Labor Only work orders.
+         </div>
+      </aura:if>
+    <!--
+   </aura:if>
+	-->
+   <aura:if isTrue="{!v.displayPartSearch}">
+      <div aura:id = "partButton" style="{!v.renderSearchBox ? 'display:block' : 'display:none'}">
+         <lightning:button label = "Start Selecting Parts" aura:id="text" variant="brand" onclick="{!c.opentable}" class="slds-align--absolute-center" disabled="{!!v.enablePartSearch}"/>
+      </div>
+   </aura:if>
+   <div class="slds-hide " aura:id="mtag"  >
+      <div aura:id = "c-searchbox" style="{!v.renderSearchBox ? 'display:block' : 'display:none'}"  >
+         <lightning:spinner aura:id="mySpinnerAps" variant="brand" size="medium" class="slds-hide"/>
+         <lightning:input aura:id="enter-search"
+            name="enter-search"
+            label="Search for Parts"
+            type="search"
+            placeholder="Search with defective component"
+            onchange="{!c.handleChange}"
+            value="{!v.searchText}"
+            />
+         <br/>
+         <aura:if isTrue="{!v.SelectedDC.length>0}">
+            Selected Defective Components
+            <br/>
+            <ul class="slds-listbox slds-listbox_horizontal" role="listbox" aria-label="Selected Options:" aria-orientation="horizontal">
+               <aura:iteration items="{!v.SelectedDC}" var="Def" indexVar="index">
+                  <li class="slds-listbox-list">
+                     <span class="slds-pill" role="option" tabindex="0" aria-selected="true">
+                     <span class="slds-pill__label" title="{!Def}">{!Def}</span>
+                     </span>
+                  </li>
+               </aura:iteration>
+            </ul>
+            <br/>
+         </aura:if>
+         <!--<aura:if isTrue="{!v.displayAdvancedSearch}">
+            <div style="padding: 1rem;">
+                <div class="slds-border_top" style="text-align: center; background-color: rgb(255, 255, 255);" />
+                <div align="left" style="margin-top: 10px">
+                    <a onclick="{!c.handleAdvancedSearch}"><strong>Didn't find what you were looking for?</strong></a>
+                </div>
+            </div> 
+            </aura:if>-->  
+      </div>
+      <div style="{!v.renderComponent ? 'display:block' : 'display:none'}">
+         <aura:if isTrue="{!v.DefCmp.length>0}">
+            <div aura:id = "c-container" class = "divStyle slds-grid slds-wrap slds-text-align_center custom-container" style="margin-top: 5px">
+               <aura:iteration items="{!v.DefCmp}" var="Def" indexVar="index">
+                  <div class="slds-size_5-of-12" style="margin-top: 3px">
+                     <span class="slds-list_horizontal">
+                        <ui:inputCheckbox aura:id="cboxRowInput" text="{!index}" class="cBox" disabled="{!and(v.SelectedDC.length>=3,Def.value!=true)}" value="{!Def.value}" change="{!c.handleCommodityChange}"/>
+                        <p style="margin-left: 3px" id="commodity" class="commodity" name="commodity">{!Def.label} </p>
+                     </span>
+                  </div>
+               </aura:iteration>
+            </div>
+         </aura:if>
+         <div style="padding: 1rem;" class="slds-wrap slds-grid">
+            <div class="slds-section slds-size_6-of-12">
+               <div align="left" style="margin-top: 10px">
+                  <a onclick="{!c.handleAdvancedSearch}"><strong>Didn't find what you were looking for?</strong></a>
+               </div>
+            </div>
+            <div class="slds-section slds-size_6-of-12">
+               <div align="right" aura:id="buttonSection" class="slds-show slds-wrap slds-grid" style="margin-top: 5px" >
+                  <lightning:button label="Cancel" title="Cancel" aura:id="clearButton" onclick="{! c.handleClear }" />
+                  <lightning:button label="Next" title="Next" variant="brand" aura:id="searchButton" onclick="{! c.handleSearch }" disabled="{!!and(v.PartList.length==0, v.SelectedDC.length>0)}"/>
+               </div>
+            </div>
+         </div>
+         <div class="slds-clearfix">
+            <div class="slds-float_right">
+               <a href="{!v.spmdLink}" target="_blank">
+                  <span>
+                     <lightning:buttonIcon aura:id="ServiceTypeEditBtn" iconName="utility:link" variant="bare"/>
+                     Go to SPMD
+                  </span>
+               </a>
+            </div>
+         </div>
+      </div>
+   </div>
+</aura:component>

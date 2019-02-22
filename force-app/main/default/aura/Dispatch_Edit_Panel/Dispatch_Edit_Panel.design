@@ -1,0 +1,7 @@
+<design:component label="Dispatch Edit Panel">
+    <sfdc:objects>
+        <sfdc:object>WorkOrder</sfdc:object>
+    </sfdc:objects>
+    <design:attribute name="EditReviewMessage" label="Edit Review Message"/>
+    <design:attribute name="EditButtonLabel" label="Edit Button Label"/>
+</design:component>

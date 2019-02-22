@@ -1,0 +1,215 @@
+<aura:component controller="AddGroupMember" implements="flexipage:availableForAllPageTypes" >
+     
+  <!-- CREATE ATTRIBUTE/VARIABLE-->
+    <aura:attribute name="searchResult" type="List" description="use for store and display Group list return from server"/>
+    <aura:attribute name="searchKeyword" type="String" description="use for store user search input"/>
+    <aura:attribute name="labelBtn" type="String" description="Get the label of button"/>
+    <aura:attribute name="Message" type="boolean" default="false" description="use for display no record found message"/>
+    <aura:attribute name="MessageAddUser" type="boolean" default="false" description="use for display to select a record"/>
+    <aura:attribute name="TotalNumberOfRecord" type="integer" default="0" description="use for display Number of records"/>
+    <aura:attribute name="group_id" type="String" description="use pass group id to other component."/>
+    <aura:attribute name="reg" type="Group[]"/>
+    <aura:attribute name="selectedRecord" type="sObject" default="{}" description="Use,for store SELECTED sObject Record"/>
+    
+     <aura:attribute name="usr" type="User[]"/>
+    <aura:attribute name="selecteduser" type="String[]" default="0"/>
+    <aura:attribute name="groupid" type="string"/>
+    <aura:attribute name="selectedLookUpRecord" type="sObject" default="{}"/>
+     <!--<ui:button label="Get Public Group" press="{!c.myAction}"/>-->
+    <!--declare events hendlers-->  
+    <aura:handler name="oSelectedRecordEvent" event="c:selectedsObjectRecordEvent" action="{!c.getSelectid}"/>
+    
+    
+    <!-- SHOW LOADING SPINNER--> 
+    <lightning:spinner variant="brand" size="large" aura:id="Id_spinner" class="slds-hide" />
+    
+    <div class="slds-m-around_medium">
+       <!-- SEARCH INPUT AND SEARCH BUTTON-->
+         <div class="c-container">
+        <lightning:layout>
+            <lightning:layoutItem flexibility="auto"  size="3" padding="around-small">
+                <lightning:input value="{!v.searchKeyword}"
+                                 required="true"
+                                 placeholder="Search Queues"
+                                 aura:id="searchField"
+                                 label="Queue Name"/>
+              
+            </lightning:layoutItem>
+            
+            <lightning:layoutItem  flexibility="auto"  size="2" padding="around-small">
+            <div style="margin-top:20px;">
+                
+                <lightning:button onclick="{!c.Search}"
+                                  variant="brand"
+                                  label="Search"
+                                  iconName="utility:search"/>
+                </div>
+                
+ 
+            </lightning:layoutItem>
+        </lightning:layout>
+        </div>
+       
+        <!-- TOTAL RECORDS BADGES
+        <div class="slds-m-around_x-small">
+            <lightning:badge label="{!v.TotalNumberOfRecord}" />
+        </div>--> 
+        
+        <!-- ERROR MESSAGE IF NOT RECORDS FOUND--> 
+        <aura:if isTrue="{!v.Message}">
+            <div class="slds-notify_container slds-is-relative">
+                <div class="slds-notify slds-notify_toast slds-theme_error" role="alert">
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small">No Records Found...</h2>
+                    </div>
+                </div>
+            </div>
+        </aura:if>
+       
+         <aura:if isTrue="{!v.MessageAddUser}">
+            <div class="slds-notify_container slds-is-relative">
+                <div class="slds-notify slds-notify_toast slds-theme_error" role="alert">
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small">Please select at least one Queue or search a Queue.</h2>
+                    </div>
+                </div>
+            </div>
+        </aura:if>
+        <!-- TABLE CONTENT--> 
+        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+            <thead>
+                <tr class="slds-text-title_caps">
+                    <th scope="col">
+                        <div class="slds-truncate" title="S.no">S.no</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Account Name">Queue Name</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Type">CREATED DATE</div>
+                    </th>
+                    <!--<th scope="col">
+                        <div class="slds-truncate" title="Industry">Industry</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Phone">Phone</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Fax">Fax</div>
+                    </th>-->
+                </tr>
+            </thead>
+            <tbody> 
+                <!--### display all records of searchResult attribute by aura:iteration ###-->
+                <aura:iteration items="{!v.searchResult}" var="grp" indexVar="count">
+                    <tr>
+                        <td>
+                            <div class="slds-truncate">{!count + 1}</div>
+                        </td>
+                        <td>
+                            
+                            <div class="slds-truncate">
+                        <span class="slds-radio">
+                            <input type="radio" aura:id = "nameRadioAuraId" value="{!grp.Id}" id="{!grp.Name}" name="options"  onclick="{!c.handleRadioClick}" />
+                            <label class="slds-radio__label" for="{!grp.Name}">
+                                <span class="slds-radio--faux"></span>
+                                <span class="slds-form-element__label"> {!grp.Name}</span>
+                            </label>
+                        </span>
+                               
+                            </div>
+                        </td>
+                        <td>
+                            <div class="slds-truncate">{!grp.CreatedDate}</div>
+                        </td>
+                        <!--<td>
+                            <div class="slds-truncate">{!acc.Industry}</div>
+                        </td>
+                        <td>
+                            <div class="slds-truncate">{!acc.Phone}</div>
+                        </td>
+                        <td>
+                            <div class="slds-truncate">{!acc.Fax}</div>
+                        </td>-->
+                        
+                    </tr>
+                </aura:iteration>
+            </tbody>
+        </table>
+         <div style="margin-top:20px;">
+        <lightning:button  variant="brand"
+                          label="Add User"
+                          title="test"
+                          name="button"
+                           onclick="{!c.openModel}" /> 
+             
+              <lightning:button  variant="brand"
+                          label="Remove User"
+                          title="test"
+                          name="button"
+                           onclick="{!c.openModel}" /> 
+        </div>
+        
+        
+    </div>
+    
+    
+ <!--use boolean attribute for Store true/false value,
+    make default to "false" so modal box are not display on the load of component. 
+    --> 
+    <aura:attribute name="isOpen" type="boolean" default="false"/>
+    <aura:attribute name="isRemove" type="boolean" default="false"/>
+    <aura:attribute name="isAdded" type="boolean" default="false"/>
+    
+    
+    <!--Use "slds-m-around_xx-large" class to add standard X-Large padding to the component--> 
+    <div class="slds-m-around_xx-large">
+
+        <!--Use aura:if tag to display Model Box, on the bese of conditions. [isOpen boolean attribute] -->   
+        <aura:if isTrue="{!v.isOpen}">
+             
+            <!--###### MODAL BOX Start######--> 
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- ###### MODAL BOX HEADER Start ######-->
+                    <header class="slds-modal__header">
+                        <lightning:buttonIcon iconName="utility:close"
+                                              onclick="{! c.closeModel }"
+                                              alternativeText="close"
+                                              variant="bare-inverse"
+                                              class="slds-modal__close"/>
+                       
+                    </header>
+                    <!--###### MODAL BOX BODY Part Start######-->
+                    <div style="height: 200px; overflow: hidden;" class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                   <c:PublicGroupCustomLookup buttonLbl="{!v.labelBtn}" group_id_lookup="{!v.groupid}" objectAPIName="user" IconName="standard:user" selectedRecord="{!v.selectedLookUpRecord}" label="User Name"/>
+                    </div>
+                    <!--###### MODAL BOX FOOTER Part Start ######-->
+                    <footer class="slds-modal__footer">
+                        <lightning:button variant="neutral" 
+                                          label="Cancel"
+                                          title="Cancel"
+                                          onclick="{! c.closeModel }"/>
+                        <aura:if isTrue="{!v.isRemove}">
+                        <lightning:button aura:id="labeluser" variant="brand" 
+                                          label="Remove User"
+                                          title="Add Users"
+                                          onclick="{! c.likenClose }"/>
+                        </aura:if>
+                        
+                         <aura:if isTrue="{!v.isAdded}">
+                        <lightning:button aura:id="labeluser" variant="brand" 
+                                          label="Add User"
+                                          title="Add Users"
+                                          onclick="{! c.likenClose }"/>
+                        </aura:if>
+                        
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+            <!--###### MODAL BOX Part END Here ######-->
+            
+        </aura:if>
+    </div> 
+</aura:component>

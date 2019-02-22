@@ -1,0 +1,15 @@
+<aura:component controller="ARRProposalApexController" implements="force:lightningQuickAction,flexipage:availableForAllPageTypes,force:hasRecordId">
+    <aura:html tag="style">
+        .slds-modal__container{
+        	width:35% !Important;
+        	max-width:35% !important;
+        }
+        .modal-body{ 
+        	height:auto !important;
+        	max-height:unset !important;
+        } 
+    </aura:html>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <p id="refresh-message">Shortly your proposal will be refreshed!</p>
+</aura:component>

@@ -1,0 +1,120 @@
+<aura:component controller="SlotsController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" 
+                access="global">
+	
+    <aura:attribute name="objClassController" type="SlotsController"/>
+    <!--aura:attribute name="objClassController" type="object"/-->
+    <aura:attribute name="cWorkOrderNum" type="string" default="00000006"/>
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    
+    <aura:attribute name="whichButton" type="String" default=""/>
+    <aura:attribute name="cDPSStartTime" type="String" default=""/>
+    <aura:attribute name="cDPSEndTime" type="String" default=""/>
+    <aura:attribute name="cCurrSelectSlot" type="String" default=""/> 
+    <aura:attribute name="cConcatenatedDateTime" type="String" default=""/>
+    <aura:attribute name="isDeferral" type="Boolean" default="{!v.objClassController.isDeferral}"/>
+    <!--lightning:button aura:id='btnSchedule' label='Schedule' name='Schedule' value='Schedule' class='unselectedbutton' onclick="{!c.performSchedule}"/>
+    <lightning:button aura:id='btnRechedule' label='Reschedule' name='Reschedule' value='Reschedule' class='unselectedbutton' onclick="{!c.performReschedule}"/>
+    <lightning:button aura:id='btnCancel' label='Cancel' name='Cancel' value='Cancel' class='unselectedbutton' onclick="{!c.performCancel}"/-->
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!--
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>
+	-->
+    
+    <!--ui:inputText label="Work Order" class="field" value="{!v.objClassController.WorkOrderNum}"/-->    
+    <!--lightning:card iconName="custom:custom18" title="Entitlements"-->
+    <!--loading spinner start... style=Brand Medium (blue dots)-->    
+ 		
+  		<!-- Loading spinner end-->   
+    
+    <!--Concatenated Slot: <ui:outputText value="{!v.cConcatenatedDateTime}" /-->
+    <p></p>
+    <article class="slds-card">
+    <div aura:id = "slotContainer" class="slds-grid slds-wrap" style="align:center">
+        <aura:if isTrue="{!v.Spinner}">
+    		<div aura:id="spinnerId" class="slds-spinner_container">
+       			<div class="slds-spinner--brand  slds-spinner slds-spinner--small slds-is-relative" role="alert">
+         			<span class="slds-assistive-text">Loading</span>
+         			<div class="slds-spinner__dot-a"></div>
+         			<div class="slds-spinner__dot-b"></div>
+       			</div>
+    		</div>
+ 		</aura:if>
+    <table >
+         <tr>
+            <aura:if isTrue="{!v.objClassController.slotsHasNewMonth}">
+                <td colspan='{!v.objClassController.currMonthColSpan}'>
+                    <div class="slds-align_absolute-center slds-text-heading_small">
+                                <b>{!v.objClassController.currMonthName}</b>
+                            </div></td>
+                <td colspan='{!v.objClassController.newMonthColSpan}'><div class="slds-align_absolute-center slds-text-heading_small">
+                                <b>{!v.objClassController.newMonthName}</b>
+                            </div></td>
+                <aura:set attribute="else">
+                    <td colspan='{!v.objClassController.currMonthColSpan}'><div class="slds-align_absolute-center slds-text-heading_small">
+                                <b>{!v.objClassController.currMonthName}</b>
+                            </div></td>
+                </aura:set>
+            </aura:if>             
+        </tr>
+        <tr>
+            <aura:iteration items="{!v.objClassController.scheduleSlotListHeader}" var="oAcc3"> 
+                <td >
+                    <div class="heaherbutton ">
+                    <!--div class=" slds-border_bottom slds-border_top slds-border_right slds-border_left slds-has-dividers_around-space" style="padding: .5rem; margin-top: 5px; margin-bottom: 5px;"-->
+                        <!--div style="padding: .5rem; margin-top: 5px; margin-bottom: 5px;"-->
+						<div style="margin-top: 5px; margin-bottom: 5px;">
+                        <!--article class="slds-tile slds-tile_board"-->
+                            <!--div class="slds-align_absolute-center slds-text-heading_small">
+                                <b>{!oAcc3.monthName}</b>
+                            </div-->
+                            
+                            <div class="slds-align_absolute-center slds-text-heading_small">
+                                <b>{!oAcc3.dayOfWeekShort}</b>
+                            </div>
+                            
+                            <div class="slds-align_absolute-center ">
+                              {!oAcc3.shortDate}
+                            </div>
+                          <!--/article-->
+                    </div>
+                    </div>
+                    
+                </td>
+            </aura:iteration>
+        </tr>
+        <tr><td><div  class="slds-p-top_medium"></div></td></tr>
+        <aura:iteration items="{!v.objClassController.scheduleWrapList}" var="oAcc">
+            <tr>
+                <aura:iteration items="{!oAcc.sectionSlotList}" var="oAcc2">
+                    <td>
+                        <!--div class="slds-border_bottom slds-border_top slds-border_right slds-border_left slds-has-dividers_around-space" style="padding: 1rem; margin-top: 5px; margin-bottom: 5px;"-->
+                            <!--article class="slds-tile slds-tile_board slds-border_bottom slds-border_top slds-border_right slds-border_left slds-has-dividers_around-space unselectedbutton"-->
+                                <lightning:button aura:id='btnSlotId' name='{!oAcc2.slotId}' label='{!oAcc2.slotStartEndTime}' value='{!oAcc2.concatenatedStartEndDate}' class='unselectedbutton' variant="none" onclick="{!c.setCFSAttribute}"/>
+                            <!--/article-->
+                    	<!--/div-->
+                    </td>
+                </aura:iteration>
+            </tr>
+        </aura:iteration>
+    </table>    
+    <!--<aura:iteration items="{!v.objClassController.scheduleSlotListHeader}" var="oAcc3"> 
+        <tr>
+        	<td class='unselectedbutton'>{!oAcc3.shortDate}</td>
+        </tr>
+    </aura:iteration>-->	
+        
+	<!--<aura:iteration items="{!v.objClassController.scheduleWrapList}" var="oAcc">        
+        <tr>
+        <aura:iteration items="{!oAcc.sectionSlotList}" var="oAcc2">
+            <td>
+                <lightning:button aura:id='btnSlotId' name='{!oAcc2.slotId}' label='{!oAcc2.slotStartEndTime}' value='{!oAcc2.concatenatedStartEndDate}' class='unselectedbutton' variant="none" onclick="{!c.setCFSAttribute}"/>
+                            </td>            
+            </aura:iteration>
+        </tr>
+    </aura:iteration>-->
+    </div>
+    </article>
+    <!--/lightning:card-->
+</aura:component>

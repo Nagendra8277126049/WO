@@ -1,0 +1,36 @@
+<aura:component controller="ARRProposalApexController" implements="force:lightningQuickActionWithoutHeader,flexipage:availableForAllPageTypes,force:hasRecordId">
+	    <aura:html tag="style">
+        .slds-modal__container{
+        	width:35% !Important;
+        	max-width:35% !important;
+        }
+        .modal-body{ 
+        	height:auto !important;
+        	max-height:unset !important;
+        } 
+            .cuf-content {
+            padding: 0 0rem !important;
+        }
+        .slds-p-around--medium {
+            padding: 0rem !important;
+        }      
+        .slds-modal__content{
+            overflow-y:hidden !important;
+            height:unset !important;
+            max-height:unset !important;
+        }
+    </aura:html>
+    
+    <div class="modal-header slds-modal__header slds-size_1-of-1">
+		<h4 class="title slds-text-heading--medium" >Create Dispatch</h4>
+    </div>
+    
+    <div class="slds-modal__content slds-p-around--x-small slds-align_absolute-center slds-size_1-of-1 slds-is-relative" aura:id="modalbody" id="modalbody">
+        <form class="slds-form--stacked">
+    		<p id="refresh-message">Dispatch is being created!</p>
+        </form> 
+    </div>   <!-- End of Modal Content -->  
+    
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <lightning:overlayLibrary aura:id="actionErrorNotification"/>
+</aura:component>

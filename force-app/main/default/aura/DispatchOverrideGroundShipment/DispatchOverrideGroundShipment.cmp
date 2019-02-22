@@ -1,0 +1,27 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global" >    
+    <aura:attribute name="OverrideGroundShipmentCB" type="Boolean" default="false" />
+    <aura:attribute name="record" type="object" />
+    <aura:attribute name="simpleRecord" type="object" />
+    <aura:attribute name="recordError" type="String" />
+    
+    <force:recordData aura:id="recordHandler" recordId="{!v.recordId}" fields="Override_Ground_Shipment__c"
+        targetRecord="{!v.record}" targetFields="{!v.simpleRecord}" targetError="{!v.recordError}"
+        mode="EDIT" recordUpdated="{!c.handleRecordUpdated}" />
+    
+    <div class="slds-form slds-form_compound" style="width: 100%;">
+        <aura:if isTrue="{!not(v.simpleRecord.Override_Ground_Shipment__c)}">
+            <!--<div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning slds-m-bottom_medium" role="alert">-->
+                <span class="slds-m-right_x-small">
+                    <lightning:icon iconName="utility:warning" variant="warning" size="small"/>
+                </span>
+                <ui:outputText value="{!$Label.c.GroundShipmentAlert}" />
+           <!-- </div>-->
+        </aura:if>
+        <div class="slds-form-element slds-size_1-of-2">
+        	<div class="slds-form-element__control">
+           <!--	<ui:inputCheckbox aura:id="OverrideGroundShipment" label="Override Ground Shipment" value="{!v.OverrideGroundShipmentCB}" change="{!handleOverride}" />-->
+           		<ui:inputCheckbox aura:id="OverrideGroundShipmentId" label="Override Ground Shipment" value="{!v.simpleRecord.Override_Ground_Shipment__c}" change="{!c.handleSaveRecord}" />
+            </div>
+        </div> 
+    </div>
+</aura:component>

@@ -1,0 +1,21 @@
+<design:component label="Dispatch Configurations">
+	<design:attribute name="ComponentLabel" label="Dispatch Configuration Component - Heading"/>
+    <design:attribute name="ServiceTypeLabel" label="Service Type Field Label"/>
+    <design:attribute name="ServiceOptionsLabel" label="Service Options Field Label"/>
+    <design:attribute name="SystemClassificationLabel" label="System Classification Field Label"/>
+    <design:attribute name="CategoryLabel" label="Category  Field Label"/>
+    <design:attribute name="KeepYourComponentsLabel" label="KYC Field Label"/>
+    <design:attribute name="DSPOverideRequestLabel" label="DSP Override Request Field Label"/>
+    <design:attribute name="AccidentalDamageLabel" label="Accidental Damage Field Label"/>
+    <design:attribute name="BillToLabel" label="Bill To Field Label"/>
+    <design:attribute name="OrderNumberLabel" label="Order Number Field Label"/>
+    <design:attribute name="InstructionLabel" label="Instruction Field Label"/>
+    <design:attribute name="KYHDLabel" label="KYHD Field Label"/>
+    <design:attribute name="ADOverrideReasonPicklistLabel" label="AD Override Reason Label"/>
+    <design:attribute name="reasonForDamageLabel" label="Reason for the Damage"/>
+    <design:attribute name="DASPLabel" label="DASP Label"/>
+    
+    <sfdc:objects >
+        <sfdc:object >WorkOrder</sfdc:object>
+    </sfdc:objects>
+</design:component>

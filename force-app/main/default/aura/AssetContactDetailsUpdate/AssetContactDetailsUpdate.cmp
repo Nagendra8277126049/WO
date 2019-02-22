@@ -1,0 +1,119 @@
+<!--
+<aura:component controller="AssetContactDetails" implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global">
+-->
+<aura:component controller="AssetContactDetails" implements="force:hasRecordId">
+  <aura:registerEvent name="cmpContactUpdateEvent" type="c:AssetContactUpdateEvt"/> 
+  <aura:attribute name="serviceTag" type="string" default=""/>
+  <aura:attribute name="firstName" type="string" default=""/>
+  <aura:attribute name="lastName" type="string" default=""/>
+  <aura:attribute name="countryCode" type="string" default=""/>
+<!--  <aura:attribute name="areaCode" type="string" default=""/> -->
+  <aura:attribute name="phoneNumber" type="string" default=""/>  
+  <aura:attribute name="emailAddress" type="string" default=""/>
+  <aura:attribute name="addressType" type="string" default=""/>
+    
+  <aura:attribute name="editWhichContact" type="string" default=""/>
+    
+  <aura:attribute name="Spinner" type="boolean" default="false"/>    
+  <aura:attribute name="alerts" type="boolean" default="false"/>
+    
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />    
+   
+  <div class="wk_static"> 
+   <!-- section for the popup starts here -->
+    <div role="dialog" tabindex="-1" aura:id="Modalbox" aria-labelledby="header43" class="slds-modal " style="height: 100%;">
+      <div class="slds-modal__container">
+          <header class="slds-modal__header">
+                       <div class="slds-button slds-modal__close closeIcon slds-button--icon-bare slds-button--icon-inverse" >
+                            <lightning:buttonIcon iconName="utility:close" variant="bare" size="large" class='icn-white'
+                                                  onclick="{!c.closeModal}" 
+                                                  alternativeText="Close window"/>
+                        </div>            			
+                    </header>
+        <div class="slds-modal__content slds-p-around--medium">
+          <div>
+            <table class="slds-table  sdls-asset-con-table-name">
+                        <tr >
+                            <td colspan="4">
+                                <div class="slds-media slds-media--center slds-has-flexi-truncate">
+                                	<div class="slds-media__figure"> 
+                                    	<lightning:icon iconName="standard:contact" alternativeText="Contact" size="small"/>
+                                    </div>
+                                    <div class="slds-media__body">
+                                    	<h2 class="slds-text-heading--small slds-truncate">{!$Label.c.AssetContactHeader}</h2>
+                                    </div>                        
+                                </div>
+                            </td>                         			
+                        </tr>
+                        <tr>
+                        </tr>
+                    </table>
+                    
+                    <table>
+                        <tr class="slds-text-title--caps">
+                            <td>
+                                <b>{!$Label.c.AssetContactFirstName}</b>
+                            </td>
+                            <td>
+                                <b>{!$Label.c.AssetContactLastName}</b>
+                            </td>   
+                        </tr>
+                    	<tr>
+                            <td class="slds-popup__spacing">
+                                <ui:inputText aura:id="mainFirstName"  value="{!v.firstName}"/>
+                            </td>
+                            <td class="slds-popup__spacing">
+                                <ui:inputText aura:id="mainLastName"  value="{!v.lastName}"/>
+                            </td>                                                   
+                        </tr>    
+                    </table>
+                    
+                    <table>
+                    	<tr class="slds-text-title--caps">                 
+                            <td colspan="3">
+                                <b>{!$Label.c.AssetContactPhone}</b>
+                            </td>   
+                        </tr>
+                        
+                        <tr class="slds-text-title--caps">
+                            <td width="60px" class="slds-popup__spacing">
+                                <ui:inputText aura:id="mainCountryCode"  value="{!v.countryCode}"/>
+                            </td>
+                       <!--     <td width="80px" class="slds-popup__spacing">
+                                <ui:inputText aura:id="mainAreaCode"  value="{!v.areaCode}" maxlength="3"/>
+                            </td>  -->
+                        	<td width="150px" class="slds-popup__spacing">
+                                <ui:inputText aura:id="mainPhone"  value="{!v.phoneNumber}"/>
+                            </td>
+                            <td></td>
+                        </tr>
+                        
+                    
+                    </table>
+                    
+                    <table>
+                        <tr class="slds-text-title--caps">                 
+                            <td>
+                                <b>{!$Label.c.AssetContactEmail}</b>
+                            </td>   
+                        </tr>
+                        <tr>
+                            <td class="sdls-asset-con-header-email slds-popup__spacing">
+                                <ui:inputEmail aura:id="mainEmail"  value="{!v.emailAddress}"/>
+                            </td>                                                    
+                        </tr>                      
+                    </table>
+                  
+                    <table>
+                    	<tr>
+                            <td colspan="6"><div align="right"><lightning:button class="slds-button_neutral" aura:id="mainConCancelBtn" label="Cancel" onclick="{!c.closeModal}" />&nbsp;
+                                <lightning:button variant="brand" label="Save" aura:id="mainConSaveBtn" onclick="{!c.closeModal}"/></div></td>                        
+                    	</tr>
+                    </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slds-backdrop " aura:id="MB-Back"></div>
+  </div>
+</aura:component>

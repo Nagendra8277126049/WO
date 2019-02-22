@@ -1,0 +1,150 @@
+<!--
+*******************************************************************************************************
+Name:         Dispatch_Edit_Panel.cmp
+Description:  This Lightning Component that will be the place holder for Edit Work Order Button 
+    - Story 5263685 
+*******************************************************************************************************
+Date         Version    Author             Summary of Changes 
+*******************************************************************************************************
+08/28/2018     1.0     Harsha Reddy        Initial Release
+08/28/2018     1.0     Rodrigo Carpio      Initial Release
+09/30/2018	   1.0	   Amit/Archana		   Added the Logic for GCC USers.
+*******************************************************************************************************
+-->
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId" controller="DispatchEditController">
+    <aura:attribute name="EditReviewMessage" type="String" />
+    <aura:attribute name="EditButtonLabel" type="String" />
+    
+    <aura:attribute name="CancelButtonLabel" type="String" default="Cancel Work Order" />
+    <aura:attribute name="ReSubmitButtonLabel" type="String" default="Re-Submit Work Order"/>
+    
+    <!--Will be used to Store the status of the Work Order. Will be populated from the application event -->
+    <aura:attribute name="woStatus" type="String" default=""/>
+    <!--Will be used to Store the Sub status of the Work Order. Will be populated from the application event -->
+    <aura:attribute name="woSubStatus" type="String" default=""/>
+    <!--Will be used to determine GCC users. Will be populated from the application event-->
+    <aura:attribute name="GCCUser" type="boolean" default="false"/>
+    <!--Will be used to enable Cancel Button -->
+    <aura:attribute name="EnableCancel" type="boolean" default="false"/>
+    <!--Will be used to enable re-submit Button -->
+    <aura:attribute name="EnableReSubmit" type="boolean" default="false"/>
+    
+    <!--Will be used to determine GCC users -->
+    <aura:attribute name="showModal" type="boolean" default="false"/>
+    <!--Will be used to determine if resubmit is clicked -->
+    <aura:attribute name="resubmitClicked" type="boolean" default="false"/>
+    <!--Will be used to determine if cancel is clicked -->
+    <aura:attribute name="cancelClicked" type="boolean" default="false"/>
+    
+    <!--<Will be used to store the Dispatch Instruction for DSP Override>
+    <aura:attribute name="dspOverrideReason" type="DispatchInstruction__c" default="{'sobjectType':'DispatchInstruction__c'}"/>
+    <Will be used to identify dsp Override >
+    <aura:attribute name="dspOverride" type="boolean" default="false"/>-->
+    
+    <!--Will be used to Store DSPName of the Work Order -->
+    <aura:attribute name="DSPName" type="String" default=""/>
+    <!--Will be used to Store DLPName of the Work Order.-->
+    <aura:attribute name="DLPName" type="String" default=""/>
+    <!--Will be used to Store CallType of the Work Order.-->
+    <aura:attribute name="CallType" type="String" default=""/>
+    <!--Will be used to Store DpsType of the Work Order.-->
+    <aura:attribute name="DpsType" type="String" default=""/>
+    <!--Will be used to display any message on the modal -->
+    <aura:attribute name="displaymessage" type="String" default=""/>
+    <aura:attribute name="DSPOverride" type="Boolean"/>
+    
+    <!--Will be used to store the Dispatch Instruction for Cancellation-->
+    <aura:attribute name="cancellationReason" type="DispatchInstruction__c" default="{'sobjectType':'DispatchInstruction__c'}"/>
+    
+    <!--hanldling the application event for GCC users -->
+    <aura:handler event="c:DisPatchGCCUserCheckEvent" action="{!c.handleGccEvent}"/>
+    
+    <div class="custom-background">
+        <lightning:card class="backColor">
+            <!-- Spinner-->
+            <lightning:spinner variant="brand" size="small" alternativeText="Loading" aura:id="mySpinner" title="Loading" class="slds-hide" />
+            <lightning:layout horizontalAlign="spread">
+                <lightning:layoutItem flexibility="auto" padding="around-small">
+                    <aura:if isTrue="{!!v.GCCUser}">
+                        {#v.EditReviewMessage}
+                    </aura:if>
+                </lightning:layoutItem>
+                <lightning:layoutItem flexibility="auto" padding="around-small">
+                    <div class="slds-float_right">
+                        <aura:if isTrue="{!and(!v.GCCUser, !empty(v.woStatus))}">
+                            <lightning:button label="{#v.EditButtonLabel}" onclick="{!c.handleEdit}" disabled="{! v.GCCUser}"/>
+                        </aura:if>
+                        <aura:if isTrue="{!v.GCCUser}">
+                            <lightning:button label="{#v.CancelButtonLabel}" onclick="{!c.handleGCCCancel}" disabled="{!! v.EnableCancel}" />
+                            <lightning:button label="{#v.ReSubmitButtonLabel}" variant="brand" onclick="{!c.handleGCCSubmit}" disabled="{!! v.EnableReSubmit}"/>
+                        </aura:if>
+                    </div>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </lightning:card>
+    </div>
+    <aura:if isTrue="{!v.showModal}">
+        <div class="demo-only" style="height: 150px;">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                     aria-describedby="modal-content-id-1" class="slds-modal slds-slide-down-cancel">
+                <div class="slds-modal__container">
+                    
+                    <div class="slds-modal__header">
+                        <button class="slds-button slds-modal__close" title="Close" onclick="{!c.closeModalPopUp}">
+                            <lightning:icon class="white slds-icon_small" iconName="utility:close"/> 
+                            <span class="slds-assistive-text">
+                                Close
+                            </span>
+                        </button>
+                        <aura:if isTrue="{!!v.cancelClicked}">
+                            <h2 id="header43" class="slds-text-heading--medium slds-text-link">Re-Submit Work Order</h2>
+                        </aura:if >
+                        <aura:if isTrue="{!v.cancelClicked}">
+                            <h2 id="header43" class="slds-text-heading--medium slds-text-link">Cancellation Reason</h2>
+                        </aura:if>
+                    </div>
+                    <div class="slds-modal__content slds-p-around_medium" style="height: 150px;" id="modal-content-id-1">
+                        <article class="slds-card">
+                            <div class="">
+                                <div class="demo-only demo-only--sizing">
+                                    <div class="slds-form-element">
+                                        <div class="slds-form-element__control">
+                                            <!--<aura:if isTrue="{!and(v.resubmitClicked, !empty(v.DSPName))}">
+                                                <lightning:textarea aura:id="instructionIdDps" label="DSP Override Reason" value="{!v.dspOverrideReason.Instruction__c}" placeholder="" />
+                                            </aura:if >-->
+                                            <!--<aura:if isTrue="{!and(v.resubmitClicked, empty(v.DSPName))}">
+                                                <div align="center">
+                                                    <h3>Please select DSP and resubmit the Work Order </h3>
+                                                </div>
+                                            </aura:if >-->
+                                            <aura:if isTrue="{!!empty(v.displaymessage)}">
+                                                <div align="center">
+                                                    <h3>{!v.displaymessage}</h3>
+                                                </div>
+                                            </aura:if >
+                                            <aura:if isTrue="{!and(v.cancelClicked , empty(v.displaymessage))}">
+                                                <lightning:textarea aura:id="instructionIdCancel" label="Cancellation Reason" value="{!v.cancellationReason.Instruction__c}" placeholder="" />
+                                            </aura:if >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div class="slds-modal__footer">
+                        <footer>
+                            <aura:if isTrue="{!v.resubmitClicked}">
+                                <lightning:button variant="brand" label="Save" onclick="{!c.handleResubmit}" disabled="{!empty(v.dspOverrideReason.Instruction__c)}" />
+                            </aura:if>
+                            <aura:if isTrue="{!v.cancelClicked}">
+                                <lightning:button variant="brand" label="Save" onclick="{!c.handleCancel}" disabled="{!empty(v.cancellationReason.Instruction__c)}" />
+                            </aura:if>
+                            <lightning:button label="Cancel" onclick="{!c.closeModalPopUp}" />
+                        </footer>
+                    </div>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </aura:if>
+</aura:component>

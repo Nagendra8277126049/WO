@@ -1,0 +1,129 @@
+<aura:component controller="QueueAssignmentController" implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction,force:appHostable" access="global">
+    <!-- CREATE ATTRIBUTE/VARIABLE-->
+    <aura:attribute name="ShowQueueTable" type="boolean" default="true" description="Flag to Show/Hide Queue List in a Table"/>
+    <aura:attribute name="ShowSearchQueueTable" type="boolean" default="false" description="Flag to Show/Hide Queue List in a Table"/>
+    <aura:attribute name="SearchQueueResult" type="List" description="List to store Searched Queue details returned from Server"/>
+    <aura:attribute name="SearchAllQueueResult" type="List" description="List to store All Queue details returned from Server"/>
+    <aura:attribute name="SearchQueueKeyword" type="String" description="Keyword from Queue search box"/>
+    <aura:attribute name="Message" type="boolean" default="false" description="Used to display No record found message"/>
+    <aura:attribute name="isQOpen" type="boolean" default="false" description="Used to display/hide View User button modal"/>
+    <aura:attribute name="ListOfQueue" type="List" description="Contains the list of queues from the query result"/>
+    <aura:attribute name="TabName" type="String" default="Queue Assignment" description="String to save the tab name"/>
+    
+    <lightning:navigation aura:id="navService"/>
+    <lightning:workspaceAPI aura:id="workspace"/>
+    <!--HANDLER -->
+    <aura:handler name="init" value="{!this}" value1="{!this}" action="{!c.doinit}"/>
+    <!-- SHOW LOADING SPINNER--> 
+    <lightning:spinner variant="brand" size="large" aura:id="Id_spinner" class="slds-hide" />
+    <!--LIGHTNING CARD -->
+    <div style="margin-top:-12px;margin-right:-12px;margin-left:-12px;margin-bottom:-2px">
+        <lightning:card class="card" title="Queue Assignments" iconName="standard:channel_programs">
+            <div style="float:right;width:8%">
+                <lightning:button class="button" onclick="{!c.OpenImportWindow}" variant="neutral" label= "Import"/> 
+            </div>
+            <lightning:layout class="slds-grid_align-end">
+                <div style="width:23%">     
+                    <ui:inputText 
+                                  updateOn="keyup"
+                                  keyup="{!c.SearchQueue}"
+                                  class="slds-lookup__search-input slds-input inputSize"
+                                  value="{!v.SearchQueueKeyword}"
+                                  placeholder="Search the list.."/>
+                </div>
+            </lightning:layout> 
+        </lightning:card>	          
+        <!-- ERROR MESSAGE IF NO RECORDS FOUND--> 
+        <aura:if isTrue="{!v.Message}">
+            <div class="slds-notify_container slds-is-relative">
+                <div class="slds-notify slds-notify_toast slds-theme_error" role="alert">
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small">No Records Found...</h2>
+                    </div>
+                </div>
+            </div>
+        </aura:if>
+        <!-- TABLE CONTENT FOR All QUEUES--> 
+        <aura:if isTrue="{!v.ShowQueueTable}"> 
+            <div class="slds" style="margin-left:-12px;border: 0px solid rgb(221,219,218);">
+                <div class="slds-table--header-fixed_container" style="height:1000px">
+                    <div class="slds-scrollable_y" style="height:47%;">
+                        <table class="slds-table slds-table_bordered slds-table--header-fixed" style="padding-left:13px;">
+                            <thead>
+                                <tr class="slds-text-title_caps" >
+                                    <th scope="col" ><div class="slds-truncate slds-cell-fixed" style="height: 10px;padding-left: 10px;padding-top: 10px;" title="S.no"></div></th>
+                                    <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 1380px;padding-left: 5px;padding-top: 10px;" title="Queue">Queue</div></th>
+                                    <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 275px;padding-top: 10px;" title="Channel">Channel</div></th>
+                                    <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 200px;padding-top: 10px;" title="Created Date">Created Date</div></th>
+                                </tr>
+                            </thead>
+                            <tbody> 
+                                <aura:iteration items="{!v.SearchAllQueueResult}" var="queue" indexVar="count">    
+                                    <tr>
+                                        <td scope="row" style="width: 5px;padding-left: 10px;"><div class="slds-truncate">{!count + 1}</div></td>
+                                        <td scope="row" style="width: 980px;"><a href="#"><ui:outputText click="{!c.SearchQueueUser}" value="{!queue.publicGroupName}" class="{!queue.publicGroupId}"/></a></td>
+                                        <td scope="row" style="width: 200px;"><div class="slds-truncate" >
+                                            <aura:if isTrue="{!queue.queueType == 'Chat'}">
+                                                <a><lightning:icon aura:id="icon1" class="cls" size="x-small" iconName='utility:chat' /></a>
+                                                <aura:set attribute="else">
+                                                    <aura:if isTrue="{!queue.queueType == 'Email'}">
+                                                        <a><lightning:icon aura:id="icon1" class="cls" size="x-small" iconName='utility:email' /></a>
+                                                        <aura:set attribute="else">
+                                                            <!-- <a><lightning:icon aura:id="icon1" class="cls" size="x-small" iconName='utility:travel_and_places' /></a> -->
+                                                           
+                                                           <img class="image" src="/resource/SVG_Workorder_new" style="width:21px" />
+                                                        </aura:set></aura:if>
+                                                </aura:set>
+                                            </aura:if>
+                                            </div></td>
+                                        <td scope="row" style="width: 200px;" ><div class="slds-truncate" title="{!queue.publicGroupCreated}">{!queue.publicGroupCreated}</div></td>
+                                    </tr>
+                                </aura:iteration>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> 
+        </aura:if>
+        <!-- TABLE CONTENT FOR SEARCHED QUEUES -->
+        <aura:if isTrue="{!v.ShowSearchQueueTable}">
+            <div class="slds"> 
+                <div class="slds-table--header-fixed_container" style="height:1000px" >
+                    <div class="slds-scrollable_y" style="height:47%;margin-top:-34px"> 
+                        <table class="slds-table slds-table_bordered" >
+                            <thead><tr class="slds-text-title_caps" >
+                                <th scope="col" ><div class="slds-truncate" style="height: 10px;padding-left: 2px;padding-top: 10px;" title="S.no"></div></th>
+                                <th scope="col"><div class="slds-truncate" style="width: 900px;padding-left: 5px;padding-top: 10px;" title="Queue">Queue</div></th>
+                                <th scope="col"><div class="slds-truncate" style="width: 275px;padding-top: 10px;" title="Channel">Channel</div></th>
+                                <th scope="col"><div class="slds-truncate" style="width: 200px;padding-top: 10px;" title="Created Date">Created Date</div></th>
+                                </tr>
+                            </thead>
+                            <tbody> 
+                                <aura:iteration items="{!v.SearchQueueResult}" var="queue" indexVar="count">    
+                                    <tr>
+                                        <td scope="row" style="width: 5px;"><div class="slds-truncate">{!count + 1}</div></td>
+                                        <td scope="row" style="width: 980px;"><a href="#"><ui:outputText click="{!c.SearchQueueUser}" value="{!queue.publicGroupName}" class="{!queue.publicGroupId}"/></a></td>
+                                        <!--  <td scope="row" style="width: 200px;"><div class="slds-truncate" ><a><lightning:icon iconName="{!v.SearchQueueKeyword== 'chat'? 'utility:chat' : 'utility:email'}" /></a></div></td> -->
+                                        <td scope="row" style="width: 200px;"><div class="slds-truncate" >
+                                            <aura:if isTrue="{!queue.queueType == 'Chat'}">
+                                                <a><lightning:icon aura:id="icon1" class="cls" size="x-small" iconName='utility:chat' /></a>
+                                                <aura:set attribute="else">
+                                                    <aura:if isTrue="{!queue.queueType == 'Email'}">
+                                                        <a><lightning:icon aura:id=	"icon1" class="cls" size="x-small" iconName='utility:email' /></a>
+                                                        <aura:set attribute="else">
+                                                            <img class="image" src="/resource/SVG_Workorder_new" style="width:21px" />
+                                                        </aura:set></aura:if>
+                                                </aura:set>
+                                            </aura:if>
+                                            </div></td>
+                                        <td scope="row"  style="width: 200px;" ><div class="slds-truncate" title="{!queue.publicGroupCreated}">{!queue.publicGroupCreated}</div></td>
+                                    </tr>
+                                </aura:iteration>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> 
+        </aura:if>
+    </div>
+</aura:component>

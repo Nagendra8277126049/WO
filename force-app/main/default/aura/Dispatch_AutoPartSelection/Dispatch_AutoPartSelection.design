@@ -1,0 +1,7 @@
+<design:component >
+   <design:attribute name="serviceTag" label="Service Tag" />
+   <design:attribute name="addressBUID" label="Address BUID" 
+      description="Use to fetch service tag and address BUID to the component from flow" />
+    <design:attribute name="workOrderId" label="Work Order Id" />
+    <design:attribute name="selectedString" label="Selected String"/>
+</design:component>

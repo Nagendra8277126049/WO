@@ -1,0 +1,8 @@
+<design:component label="Work Order Scheduling">
+    <design:attribute name="componentHeader" label="Component Header Label"/>
+	<design:attribute name="dateFieldLabel" label="Date Field Label"/>
+    <design:attribute name="timeFieldLabel" label="Time Field Label"/>
+    <sfdc:objects >
+        <sfdc:object >WorkOrder</sfdc:object>
+    </sfdc:objects>
+</design:component>

@@ -1,0 +1,107 @@
+<aura:component controller="EinsteinIntent_AdminController" implements="force:appHostable,flexipage:availableForAllPageTypes" access="global" >
+    <aura:attribute name="usage" type="object[]"/>
+    <aura:attribute name="EinsteinApiToken" type="String"></aura:attribute>
+    <aura:attribute name="refreshModelMetricsMessage" type="String"  /> 
+    <c:LightningErrorHandler aura:id="leh"/>
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <article class="slds-card">
+        <div class="slds-grid slds-einstein-header slds-card__header">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-grid slds-grid_vertical-align-center slds-size_3-of-4 slds-medium-size_2-of-3">
+                    <div class="slds-media__body">
+                        <lightning:layout>
+                            <lightning:layoutItem>
+                                <lightning:icon iconName="utility:einstein" alternativeText="Einstein"/>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem padding="horizontal-small">
+                                <div class="page-section page-header">
+                                    <h1 class="slds-text-heading--label">Einstein Intent</h1>
+                                    <h2 class="slds-text-heading--medium">Admin settings</h2>
+                                </div>
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </div>
+                </div>
+                <div class="slds-einstein-header__figure slds-size_1-of-4 slds-medium-size_1-of-3"></div>
+            </header>
+        </div>
+        <div class="slds-card__body slds-card__body_inner">
+            <div class="c-container">
+                <div class="slds-card__body slds-card__body_inner">In this page you can configure the Einstein Intent API related with <b>Case</b> Object</div>
+                
+                <lightning:card title="Prediction Usage">
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th class="slds-text-title_caps" scope="col">
+                                    <div class="slds-truncate" title="Start">Start</div>
+                                </th>
+                                <th class="slds-text-title_caps" scope="col">
+                                    <div class="slds-truncate" title="End">End</div>
+                                </th>
+                                <th class="slds-text-title_caps" scope="col">
+                                    <div class="slds-truncate" title="Used">Used</div>
+                                </th>
+                                <th class="slds-text-title_caps" scope="col">
+                                    <div class="slds-truncate" title="Remaining">Remaining</div>
+                                </th>
+                                <th class="slds-text-title_caps" scope="col">
+                                    <div class="slds-truncate" title="OrgId">OrgId</div>
+                                </th>
+                                <th class="slds-text-title_caps" scope="col">
+                                    <div class="slds-truncate" title="License">License</div>
+                                </th>
+                                <th class="slds-text-title_caps" scope="col">
+                                    <div class="slds-truncate" title="Source">Source</div>
+                                </th>
+                                <th class="slds-text-title_caps" scope="col">
+                                    <div class="slds-truncate" title="Remaining">Plan</div>
+                                </th>
+                                <th class="slds-text-title_caps" scope="col">
+                                    <div class="slds-truncate" title="amount">Amount</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <aura:iteration items="{!v.usage}" var="usage">
+                                <tr class="slds-hint-parent">
+                                    <td> <ui:outputDateTime value="{!usage.startsAt}" format="M/d/yyyy ha"/> </td>
+                                    <td> <ui:outputDateTime value="{!usage.endsAt}" format="M/d/yyyy ha"/> </td>
+                                    <td> {!usage.predictionsUsed}/{!usage.predictionsMax} </td>
+                                    <td> {!usage.predictionsRemaining} </td>
+                                    <td> {!usage.organizationId} </td>
+                                    <td> {!usage.licenseId} </td>
+                                    <td> {!usage.planData[0].source} </td>
+                                    <td> {!usage.planData[0].plan} </td>
+                                    <td> {!usage.planData[0].amount} </td>
+                                </tr>
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                </lightning:card>            
+                <lightning:layoutItem> 
+                    <lightning:tabset >
+                        <!--lightning:tab label="Case Classification">
+                            <c:CaseClassification_Admin />
+                        </lightning:tab-->
+                        <lightning:tab label="Accidental Damage Classification">
+                            <c:AccidentalDamage_Admin />
+                        </lightning:tab>
+                    </lightning:tabset>
+                </lightning:layoutItem>               
+                <lightning:card title="Get Current Einstein Token">
+                    <lightning:layout >
+                        <lightning:layoutItem padding="around-small">
+                            <lightning:button variant="brand" onclick="{!c.getToken}">Get Current Token</lightning:button>
+                            <br></br>
+                            <br></br>
+                            <p> <b>Token: </b>
+                                {!v.EinsteinApiToken}
+                            </p>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </lightning:card>
+            </div>
+        </div>
+    </article>
+</aura:component>

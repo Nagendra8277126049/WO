@@ -1,0 +1,37 @@
+<!--
+*******************************************************************************************************
+Name:       ListPagination.cmp
+Apex Controller: 
+Description: Lightning component to display Pagination. First fetch all the List items from AuraMethod, then use List to navigate using this pagination
+    Story 4656242:SFDC Phase2: Display if there are any Diagnostics alerts on an Asset and Case Page
+
+*******************************************************************************************************
+Date         Version            Author                Summary of Changes 
+*******************************************************************************************************
+03/7/2018     1.0       	Amitabh Wankhede	         Initial Release
+*******************************************************************************************************
+-->
+
+<aura:component implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >
+    <aura:attribute name="currentPageNumber" type="Integer" required="true" />
+    <aura:attribute name="maxPageNumber" type="Integer" required="true" />
+    <aura:handler name="change" value="{!v.maxPageNumber}" action="{!c.doInit}"/>
+
+        <div class="slds-button-group" style="display:block; text-align:center;" role="group">
+            <!--<button onclick="{!c.firstPage}" class="slds-button slds-button- -neutral">
+                First
+            </button>-->
+            <span aura:id="prevPage"><ui:button press="{!c.prevPage}"  class="slds-button slds-button--neutral">
+                Prev
+                </ui:button></span>
+            <!--<button class="slds-button slds-button- -neutral">
+                {!v.currentPageNumber} / {!v.maxPageNumber}
+            </button>-->
+            <span aura:id="nextPage"  ><ui:button press="{!c.nextPage}" class="slds-button slds-button--neutral">
+                Next
+            </ui:button></span>
+            <!--<button onclick="{!c.lastPage}" class="slds-button slds-button- -neutral">
+                Last
+            </button>-->
+        </div>
+</aura:component>

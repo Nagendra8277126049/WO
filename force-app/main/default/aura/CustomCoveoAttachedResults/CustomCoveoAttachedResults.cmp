@@ -1,0 +1,14 @@
+<aura:component implements="force:hasRecordId,flexipage:availableForRecordHome">
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+    <aura:registerEvent name="OpenInNewTab" type="c:OpenInNewTab"/>
+
+    <aura:method name="openTab" action="{!c.openTab}" > 
+        <aura:attribute name="url" type="String"/> 
+        <aura:attribute name="sfid" type="String" /> 
+    </aura:method>
+
+    <CoveoV2:AttachedResults aura:id="panel"
+                             name="CoveoAttachedResults"
+                             recordId="{!v.recordId}">
+    </CoveoV2:AttachedResults>
+</aura:component>

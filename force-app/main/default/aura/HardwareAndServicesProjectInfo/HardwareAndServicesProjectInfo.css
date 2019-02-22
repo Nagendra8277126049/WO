@@ -1,0 +1,11 @@
+.THIS table.slds-table tbody th.red .slds-icon {
+    fill: #dc3545;
+}
+
+.THIS table.slds-table tbody th.green .slds-icon {
+    fill: #28a745;
+}
+
+.THIS table.slds-table tbody th.yellow .slds-icon {
+    fill: #ffc107;
+}

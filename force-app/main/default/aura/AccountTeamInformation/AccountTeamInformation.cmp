@@ -1,0 +1,63 @@
+<aura:component controller="AffinityController" implements="force:hasRecordId,force:lightningQuickAction,lightning:availableForFlowScreens,force:appHostable,flexipage:availableForRecordHome" access="global" >
+ 	<!-- attributes -->
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="project" type="pse__Proj__c" />
+    <aura:attribute name="accountTeamList" type="AccountTeamInformation[]" />
+	<aura:attribute name="columns" type="List" />
+    <aura:attribute name="isLoading" type="Boolean" />
+ 	<aura:attribute name="shouldShowMessageNoTeamInformation" type="Boolean" default="false"/>
+    
+     <!-- handler -->
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+    
+    <aura:if isTrue="{!v.isLoading}">
+    	<lightning:spinner aura:id="spinner" alternativeText="Loading..." />
+	</aura:if>
+    
+    <div class="slds-grid slds-grid_vertical">
+        
+            <aura:if isTrue="{!!empty(v.accountTeamList)}">
+                 <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+                        <thead>
+                            <tr class="slds-text-title--caps">
+                                <th scope="col">
+                                    <div class="slds-truncate">Name</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate">Role</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate">Email</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate">Phone</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <aura:iteration items="{!v.accountTeamList}" var="accountTeam">
+                                <tr>
+                                    <td data-label="MemberName"> 
+                                        <div class="slds-truncate">{!accountTeam.name}</div>
+                                    </td> 
+                                    <td data-label="MemberRole">
+                                        <div class="slds-truncate">{!accountTeam.role}</div>
+                                    </td>
+                                    <td data-label="MemberEmail">
+                                        <div class="slds-truncate">{!accountTeam.email}</div>
+                                    </td>
+                                    <td data-label="MemberPhone">
+                                        <div class="slds-truncate">{!accountTeam.phone}</div>               
+                                    </td>	
+                                </tr>
+                            </aura:iteration>
+                        </tbody> 
+                    </table>
+            </aura:if>
+            <aura:if isTrue="{!v.shouldShowMessageNoTeamInformation}">
+                <div class="slds-box slds-clearfix">
+           		 	<b>There's no Team Information.</b>
+                </div>
+       		</aura:if>  
+    </div>
+</aura:component>

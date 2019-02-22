@@ -1,0 +1,90 @@
+<!--
+*******************************************************************************************************
+Name:       CaseAlertDetails.cmp
+Apex Controller: CaseAlertsController.apx
+Description:  lightning Component to display the Alerts related to this asset & customer details  - Story #4142699
+*******************************************************************************************************
+Date         Version            Author                  Summary of Changes 
+*******************************************************************************************************
+11/17/2017     1.0       Sri Harsha Gangi Reddy         Initial Release
+05/25/2018     1.1        Brundha Rajkumar              Changes are made for the User Story #5096431
+07/10/2018     1.2       Brundha Rajkumar               Changes are made for the User Story #5067671
+7/12/2018	   1.3		  Brundha	     				Defect #5323980
+08/07/2018     1.4     	 Harsha Reddy                   DEFECT 5443199 - Updated the Code to Use 
+													   lightning:isUrlAddressable - Since  
+													   force:NavigateToComponent(Deprecated in Summer'18)
+*******************************************************************************************************
+-->
+
+<aura:component implements="lightning:isUrlAddressable" controller="CaseAlertsController">
+    
+    <aura:attribute name="assetAlerts"  type="string[]"/>
+    <aura:attribute name="flag" type="String" default="false"/>
+    <aura:attribute name="recId" type="Id" default="{!v.pageReference.state.recordId}" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <lightning:workspaceAPI aura:id="workspace" />
+    
+    <lightning:card iconName="custom:custom53">
+        <aura:set attribute="title">
+            {!$Label.c.CaseAlertDetailsName}
+            <lightning:spinner aura:id="mySpinner" variant="brand" size="small" />  
+        </aura:set>
+        
+        <ui:scrollerWrapper class="scrollerSize">
+            <aura:if isTrue="{! !empty(v.assetAlerts) }">
+                <div class="slds-card__body">
+                    <div class="slds-scrollable_y">
+                        <table class="slds-table slds-table_bordered">
+                            <thead >
+                                <tr class="slds-text-title_caps">
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Message">{!$Label.c.CaseAlertDetailsAlertName}</div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Type">{!$Label.c.CaseAlertDetailsAlertType}</div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Start Date">{!$Label.c.CaseAlertDetailsStartDate}</div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="End Date">{!$Label.c.CaseAlertDetailsEndDate}</div>
+                                    </th> 
+                                </tr>
+                            </thead>
+                            
+                            <tbody> 
+                                <aura:iteration items="{!v.assetAlerts}" var="Ast" indexVar="i">
+                                    <tr>
+                                        <td data-label="AlertName" class="slds-text-body_small slds_wrap_text">
+                                            <!--{!Ast.alertName}-->
+                                            <aura:if isTrue="{!and(Ast.supportAssistURL!=null ,Ast.supportAssistURL!= '')}" >
+                                                <ui:outputURL value="{!Ast.supportAssistURL}" target="_blank" label="{!Ast.alertName}" />
+                                                <aura:set attribute="else">
+                                                    {!Ast.alertName}
+                                                </aura:set>
+                                            </aura:if>
+                                            <aura:if isTrue="{!or(Ast.supportAssistURL=='null' ,Ast.supportAssistURL== '')}" >
+                                                {!Ast.alertName}
+                                            </aura:if>
+                                        </td>
+                                        <td data-label="Type" class="slds-text-body_small">
+                                            {!Ast.alertType}
+                                        </td>  
+                                        <td data-label="StartDate" class="slds-text-body_small"> 
+                                            {!Ast.startDate}
+                                        </td>
+                                        <td data-label="EndDate" class="slds-text-body_small">
+                                            {!Ast.endDate}
+                                        </td>
+                                    </tr>
+                                </aura:iteration>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>  
+            </aura:if>
+        </ui:scrollerWrapper>
+        
+    </lightning:card>
+</aura:component>

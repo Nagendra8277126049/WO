@@ -1,0 +1,5 @@
+<design:component label="Dispatch Tracking Information">
+    <sfdc:objects >
+        <sfdc:object>WorkOrder</sfdc:object>
+    </sfdc:objects>
+</design:component>

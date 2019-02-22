@@ -1,0 +1,9 @@
+.THIS .white svg {
+    color:#FFF;
+    fill: rgb(255, 255, 255);
+}
+.THIS .slds-spinner_container  {
+    background-color: rgba(0, 0, 0, 0.10);
+    margin-top: 175px;
+    margin-bottom: 175px; 
+}

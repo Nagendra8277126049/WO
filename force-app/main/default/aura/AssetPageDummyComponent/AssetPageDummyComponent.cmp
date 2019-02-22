@@ -1,0 +1,81 @@
+<!--
+*******************************************************************************************************
+Name:       AssetPageDummyComponent.cmp
+Description:  
+*******************************************************************************************************
+Date         Version           Author             Summary of Changes 
+***********************************************************************************************************
+06/29/2018     1.0     Sri Harsha Gangi Reddy      Initial Release
+***********************************************************************************************************
+-->
+<aura:component implements="flexipage:availableForRecordHome" access="global">
+    <aura:attribute name="ComponentHeader" type="string" default=" " />
+    <aura:attribute name="ComponentIcon" type="string" default=" " />
+    <aura:attribute name="viewDetails" type="boolean" default="false" />
+    <aura:attribute name="assetLocationComp" type="boolean" default="false" />
+    <aura:attribute name="NoDataMessage" type="string" default="No Data Available" />
+
+    <aura:if isTrue="{!v.assetLocationComp}">
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col slds-grid slds-size_1-of-2">
+                <article class="slds-card">
+                    <div class="slds-media__body">
+                        <h3 class="slds-m-left--x-small slds-text-body_small">
+                            Asset Location
+                        </h3>
+                        <div class="slds-m-around--x-small">
+                            {#v.NoDataMessage}
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <div class="slds-col slds-grid slds-size_1-of-2">
+                <article class="slds-card">
+                    <div class="slds-media__body">
+                        <div>
+                            <h3 class="slds-m-left--x-small slds-text-body_small">
+                    			SupportAssist Heartbeat
+                			</h3>
+                        </div>
+                        <div class="slds-m-left--x-small slds-m-top_x-small">
+                            {#v.NoDataMessage}
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+        <aura:set attribute="else">
+            <article class="slds-card">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-standard-contact" title="Warranty">
+            					<lightning:icon iconName="{#v.ComponentIcon}" alternativeText="Warranty" size="small"/>
+          					</span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h2>          
+            					<span class="slds-text-heading_small"> 
+                                    {#v.ComponentHeader} 
+                                </span>
+          					</h2>
+                        </div>
+                        <aura:if isTrue="{!v.viewDetails}">
+                            <div align="right">
+                                <lightning:button class="slds-button_neutral" aura:id="entViedDetail" label="View Details" />
+                            </div>
+                        </aura:if>
+                    </header>
+                </div>
+
+                <div class="slds-card__body">
+                    <div class="slds-scrollable--y" style="height: 150px;">
+                        <div class="slds-align_absolute-center slds-m-top_small">
+                            {#v.NoDataMessage}
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </aura:set>
+    </aura:if>
+</aura:component>

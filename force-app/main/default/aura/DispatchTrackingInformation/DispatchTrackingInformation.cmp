@@ -1,0 +1,88 @@
+<!--
+*******************************************************************************************************
+Name:       DispatchTrackingInformation.cmp
+Description:  This Lightning Component that will be the place holder for the dispatch tracking.  - Story 5003270  
+*******************************************************************************************************
+Date         Version    Author             Summary of Changes 
+*******************************************************************************************************
+05/15/2018     1.0     Rodrigo Carpio      Initial Release
+*******************************************************************************************************
+-->
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" controller="DispatchTrackingInfoController">
+    <aura:attribute name="trackList" type="Object"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+    	    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-contact" title="Accidental Damage">
+                        <lightning:icon iconName="standard:shipment" alternativeText="Icon" size="small"/>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2>          
+                        <span class="slds-text-heading_small"> <b>TRACKING INFORMATION</b> </span>
+                    </h2>
+                </div>
+    		</header>
+    	</div>
+    	<!--
+        <lightning:spinner aura:id="mySpinner" variant="brand" size="small" /> 
+        -->
+        <!--<aura:if isTrue="{! and(v.trackList != null, v.trackList != undefined)}">-->
+            <div class="" style="height:250px;">
+                <div class="slds-scrollable--y" style="height: 100%;"> 
+                    <table class="slds-table slds-table_bordered slds-no-row-hover" >
+                        <thead>                  
+                            <tr class="slds-text-title--caps">
+                                <th scope="col">
+                                    <div class="slds-truncate"><b>CARRIER NAME</b></div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate"><b>TRACKING NAME</b></div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate"><b>DIRECTION</b></div>
+                                </th>  
+                                <th scope="col">
+                                    <div class="slds-truncate"><b>DATE</b></div>
+                                </th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody> 
+                            <aura:if isTrue="{! and(v.trackList != null, v.trackList != undefined)}">
+                            <aura:iteration items="{!v.trackList}" var="tL" indexVar="i">
+                            <tr>
+                                <td data-label="AD_Limit_Eligible">
+                                    <div class="slds-truncate slds-text-body_small slds-cell-wrap">
+                                        <ui:outputURL value="{!tL.WayBillURL}" label="{!tL.CarrierName}" target="_blank"/>                                        
+                                    </div>
+                                </td> 
+                                <td data-label="AD_Count">
+                                    <div class="slds-truncate slds-text-body_small slds-cell-wrap">
+                                        {!tL.WayBillNumber}
+                                    </div>
+                                </td>
+                                <td data-label="AD_Override_Count">
+                                    <div class="slds-truncate slds-text-body_small slds-cell-wrap">
+                                        {!tL.WayBillDirection}
+                                    </div>
+                                </td>
+                                 <td data-label="AD_Override_Count">
+                                    <div class="slds-truncate slds-text-body_small slds-cell-wrap">
+                                        {!tL.WayBillDate}
+                                    </div>
+                                </td> 
+                            </tr>
+                            </aura:iteration>
+                            </aura:if>
+                        </tbody>
+                    </table>
+                </div> 
+            </div>
+       <!-- </aura:if>-->
+    </article>
+</aura:component>

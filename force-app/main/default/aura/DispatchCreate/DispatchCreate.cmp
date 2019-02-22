@@ -1,0 +1,282 @@
+<!--
+*******************************************************************************************************
+Name:       DispatchCreate.cmp
+Description:  This Lightning Component that will be the place holder for the dispatch creation.  - Story 4316154 
+*******************************************************************************************************
+Date         Version    Author             Summary of Changes 
+*******************************************************************************************************
+03/26/2018     1.0     Rodrigo Carpio      Initial Release
+03/26/2018     1.0     Harsha Gangi Reddy  Initial Release
+06/01/2018     1.1     Brundha Rajkumar    Defect #5126910
+06/25/2018     1.2     Harsha Gangi Reddy  Defect #5257488
+09/28/2018     1.3     Harsha Gangi Reddy  DEFECT #5666418
+10/01/2018     1.4     Harsha Gangi Reddy  DEFECT #5670951
+19th Feb 19    1.5     Sri Harsha G    	   STORY 5240855 
+*******************************************************************************************************
+-->
+<aura:component implements="lightning:availableForFlowScreens" controller="DispatchCreateHandler">
+
+    <aura:attribute name="caseId" type="String" />
+    <aura:attribute name="isAssetOnHold" type="Boolean" default="false"  />
+    <aura:attribute name="assetHoldMessage" type="string"  default="" />
+    <aura:attribute name="assetModel" type="string"  default="" />
+    <aura:attribute name="ServiceBUID" type="String"  default="" />
+    <aura:attribute name="addressStreet" type="String"  default="" />
+    <aura:attribute name="addressCity" type="String"  default="" />
+    <aura:attribute name="addressState" type="String"  default="" />
+    <aura:attribute name="addressPostalCode" type="String"  default="" />
+    <aura:attribute name="addressCountry" type="String"  default="" />
+    <aura:attribute name="partyLocationId" type="String"  default="" />
+    <aura:attribute name="assetPartyLocationId" type="String"  default="" />
+    <aura:attribute name="Region" type="String"  default="" />
+    <aura:attribute name="CountryCode" type="String"  default="" />
+    <aura:attribute name="CountryBUID" type="String"  default="" />
+    <aura:attribute name="RegionName" type="String"  default="" />
+    <aura:attribute name="SubRegionName" type="String"  default="" />
+    <aura:attribute name="Environment" type="String"  default="" />
+    <aura:attribute name="SubEnvironment" type="String"  default="" />
+    <aura:attribute name="brazilAddressLine1" type="String"  default="" />
+    <aura:attribute name="brazilAddressLine2" type="String"  default="" />
+    <aura:attribute name="brazilAddressLine3" type="String"  default="" />
+    <aura:attribute name="brazilAddressLine4" type="String"  default="" />
+	
+
+    <aura:attribute name="addressStreetBilling" type="String"  default="" />
+    <aura:attribute name="addressStreetBilling2" type="String"  default="" />
+    <aura:attribute name="addressCityBilling" type="String"  default="" />
+    <aura:attribute name="addressStateBilling" type="String"  default="" />
+    <aura:attribute name="addressPostalCodeBilling" type="String"  default="" />
+    <aura:attribute name="addressCountryBilling" type="String"  default="" />
+
+    <aura:attribute name="caseSubject" type="String" default="" />
+    <aura:attribute name="caseDescription" type="String" default="" />
+    <aura:attribute name="casePrimaryContactId" type="String" default="" />
+    <aura:attribute name="casePrimaryContactRole" type="String" default="" />
+    <aura:attribute name="caseSecondaryContactId" type="String" default="" />
+    <aura:attribute name="caseSecondaryContactRole" type="String" default="" />
+    <aura:attribute name="caseAccountId" type="String" default="" />
+    <aura:attribute name="caseAssetId" type="String" default="" />
+    <aura:attribute name="workOrderId" type="String" default="" />
+    <aura:attribute name="ReasonRepeatWorkOrder" type="String" default="" />
+    <aura:attribute name="ReasonWorkOrder" type="String" default="" />
+    <aura:attribute name="AdditionalNotes" type="String" default="" />
+    <aura:attribute name="AdditionalNotesAge" type="String" default="" />
+    <!-- MB: added below attributes to save CFI Number and CFI Exists on work order as part of Nov Story: 5417023 -->
+    <aura:attribute name="customFactoryIntNum" type="String" default="" />
+
+    <aura:attribute name="options" type="List" />
+    <aura:attribute name="objInfo" type="WorkOrder" default="{sobjectType : 'WorkOrder'}" />
+    <aura:attribute name="woRec" type="WorkOrder" default="{'sobjectType':'WorkOrder', 'Reason_for_repeat_Work_Order__c':''}" />
+
+    <aura:attribute name="newWorkOrder" type="Object" />
+    <aura:attribute name="simpleNewWorkOrder" type="Object" />
+    <aura:attribute name="newWorkOrderError" type="String" />
+    <aura:attribute name="showValidationErrorMsg" type="Boolean" default="false" />
+    <aura:attribute name="errorMessage" type="String" />
+    <aura:attribute name="errorMessageArray" type="List" />
+    <aura:attribute name="showValidationErrorMsgforDuplicatePPID" type="Boolean" default="false"/>
+    <aura:attribute name="ValidationErrorMsgforDuplicatePPID" type="String" />
+    <aura:attribute name="isRepeatDispatch" type="Boolean" default="false"  />
+    <aura:attribute name="isAssetPurchasedRecently" type="Boolean" default="false"  />
+    <aura:attribute name="isPPID" type="Boolean" default="false" />
+    <aura:attribute name="PPID" type="String" default="" />
+    <aura:attribute name="PPIDList" type="List" />
+    <aura:attribute name="PPIDkey" type="String" default="" />
+    <aura:attribute name="rowCount" type="Integer" default="0" />
+    <aura:attribute name="PPIDDuplicate" type="Boolean" default="false"/>
+    <aura:attribute name="DisabledPPIDLink" type="Boolean" default="false"/>
+    
+    <!-- Added for DEFECT 5670951 // Starts Here // *** 10/01/2018 *** Harsha-->
+    <aura:attribute name="safetyIssueFlag" type="boolean" default="false"/>
+    <aura:attribute name="typeOfSafetyIssue" type="string" default=""/>
+     <!-- Added for DEFECT 5670951 // Ends Here // *** 10/01/2018 *** Harsha-->
+    
+    
+    <!-- Added for STORY 5240855 - Starts Here -->
+    <aura:attribute name="requireMWDDiagnostic" type="boolean" default="false"/>
+    <aura:attribute name="tireObject" type="object" default=""/>
+    <!-- Added for STORY 5240855 - Ends Here -->
+
+    <!-- Spinner -->
+    <aura:attribute name="Spinner" type="boolean" default="false" />
+
+    <!-- Page Reference -->
+    <aura:attribute name="pageReference" type="Object" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <!--
+    <lightning:spinner aura:id="mySpinner" variant="brand" size="medium" class="slds-hide"/>
+	-->
+    
+       <!-- Navigation -->
+    <!-- Added by Harsha - 08/07/2018 --> 
+  	<lightning:navigation aura:id="navService"/>
+
+     <!-- Updated fields atrribute in force:recordData by adding new fields 
+		** Diagnostic_Tier_Type__c,ISPDiagnosticTier1__c,ISPDiagnosticTier2__c,ISPDiagnosticTier3__c,
+           ISPDispatchReasonCode__c*** 
+		for DEFECT 5670951 *** 10/01/2018 *** Harsha -->
+    <force:recordData aura:id="workOrderRecordCreator" targetRecord="{!v.newWorkOrder}" targetFields="{!v.simpleNewWorkOrder}" targetError="{!v.newWorkOrderError}" fields="AccountId, AssetId, CaseId, Subject, Description, ContactId, AdditionalContactId__c, ContactRole__c, 
+                              Reason_for_repeat_Work_Order__c, Additional_Notes__c, AdditionContactRole__c, Street, 
+                              City, State, StateCode, Country, PostalCode, AssetPartyLocationId__c, PartyLocationId__c, 
+                              Reason_for_repeat_Work_Order__c, Region__c, CountryCode__c, DPS_BUID__c, DPS_Region__c, DPS_Sub_Region__c,
+                              Environment__c, SubEnvironment__c, DispatchEvent__c, FSD_Worked_By_Flg__c, RecordTypeId, FSD_System_Model__c,
+                              Additional_Notes_Age__c, Reason_for_Work_Order__c, Status, IsDeferralAllowed__c, ISPDispatchReasonCode__c, Repeat_Dispatch_Count__c, 
+                              ISPBillingAddressLine1__c,ISPBillingAddressLine2__c, ISPBillingCity__c, ISPBillingCountryCode__c, 
+                              ISPBillingState__c, ISPBillingCountry__c, ISPBillingZipCode__c, ISPDispatchPPID__c,Dispatch_Country__c, CFINumber__c, 
+							  Address_Line_1__c,Address_Line_2__c,Address_Line_3__c,Address_Line_4__c,Country__c,City__c,State__c,Zip_Code__c,
+                              Diagnostic_Tier_Type__c,ISPDiagnosticTier1__c,ISPDiagnosticTier2__c,ISPDiagnosticTier3__c,ISPDispatchReasonCode__c, WO_Type__c,OperationType__c,Is_Asset_within_Invoice_Period__c,CustomerRegion__c"
+                      		mode="EDIT" />
+    <lightning:card>
+        <!-- Spinner Code Begins Here -->
+        <aura:if isTrue="{!v.Spinner}">
+            <div aura:id="spinnerId" class="slds-spinner_container">
+                <div class="slds-spinner--brand  slds-spinner slds-is-relative slds-spinner_medium" role="alert">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </aura:if>
+        <!-- Spinner Code Ends Here -->
+        <div class="slds-form slds-form_compound" style="width: 100%;">
+            <aura:if isTrue="{!v.showValidationErrorMsg}">
+                <aura:iteration items="{!v.errorMessageArray}" var="item">
+                    <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+                        <span class="slds-m-right_x-small">
+                            <lightning:icon iconName="utility:error" variant="inverse" size="xx-small" />
+                        </span>
+                        <ui:outputText value="{!item}" />
+                    </div>
+                </aura:iteration>
+            </aura:if>
+
+            <aura:if isTrue="{!or(v.isAssetPurchasedRecently , v.isRepeatDispatch)}">
+				<aura:if isTrue="{!v.isAssetPurchasedRecently}">
+                    <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning slds-m-bottom_none" role="alert">
+                        <span class="slds-m-right_x-small">
+                            <lightning:icon iconName="utility:warning" variant="inverse" size="xx-small" />
+                        </span>
+                        <ui:outputText value="{!$Label.c.Provide_Reason_For_Work_Order_If_Asset_Purchased_Recently}" />
+                    </div>
+					<div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning slds-m-bottom_medium" role="alert">
+					 <ui:outputUrl label="{!$Label.c.Asset_Label}" value="{!$Label.c.Asset_Label}" target="_blank" /> 
+					</div>
+                </aura:if>
+
+                <aura:if isTrue="{!v.isRepeatDispatch}">
+                    <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning slds-m-bottom_medium" role="alert">
+                        <span class="slds-m-right_x-small">
+                            <lightning:icon iconName="utility:warning" variant="inverse" size="xx-small" />
+                        </span>
+                        <ui:outputText value="{!$Label.c.Provide_Reason_For_Repeat_Work_Order}" />
+                    </div>
+                    <fieldset class="slds-form-element">
+                        <div class="slds-form-element__group ">
+                            <div class="slds-form-element__row ">
+                                <div class="slds-form-element slds-size_1-of-2 slds-align-top">
+                                    <div class="slds-form-element__control" aura:id="ReasonRepeatWorkOrderDivId" id="ReasonRepeatWorkOrderDivHtmlId">
+                                        <lightning:recordEditForm aura:id="recordEditForm" objectApiName="Case" recordId="{!v.caseId}">
+                                           
+                                            <label class="slds-form-element__label">
+                                                Reason for repeat Work Order<span title="required" class="slds-required">*</span>
+                                            </label>
+                                           
+                                          
+                                            <lightning:inputField aura:id="ReasonRepeatWorkOrderId" onchange="{!c.handleRepeatReason}" fieldName="Reason_for_repeat_Work_Order__c" class="ReasonRepeatWorkOrderCls" />
+                                        </lightning:recordEditForm>
+                                    </div>                                    
+                                </div>
+                                <div class="slds-form-element slds-size_1-of-2">
+                                    <div class="slds-form-element__control">
+                                        <lightning:textarea aura:id="caseAdditionalNote" label="Additional Notes" value="{!v.AdditionalNotes}" maxlength="254" class="caseAdditionalNoteCls" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-form-element__row">
+                                <div class="slds-form-element slds-size_1-of-2">
+                                    <!-- Added for STORY 5240855 - Starts Here -->
+                                     <div class="slds-form-element ">
+                                         <aura:if isTrue="{!v.requireMWDDiagnostic}">
+                                             <c:mwdDiagnosticTierSpecialList onselectedItems="{!c.handleMWDDiagnosticTeir}"/>
+                                         </aura:if>
+                                    </div>
+                                    <!-- Added for STORY 5240855 - Ends Here -->
+                                </div>
+                                <div class="slds-form-element slds-size_1-of-2">
+                                    <aura:if isTrue="{!v.isPPID}">
+                                        <div class="slds-form-element ">
+                                            <!-- <div class="slds-form-element__label">
+                                                <lightning:input aura:id="casePPID" label="PPID" value="{!v.PPID}" class="casePPIDCls"></lightning:input>
+                                            </div>-->
+                                        </div>
+                                        <aura:iteration items="{!v.PPIDList}" var="item" indexVar="i">
+                                            <lightning:layout horizontalAlign="center">
+                                                <lightning:layoutItem size="11">
+                                                    <lightning:input maxlength="30" onkeyup ="{!c.keyCheck}" aura:id="casePPID" label="PPID" 
+                                                                     value="{!item.PPIDText__c}"></lightning:input>
+                                                </lightning:layoutItem>
+                                                <lightning:layoutItem size="1" class="slds-m-top_large slds-m-left_xx-small">
+                                                    <aura:if isTrue="{!i > 0}">
+                                                        <!--Remove PPID icon-->
+                                                        <a href="javascript:void(0)" data-index="{!i}" onclick="{!c.removePPID}" >
+                                                            <lightning:icon iconName="utility:close" class="slds-icon slds-icon_small" size="small" alternativeText="close"/>
+                                                            <span class="slds-assistive-text">Close Icon</span>
+                                                        </a> 
+                                                    </aura:if>        
+                                                </lightning:layoutItem>
+                                            </lightning:layout>
+                                            <aura:if isTrue="{!and(item.ErrorMessageforLength,not(item.ErrorMessageforDuplicatePPId))}">
+                                                <div class="slds-text-color_error slds-p-left_x-small">
+                                                    Invalid PPID
+                                                </div>
+                                            </aura:if>
+                                            <aura:if isTrue="{!item.ErrorMessageforPPID__c}">
+                                                <div class="slds-text-color_error slds-p-left_x-small">
+                                                    Invalid PPID
+                                                </div>
+                                            </aura:if>
+                                              <aura:if isTrue="{!and(item.ErrorMessageforDuplicatePPId,not(item.ErrorMessageforLength))}">
+                                                <div class="slds-text-color_error slds-p-left_x-small">
+                                                       Duplicate PPID
+                                                </div>
+                                            </aura:if>
+                                             <aura:if isTrue="{!and(item.ErrorMessageforDuplicatePPId,item.ErrorMessageforLength)}">
+                                                <div class="slds-text-color_error slds-p-left_x-small">
+                                                       Invalid PPID,Duplicate PPID
+                                                </div>
+                                            </aura:if>
+                                        </aura:iteration>
+                                      <!--  <aura:if isTrue="{!v.DisabledPPIDLink}">-->
+                                        <div>
+                                            <a href="javascript:void(0)" onclick="{!c.addNewRow}">
+                                                Add Additional PPID
+                                            </a>
+                                        </div>
+                                       <!-- </aura:if>-->
+                                    <!--     <aura:if isTrue="{!not(v.DisabledPPIDLink)}">
+                                        <div>
+                                            <a href="javascript:void(0)">
+                                                Add Additional PPID
+                                            </a>
+                                        </div>
+                                        </aura:if>-->
+                                    </aura:if>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </aura:if>
+                <aura:set attribute="else">
+                    <div>{!$Label.c.CreateDispatchMessage}<br/>
+                    </div>
+                    <div class="slds-p-top_large"></div>
+                </aura:set>
+            </aura:if>
+
+            <div align="right">
+          <lightning:button variant="brand" label="Create" onclick="{!c.handleSaveWorkOrder}" />
+           </div>
+</div>
+    </lightning:card>
+</aura:component>

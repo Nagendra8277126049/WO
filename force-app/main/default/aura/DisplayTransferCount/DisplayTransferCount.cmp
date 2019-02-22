@@ -1,0 +1,15 @@
+<aura:component controller="CallTransferHandler" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <aura:attribute name="record" type="Object"/>
+     <aura:attribute name="sample" type="Object" />
+    <aura:attribute name="transferCount" type="String"/>
+    <force:recordData aura:id="record"
+    layoutType="FULL"
+    recordId="{!v.recordId}"
+    fields="Agent_ID__c,IVR_Input__c"                  
+    targetFields ="{!v.sample}" 
+    recordUpdated="{!c.transCount}"/>
+    <div class="slds-card slds-p-around_large">
+        <p>Transfer Count </p>
+        {!v.transferCount}
+    </div>
+</aura:component>

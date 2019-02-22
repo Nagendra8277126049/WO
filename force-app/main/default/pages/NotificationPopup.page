@@ -1,0 +1,106 @@
+<apex:page showHeader="false"  Controller="OmniListener" sidebar="false" >
+<head>
+<title>{!$CurrentPage.parameters.lctName} | Salesforce</title>
+</head>
+
+<apex:includeScript value="/support/console/37.0/integration.js"/>
+<script src="../../soap/ajax/37.0/connection.js" type="text/javascript"></script>
+
+ <style>
+
+ /* Container holding the image and the text */
+
+
+/* Bottom right text */
+/*.text-block {
+    
+    top: 20px;
+    left: 20px;
+    background-color: #b0c4de;
+    color: black;
+    padding-top: 20px;
+    padding-left: 20px;
+    border-radius: 4px;
+    padding-right: 20px;
+    text-shadow: 2px 2px 7px rgba(0, 0, 0, 0.31);
+    border: 0px solid #000000;
+}
+
+.text-detail {
+    
+    color: #696969;
+    font-family: verdana;
+    font-size: 100%;
+}
+p  {
+    color: #696969;
+    padding-left: 20px;
+    font-family: verdana;
+    font-size: 100%;
+    line-height: 2;
+} */
+body .secondaryPalette.bPageBlock {
+    background: #c23934 !important;
+    border: none !important;
+    border-radius: 8px !important;
+    margin: 13px !important;
+}
+
+.apexp .bPageBlock p {
+    text-align: center;
+    color: #fff;
+    font-size: 20pt;
+    margin: 0;
+    padding: 15px 0 15px 0;
+    text-shadow: none;
+}
+
+.apexp .bPageBlock.apexDefaultPageBlock .pbBody{
+    background: #fff;
+    margin: 0;
+    padding: 20px;
+    border-radius: 0 0 8px 8px;
+}
+.apexp .bPageBlock.apexDefaultPageBlock .pbBody .ChatRequestTimer{
+    color: #5876a3;
+    font-size: 12pt;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+.apexp .bPageBlock.apexDefaultPageBlock .pbBody .ChatRequestBodyMsg{
+    color: #5876a3;
+    font-size: 12pt;
+    font-weight:normal;
+}
+ </style>
+
+ 
+ <body onLoad="init()" style="background-color:#636163">
+
+    <div class="text-block"> 
+    <apex:form >
+        <apex:pageBlock >
+            <apex:facet name="header">
+              <p>New Chat Request</p>
+            </apex:facet>
+            <apex:pageBlockSection columns="1">
+            <div class="ChatRequestTimer"> Chat request will expire in <span id="progressBar">30</span> seconds.</div>
+             <div class="ChatRequestBodyMsg"> {!$Label.OmniListner_Notification}</div>
+                
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+    </div>
+  
+  </body>
+  <script type="text/javascript">
+
+var startCounter = 30, timeleft = 0;
+var myVar = setInterval(function(){
+          document.getElementById("progressBar").innerHTML = (startCounter - ++timeleft);
+      if(timeleft >= startCounter)
+        clearInterval(myVar);
+    },1000);
+
+ </script>
+</apex:page>

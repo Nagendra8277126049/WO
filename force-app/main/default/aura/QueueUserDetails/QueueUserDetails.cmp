@@ -1,0 +1,250 @@
+<aura:component controller="QueueAssignmentController" implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction,force:appHostable" access="global" >
+    <aura:attribute name="ShowSearchUserTable" type="boolean" default="false" description="Flag to Show/Hide Queue List in a Table"/>
+    <aura:attribute name="ShowUserTable" type="boolean" default="true" description="Flag to Show/Hide User List in a Table"/>
+    <aura:attribute name="SearchUserResult" type="List" description="List to store User details returned from Server"/>
+    <aura:attribute name="SearchQueueUserResult" type="List" description="List to store User details returned from Server"/>
+    <aura:attribute name="SearchQueueResult" type="List" description="List to store queue details returned from Server"/>
+    <aura:attribute name="SearchUserKeyword" type="String" description="Keyword from User search box"/>
+    <aura:attribute name="selectedLookUpRecords" type="sObject[]" default="[]" description="Keyword from User search box"/>
+    <aura:attribute name="selectedRecord" type="sObject" default="{}" description="Use,for store SELECTED sObject Record"/>
+    <aura:attribute name="isOpen" type="boolean" default="false" description="Used to display/hide View Queue button modal"/>
+    <aura:attribute name="isConf" type="boolean" default="false" description="Used to display/hide Confrim Removal message modal"/>
+    <aura:attribute name="showMe" type="boolean" default="false" description="Used to display/hide Remove User button"/>
+    <aura:attribute name="ListOfUser" type="List" description="Contains the list of users from the query result"/>
+    <aura:attribute name="QueueId" type="String" description="Contains the queue id from the query result"/>
+    <aura:attribute name="RecordId" type="String" access="global" />
+    <aura:attribute name="RecId" type="String" access="global" description="Contains the single user id selcted from toggle menu"/>
+    <aura:attribute name="QueueName" type="String" access="global" />
+    <aura:attribute name="Role" type="String" access="global" />
+    <aura:attribute name="Message" type="boolean" default="false" description="Used to display No record found message"/>
+    <aura:attribute name="MessageAddUser" type="boolean" default="false" description="Used to display No record found message"/>
+    <aura:attribute name="Error" type="String" access="global" />
+    <aura:attribute name="selectedCount" type="String" default="0" description="Used to count checkbox select"/>
+    <aura:attribute name="isSingle" type="boolean" default="false"/>
+    <aura:attribute name="isMulti" type="boolean" default="false"/>
+    <aura:attribute name="isSelect" type="boolean" default="false" description="Used to display/hide SelectAll User button"/>
+    
+    <!--LIGHTNING CARD -->
+    <div class="card" style="margin-top: -12px;margin-right: -12px;margin-left:-12px;margin-bottom:-1px;">
+        <lightning:card  title="User List" iconName="standard:channel_program_members">
+            <aura:set attribute="actions">
+                <aura:if isTrue="{!v.showMe}">
+                    <lightning:button onclick="{!c.confirmremove}" variant="brand" label="Remove" />
+                </aura:if>
+                <lightning:button onclick="{!c.OpenUserModel}" variant="neutral" label="Add"/> 
+            </aura:set>
+        </lightning:card>
+    </div>
+    <lightning:workspaceAPI aura:id="workspace" />
+    <!--HANDLER -->
+    <aura:handler name="init" value="{!this}" action="{!c.doinit}"/>
+    <!--declare events hendlers-->  
+    <aura:handler name="oSelectedRecordEvent" event="c:selectedsObjectRecordEvent" action="{!c.getSelectid}"/>
+    <!-- SHOW LOADING SPINNER--> 
+    <lightning:spinner variant="brand" size="large" aura:id="Id_spinner" class="slds-hide" />
+    
+    <!-- SEARCH BUTTON -->
+    <div class="slds-around_large" style="margin-right:-11px;margin-left:-12px">	
+        <lightning:layout class="slds-grid_align-end slds-is-relative" >
+            <lightning:layoutItem flexibility="auto" size="3" padding="around-small">
+                <!--  <lightning:input value="{!v.SearchUserKeyword}" placeholder="Search queue member.." aura:id="searchField" />  -->
+                <div aura:id="searchRes" class="slds-form-element slds-lookup slds-is-close" style="width: 100%">
+                    <div aura:id="lookupField" class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right"  style="width: 100%;">                        
+                        <ui:inputText 
+                                      updateOn="keyup"
+                                      keyup="{!c.SearchUser}"
+                                      class="slds-lookup__search-input slds-input inputSize"
+                                      value="{!v.SearchUserKeyword}"
+                                      placeholder="Search by Name or Badge Id.."/>
+                    </div>
+                </div>
+            </lightning:layoutItem> 
+        </lightning:layout>
+        <!-- ERROR MESSAGE IF NOT RECORDS FOUND--> 	
+        <aura:if isTrue="{!v.Message}">
+            <div class="slds-notify_container slds-is-relative">
+                <div class="slds-notify slds-notify_toast slds-theme_error" role="alert">
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small">No Records Found...</h2>
+                    </div>
+                </div>
+            </div>
+        </aura:if>
+        <aura:if isTrue="{!v.MessageAddUser}">
+            <div class="slds-notify_container slds-is-relative">
+                <div class="slds-notify slds-notify_toast slds-theme_error" role="alert">
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small">Please select at least one Queue or search a Queue.</h2>
+                    </div>
+                </div>
+            </div>
+        </aura:if>
+        <!-- TABLE CONTENT FOR USER--> 
+        <aura:if isTrue="{!v.ShowUserTable}"> 
+            <div class="slds" style="border: 1.5px solid rgb(221,219,218);margin-top:-1px">
+                <div class="slds-table--header-fixed_container" style="height:950px;">
+                    <div class="slds-scrollable_y" style="height:44%;"> 
+                        <table class="slds-table slds-table_bordered slds-table--header-fixed">
+                            <thead><tr class="slds-text-title_caps" >
+                                <th scope="col" >
+                                    <div class="slds-truncate slds-cell-fixed"  style="width: 30px;padding-top: 10px; padding-left: 10px;">
+                                        <div class="slds-checkbox">                                        
+                                            <!--<input type="checkbox" name="options" id="checkbox-5" tabindex="-1" aria-labelledby="check-select-all-label column-group-header" value="checkbox-5" />-->
+                                            <label class="slds-checkbox">
+                                                <aura:if isTrue="{!v.isSelect}"> 
+                                                    <ui:inputCheckbox aura:id="box3" change="{!c.selectAll}" />
+                                                </aura:if>
+                                                <span class="slds-checkbox_faux"></span>
+                                                <span class="slds-form-element__label text" style="margin-right:-16px"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 450px;padding-top: 10px;padding-left: 10px;" title="Name">Name</div></th> 
+                                
+                                <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 440px;padding-top: 10px;padding-left: 10px;" title="Manager">BadgeId</div></th>
+                                <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 440px;padding-top: 10px;padding-left: 10px;" title="Manager">Manager</div></th>
+                                <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 600px;padding-top: 10px;padding-left: 10px;" title="Role">Role</div></th>
+                                <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 250px;padding-top: 10px;padding-left: 10px;" title="Profile">Profile</div></th>
+                                </tr>
+                            </thead>
+                            
+                            <tbody align="right"> 
+                                <aura:iteration items="{!v.SearchUserResult}" var="usr" indexVar="count"> 
+                                    <tr>
+                                        <td data-label="Select Row"  style="width: 2px;">
+                                            <label class="slds-checkbox">
+                                                <ui:inputCheckbox text="{!usr.Id}" aura:id="boxPack" value="" change="{!c.checkboxSelect}" />
+                                                <span class="slds-checkbox_faux"></span>
+                                                <span class="slds-form-element__label text"></span>
+                                            </label>
+                                        </td>
+                                        <td scope="row" style="width: 300px;"><a href="#"><ui:outputText click="{!c.openuserqueue}" value="{!usr.Name}" class="{!usr.Id }"/></a></td>
+                                        <td scope="row" style="width: 300px;"><div class="slds-truncate" title="{!usr.FederationIdentifier}">{!usr.FederationIdentifier}</div></td>
+                                        <td scope="row" style="width: 300px;"><div class="slds-truncate" title="{!usr.Manager.Name}">{!usr.Manager.Name}</div></td>
+                                        <td scope="row" style="width: 360px;"><div class="slds-truncate" title="{!usr.Role}">{!usr.UserRole.Name}</div></td>
+                                        <td scope="row" style="width: 250px;"><div class="slds-truncate" title="{!usr.Profile.Name}">{!usr.Profile.Name}</div></td>
+                                        <td scope="row" style="width: 100px;">
+                                            <lightning:buttonMenu alternativeText="Toggle menu" class="cls_button" iconSize="Small" onselect="{!c.handleMenuSelect}">
+                                                <lightning:menuItem  value="{!usr.Id}" label="Remove"/>
+                                            </lightning:buttonMenu></td>                                  
+                                    </tr>  
+                                </aura:iteration>
+                            </tbody>
+                        </table> 
+                    </div>
+                </div> 
+            </div>
+            
+        </aura:if>
+        <!-- DISPLAY SEARCHED GROUPMEMBER LIST-->
+        <aura:if isTrue="{!v.ShowSearchUserTable}"> 
+            <div class="slds" style="border: 0.5px solid rgb(221,219,218)">
+                <div class="slds-table--header-fixed_container" style="height:1000px;">
+                    <div class="slds-scrollable_y" style="height:44%;"> 
+                        <table class="slds-table slds-table_bordered slds-table--header-fixed">
+                            <thead><tr class="slds-text-title_caps" >
+                                <th scope="col" >
+                                    <div class="slds-truncate slds-cell-fixed"  style="width: 30px;padding-top: 10px; padding-left: 10px;">
+                                        <div class="slds-checkbox">                                        
+                                            <label class="slds-checkbox">
+                                                <ui:inputCheckbox aura:id="box3" change="{!c.selectAll}" />
+                                                <span class="slds-checkbox_faux"></span>
+                                                <span class="slds-form-element__label text" style="margin-right:-16px"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 450px;padding-top: 10px;padding-left: 10px;" title="Name">Name</div></th>
+                                <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 440px;padding-top: 10px;padding-left: 10px;" title="Manager">BadgeId</div></th>
+                                <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 440px;padding-top: 10px;padding-left: 10px;" title="Manager">Manager</div></th>
+                                <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 600px;padding-top: 10px;padding-left: 10px;" title="Role">Role</div></th>
+                                <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 250px;padding-top: 10px;padding-left: 10px;" title="Profile">Profile</div></th>
+                                </tr>
+                            </thead>
+                            <tbody align="right"> 
+                                <aura:iteration items="{!v.SearchQueueUserResult}" var="usr" indexVar="count"> 
+                                    <tr>
+                                        <td data-label="Select Row"  style="width: 2px;">
+                                            <label class="slds-checkbox">
+                                                <ui:inputCheckbox text="{!usr.Id}" aura:id="boxPack" value="" change="{!c.checkboxSelect}" />
+                                                <span class="slds-checkbox_faux"></span>
+                                                <span class="slds-form-element__label text"></span>
+                                            </label>
+                                        </td>
+                                        <td scope="row" style="width: 300px;"><a href="#"><ui:outputText click="{!c.openuserqueue}" value="{!usr.Name}" class="{!usr.Id }"/></a></td>
+                                        <td scope="row" style="width: 300px;"><div class="slds-truncate" title="{!usr.FederationIdentifier}"><a>{!usr.FederationIdentifier}</a></div></td>
+                                        <td scope="row" style="width: 300px;"><div class="slds-truncate" title="{!usr.Manager.Name}"><a>{!usr.Manager.Name}</a></div></td>
+                                        <td scope="row" style="width: 360px;"><div class="slds-truncate" title="{!usr.Role}"><a>{!usr.UserRole.Name}</a></div></td>
+                                        <td scope="row" style="width: 250px;"><div class="slds-truncate" title="{!usr.Profile.Name}"><a>{!usr.Profile.Name}</a></div></td>
+                                        <td scope="row" style="width: 100px;">
+                                            <lightning:buttonMenu alternativeText="Toggle menu" class="cls_button" iconSize="Small" onselect="{!c.handleMenuSelect}">
+                                                <lightning:menuItem  value="{!usr.Id}" label="Remove"/>
+                                            </lightning:buttonMenu></td>                                 
+                                    </tr>  
+                                </aura:iteration>
+                            </tbody>
+                        </table> 
+                    </div>
+                </div> 
+            </div>
+        </aura:if>
+        <!-- OPEN MODAL FOR CONFIRMATION MESSAGE -->
+        <aura:if isTrue="{!v.isConf}">
+            <div style="height: 300px;">
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header">
+                            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                            </button>
+                            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Confirm Removals</h2>
+                        </header>
+                        <aura:if isTrue="{!v.isSingle}">
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                <p>Are you sure want to remove this user?</p>
+                            </div>
+                            <footer class="slds-modal__footer">
+                                <button class="slds-button slds-button_neutral" onclick="{!c.closeModal }">Cancel</button>
+                                <button class="slds-button slds-button_brand" onclick="{!c.removesinglerec}">Remove</button>
+                            </footer>
+                        </aura:if>
+                        <aura:if isTrue="{!v.isMulti}">
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                <p>Are you sure want to remove these users?</p>
+                            </div>
+                            <footer class="slds-modal__footer">
+                                <button class="slds-button slds-button_neutral" onclick="{!c.closeModal }">Cancel</button>
+                                <button class="slds-button slds-button_brand" onclick="{!c.deleteSelected}" value="{#v.QueueId}">Remove</button>
+                            </footer>
+                        </aura:if>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </div>
+        </aura:if>
+        <!-- OPEN MODAL FOR ADD USER -->
+        <aura:if isTrue="{!v.isOpen}">                
+            <!--###### MODAL BOX Start######--> 
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-modal_small slds-fade-in-open">
+                <div class="slds-modal__container slds-p-around_medium" style="width:650px">
+                    <header class="slds-modal__header">
+                        <h2 id="modal-heading-01" class="slds-text-heading_small slds-hyphenate" align="Left">You can add up to 15 users at one time.</h2>
+                        
+                        <c:QueueUserLookup objectAPIName="user"  
+                                           IconName="standard:user"
+                                           lstSelectedRecords="{!v.selectedLookUpRecords}"
+                                           label="User Name"
+                                           lstofgroupmember ="{!v.ListOfUser}"/>
+                        <lightning:buttonIcon iconName="utility:close" onclick="{! c.closeModal }" alternativeText="close" variant="bare-inverse" class="slds-modal__close"/>   
+                    </header>
+                    <footer class="slds-modal__footer">   
+                        <lightning:button onclick="{!c.adduser}" value="{!v.selectedLookUpRecords}" variant="brand" label="Add Users"/> 
+                        <lightning:button variant="neutral" label="Cancel" onclick="{! c.closeModal }"/>                         
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+            <!--###### MODAL BOX Part END Here ######--> 
+        </aura:if>
+    </div>    
+</aura:component>

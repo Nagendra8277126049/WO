@@ -1,0 +1,158 @@
+<aura:component >
+    <aura:attribute name="assets" type="String" default="Map"/>
+    <aura:attribute name="currency" type="String" default="USD"/>
+    
+    <lightning:card title="Assets" iconName="standard:work_order_item" class="slds-theme">
+        <p class="slds-p-horizontal--small">
+            <aura:iteration items="{!v.assets}" var="asset">
+                <div aria-labelledby="{!asset.serviceTag}">
+                    <fieldset class="slds-box slds-theme--default slds-container">
+                        <legend id="{!asset.serviceTag}" class="slds-text-heading--small slds-p-vertical--small">
+                            {!asset.serviceTag}
+                        </legend>
+                        
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2">
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_5-of-12">
+                                        Product Type: 
+                                    </div>
+                                    <div class="slds-col slds-size_7-of-12">
+                                        {!asset.productType} 
+                                    </div>
+                                </div>
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_5-of-12">
+                                        Quantity: 
+                                    </div>
+                                    <div class="slds-col slds-size_7-of-12">
+                                        <lightning:formattedNumber value="{!asset.quantity}"/>x
+                                    </div> 
+                                </div>
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_5-of-12">
+                                        Unit Price: 
+                                    </div>
+                                    <div class="slds-col slds-size_7-of-12">
+                                        <lightning:formattedNumber currencyCode="{!v.currency}" value="{!asset.unitPrice}" style="currency"/>
+                                    </div> 
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_5-of-12">
+                                        Total Value: 
+                                    </div>
+                                    <div class="slds-col slds-size_7-of-12">
+                                        <lightning:formattedNumber currencyCode="{!v.currency}" value="{!asset.totalValue}" style="currency"/>
+                                    </div> 
+                                </div>
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_5-of-12">
+                                        Dell Portion: 
+                                    </div>
+                                    <div class="slds-col slds-size_7-of-12">
+                                        <lightning:formattedNumber currencyCode="{!v.currency}" value="{!asset.dellPortion}" style="currency"/>
+                                    </div> 
+                                </div>
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_5-of-12">
+                                        <b>Net Value:</b>
+                                    </div>
+                                    <div class="slds-col slds-size_7-of-12">
+                                        <b><lightning:formattedNumber currencyCode="{!v.currency}" value="{!asset.netValue}" style="currency"/></b>
+                                    </div> 
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <br/>
+                        <div class="slds-p-bottom_small">
+                        	Parts per asset:
+                        </div>
+                        
+                        <div class="slds-p-left_small">
+                            <aura:iteration items="{!asset.components}" var="component">
+                                <div>
+                                    <div class="slds-grid">
+                                        <div class="slds-col slds-size_1-of-5">
+                                            <b>Part:</b>
+                                        </div>
+                                        <div class="slds-col slds-size_4-of-5 overflowSection">
+                                            <b title="{!component.description}">{!component.description}</b>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-p-bottom_small slds-grid">
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <div class="slds-grid">
+                                            <div class="slds-col slds-size_5-of-12">
+                                                Qty: 
+                                            </div>
+                                            <div class="slds-col slds-size_7-of-12">
+                                                <lightning:formattedNumber value="{!component.quantity}"/>x
+                                            </div>
+                                        </div>
+                                        <div class="slds-grid">
+                                            <div class="slds-col slds-size_5-of-12">
+                                                Unit Price:
+                                            </div>
+                                            <div class="slds-col slds-size_7-of-12">
+                                                <lightning:formattedNumber currencyCode="{!v.currency}" value="{!component.unitPrice}" style="currency"/>
+                                            </div>
+                                        </div>
+                                        <div class="slds-grid">
+                                            <div class="slds-col slds-size_5-of-12">
+                                                Profit Per Unit: 
+                                            </div>
+                                            <div class="slds-col slds-size_7-of-12">
+                                                <lightning:formattedNumber currencyCode="{!v.currency}" value="{!component.profitPerUnit}" style="currency"/>
+                                            </div>
+                                        </div>
+                                        <div class="slds-grid">
+                                            <div class="slds-col slds-size_5-of-12">
+                                                Unit Net Value: 
+                                            </div>
+                                            <div class="slds-col slds-size_7-of-12">
+                                                <lightning:formattedNumber currencyCode="{!v.currency}" value="{!component.unitNetValue}" style="currency"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <br/>
+                                        <div class="slds-grid">
+                                            <div class="slds-col slds-size_5-of-12">
+                                                Total Price: 
+                                            </div>
+                                            <div class="slds-col slds-size_7-of-12">
+                                                <lightning:formattedNumber currencyCode="{!v.currency}" value="{!component.totalValue}" style="currency"/>
+                                            </div>
+                                        </div>
+                                        <div class="slds-grid">
+                                            <div class="slds-col slds-size_5-of-12">
+                                                Dell Portion:
+                                            </div>
+                                            <div class="slds-col slds-size_7-of-12">
+                                                <lightning:formattedNumber currencyCode="{!v.currency}" value="{!component.dellPortion}" style="currency"/>
+                                            </div>
+                                        </div>
+                                        <div class="slds-grid">
+                                            <div class="slds-col slds-size_5-of-12">
+                                                <b>Net Value:</b>
+                                            </div>
+                                            <div class="slds-col slds-size_7-of-12">
+                                                <b><lightning:formattedNumber currencyCode="{!v.currency}" value="{!component.netValue}" style="currency"/></b>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </aura:iteration>  
+                        </div>
+                    </fieldset>
+                </div>
+            </aura:iteration>
+        </p>
+    </lightning:card>
+</aura:component>

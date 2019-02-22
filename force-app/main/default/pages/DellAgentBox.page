@@ -1,0 +1,221 @@
+<apex:page standardController="Case" docType="html-5.0" showHeader="false">
+    <apex:includeScript value="/canvas/sdk/js/publisher.js" />
+    <apex:includeScript value="/soap/ajax/34.0/connection.js"/>
+    <apex:includeScript value="/support/api/34.0/interaction.js"/>
+
+<style>
+    .CoveoSearchInterface {
+        min-width: 100%;
+    }
+    .CoveoSearchInterface,
+    .CoveoBoxPopup,
+    .CoveoFieldTable th,
+    .CoveoFieldTable td,
+    .CoveoSearchInterface.CoveoBox .coveo-tab-section.coveo-inline-tab-section .CoveoTab {
+        font-size: 12px;
+    }
+    .CoveoBoxPopup .coveo-box-popup-toggle {
+        line-height: 1.5rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+    .CoveoResult .CoveoBoxResultAction.coveo-displayed-in-menu:after {
+        vertical-align: sub;
+    }
+    .custom-badge.coveo-value.coveo-clickable {
+        color: #296896;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    .custom-badge.coveo-value {
+        display: inline-block;
+        vertical-align: middle;
+        border-radius: 1em;
+        line-height: 1.25em;
+        margin-right: 8px;
+    }
+    .custom-badge.coveo-value .coveo-badge-label {
+        vertical-align: middle;
+    }
+    .custom-badge.coveo-value .coveo-badge-icon {
+        position: relative;
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        margin-right: 2px;
+        vertical-align: middle;
+    }
+    .custom-badge.coveo-value .coveo-badge-icon:before {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 2px;
+        top: 3px;
+        width: 12px;
+        height: 10px;
+        transform: rotate(-45deg);
+        -ms-transform: rotate(-45deg);
+        border: 2px solid;
+        border-right: none;
+        filter: progid:DXImageTransform.Microsoft.Matrix( M11=0.7071067811865483, M12=0.7071067811865467, M21=-0.7071067811865467, M22=0.7071067811865483, SizingMethod='auto expand');
+        -webkit-backface-visibility: hidden;
+        -webkit-border-top-left-radius: 2px;
+        -webkit-border-bottom-left-radius: 2px;
+        -moz-border-radius-topleft: 2px;
+        -moz-border-radius-bottomleft: 2px;
+        border-top-left-radius: 2px;
+        border-bottom-left-radius: 2px;
+        box-sizing: border-box;
+    }
+    .custom-badge.coveo-value .coveo-badge-icon:after {
+        content: '';
+        display: block;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 7px;
+        height: 7px;
+        border: 2px solid;
+        border-bottom: none;
+        border-left: none;
+        -webkit-border-top-right-radius: 3px;
+        -moz-border-radius-topright: 3px;
+        border-top-right-radius: 3px;
+        box-sizing: border-box;
+    }
+    .coveo-result-frame.coveo-result-folding-child-result {
+        background-color: #e9ebee;
+        margin: 4px 10px;
+        padding: 4px;
+        border: none;
+        border-bottom: 1px solid #ccc;
+        font-size: 13px;
+    }
+    .coveo-folding-results {
+        background-color: #e9ebee;
+        margin-right: 10px;
+    }
+    .custom-result-badge {
+        float: left;
+        border: 1px solid #bcc3ca;
+        font-size: 12px;
+        line-height: 18px;
+        border-radius: 2px;
+    }
+    .custom-top-result {
+        position: relative;
+        background: #f58020;
+        color: white;
+        display: inline-block;
+        padding: 0 5px;
+    }
+    /*span.result-highlight.custom-top-result:after {
+        content: '';
+        width: 0;
+        height: 0;
+        border-top: 18px solid #0070d2;
+        border-right: 14px solid transparent;
+        position: absolute;
+        top: 0px;
+        right: -14px;
+    }*/
+    span.result-type-badge {
+        padding: 0 5px;
+    }
+    .CoveoBox .CoveoBoxBody .CoveoResult {
+        margin: 0;
+        padding: 10px 0;
+    }
+    .CoveoBreadcrumb {
+        width: 100%;
+    }
+    .coveo-contextual-results-toggle {
+        width: 100%;
+    }
+</style>
+
+<script> 
+    sforce.connection.sessionId='{!GETSESSIONID()}';
+
+    Coveo.$(function () {    
+        var searchInterface = Coveo.$('#search');
+        searchInterface.on('preprocessResults', function(e, args) {
+            Coveo._.each(args.results.results, function(result) {
+                if (result.raw.source == 'Dell - Siebel Cases') {
+                    result.title = result.raw.srnumber + ' - ' + result.title;
+                }
+                if (result.raw.source == 'SalesforcePilot Data' && result.raw.sfcasenumber) {
+                    result.title = result.raw.sfcasenumber + ' - ' + result.title;              
+                }
+            });
+        });
+
+        // Disable click on Siebel Cases results 
+        searchInterface.on('deferredQuerySuccess', function(e, args) {
+            let elems = document.querySelectorAll('.CoveoResult');
+            for (let i = 0; i < elems.length; i++) {
+              let resultLink;
+              if ((resultLink = elems.item(i).querySelector('.siebel-case'))) {
+                  e.preventDefault();
+                  resultLink.removeAttribute('href');
+              }
+            }
+        });
+    });
+</script>
+
+<CoveoV2:Box name="DellAgentBox" searchHub="DellAgentBox" recordId="{!id}" debug="true"/>
+
+<script>
+    var searchInterface = Coveo.$('#search');
+    
+    searchInterface.coveo('options', {
+        AttachToCase : {
+            readonly: '{!JSENCODE(case.Status)}' === 'Closed' ? true : false
+        },
+        Facet : {
+            valueCaption : {
+                en: 'English',
+                es: 'Spanish',
+                fr: 'French',
+                ru: 'Russian',
+                ko: 'Korean',
+                ja: 'Japanese',
+                it: 'Italian',
+                zh: 'Chinese',
+                de: 'German',
+                pt: 'Brazilian Portuguese',
+                cs: 'Czech',
+                he: 'Hebrew',
+                da: 'Danish',
+                fi: 'Finnish',
+                el: 'Greek',
+                hu: 'Hungarian',
+                tr: 'Turkish',
+                gr: 'Greek',
+                in: 'Indonesian',
+                po: 'Portuguese',
+                sr: 'Serbian',
+                nl: 'Dutch',
+                ro: 'Romanian',
+                sv: 'Swedish',
+                sk: 'Slovak',
+                pl: 'Polish',
+                no: 'Norwegian',
+                lt: 'Lithuanian',
+                ar: 'Arabic',
+                sl: 'Slovenian',
+                cr: 'Croatian',
+                vi: 'Vietnamese',
+                th: 'Thai',
+                bg: 'Bulgarian',
+                uk: 'Ukrainian',
+                et: 'Estonian',
+                kh: 'Khmer'
+            }
+        }
+    });
+</script>
+<apex:includeScript value="{!$Resource.DellAgentBox}"/>
+    <apex:stylesheet value="{!$Resource.DellAgentBoxCss}"/>
+</apex:page>

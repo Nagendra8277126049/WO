@@ -1,0 +1,57 @@
+<!--
+*******************************************************************************************************
+Name:       GetAssetDetails.cmp
+Description:  This Lightning Component is placed in Extras section from where the agent can search for Assets in BIL- Story 4645338
+*******************************************************************************************************
+Date         Version           Author             Summary of Changes 
+*******************************************************************************************************
+02/28/2017     1.0             Srikanth           Initial Release
+03/14/2017     1.1             Roselin Hephzibah  Updated the component based on story#4645338
+*******************************************************************************************************
+-->
+<aura:component implements="force:appHostable,flexipage:availableForRecordHome,flexipage:availableForAllPageTypes,force:hasRecordId" controller="AssociateServiceTagHandler"  access="global" >
+    
+    <aura:attribute name="CaseExtrasHeading" type="String"/>
+    <aura:attribute name="SearchButtonName" type="String"/>
+    <aura:attribute name="SearchAssetErrorMessage" type="String"/>
+    <aura:attribute name="AccountNAErrorMessage" type="String"/>
+    <aura:attribute name="ProducttNAErrorMessage" type="String"/>
+    <aura:attribute name="SuccessMessage" type="String"/>
+    <aura:attribute name="ReplaceButton" type="String"/>
+    <aura:attribute name="isOpen" type="boolean" default="false"/>
+    <aura:attribute name="newAsset" type="string"/>
+    <aura:attribute name="toggleSpinner" type="boolean" default="false"/>
+    
+    <article class="slds-card">
+        <aura:if isTrue="{!v.toggleSpinner}">
+            <lightning:spinner class="slds-spinner_container" variant="brand" size="small" />
+        </aura:if>
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-contact" title="Case">
+                        <lightning:icon iconName="standard:case" alternativeText="Case" size="small"/>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2>          
+                        <span class="slds-text-heading_small"> {#v.CaseExtrasHeading} </span>
+                    </h2>
+                </div>
+            </header>
+        </div>
+        <div class="slds-no-flex">
+            
+        </div>
+        <div class="slds-card__body slds-card__body_inner">{!$Label.c.CaseExtrasMessage} </div>
+        
+        <div class="slds-text-body_regular">
+            <p> 
+                {!$Label.c.ExtrasSectionMessage}
+            </p>
+        </div>
+        <button class="slds-button slds-button--brand" onclick="{!c.openWindow}">{#v.SearchButtonName}</button>  
+        <div aura:id="ModalDialogPlaceholder" />
+        
+    </article>
+</aura:component>

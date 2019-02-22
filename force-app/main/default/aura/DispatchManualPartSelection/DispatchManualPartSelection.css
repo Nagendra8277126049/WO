@@ -1,0 +1,10 @@
+.THIS .slds-border_bottom{
+   box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+.THIS a:hover svg{
+    fill: #1e63be !important;
+}
+.THIS.slds-spinner_container {  
+  z-index: 3;
+  position: fixed;   
+}

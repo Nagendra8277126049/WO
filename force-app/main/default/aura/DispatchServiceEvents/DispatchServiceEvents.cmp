@@ -1,0 +1,80 @@
+<!--
+*******************************************************************************************************
+Name:       DispatchServiceEvents.cmp
+Description:  This Lightning Component that will be the place holder for the dispatch service events
+  - Story 5201685 
+*******************************************************************************************************
+Date         Version    Author             Summary of Changes 
+*******************************************************************************************************
+07/06/2018     1.0     Rodrigo Carpio      Initial Release
+*******************************************************************************************************
+-->
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId" controller="DispatchDefaultDetailsController">
+    
+    <aura:attribute name="Label_SERVICEPROVIDER" type="String" default="SERVICE PROVIDER"/>
+    <aura:attribute name="Label_REFERENCENUMBER" type="String" default="REFERENCE NUMBER"/>
+    <aura:attribute name="Label_SERVICEEVENT" type="String" default="SERVICE EVENT"/>
+    <aura:attribute name="Label_REJECTREASON" type="String" default="REJECT REASON"/>
+    <aura:attribute name="Label_EVENTDATE" type="String" default="EVENT DATE TIME"/>    
+    <!-- req#5201685 end-->
+    <aura:attribute name="ServiceEvents" type="List" />
+    <!-- Handler -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler event="force:refreshView" action="{!c.doInit}" />
+    
+    <!-- Navigation -->
+    <!-- Added by Harsha - 08/07/2018 --> 
+  	<lightning:navigation aura:id="navService"/>
+
+   	<article class="slds-card slds-card_boundary">
+		<div class="slds-card__header slds-grid">
+    		<header class="slds-media slds-media_center slds-has-flexi-truncate">
+      			<div class="slds-media__figure">
+        			<span class="slds-icon_container slds-icon-standard-contact" >
+               			<lightning:icon iconName="standard:work_order_item" size="small" alternativeText="Service Events"/>
+              		</span>
+      			</div>
+      			<div class="slds-media__body">
+        			<h2 class="slds-card__header-title">
+          				<a href="javascript:void(0);" class="slds-card__header-link slds-truncate">
+            				<span class="slds-text-heading_small">Service Events ({!v.ServiceEvents.length})</span>
+          				</a>
+        			</h2>
+      			</div>
+    		</header>
+		</div>
+        <aura:if isTrue="{! !empty(v.ServiceEvents)}"> 
+            <div class="slds-card__body slds-card__body_inner">
+                <div class="slds-scrollable" style="height:7rem; width:100%;">
+                    <table class="slds-table slds-table--bordered slds-table--cell-buffer slds-table--fixed-layout slds-no-row-hover">
+                        <thead>
+                            <tr class="slds-text-heading--label">
+                                <th scope="col"><div class="slds-truncate">{#v.Label_SERVICEPROVIDER}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_REFERENCENUMBER}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_SERVICEEVENT}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_REJECTREASON}</div></th>
+                                <th scope="col"><div class="slds-truncate">{#v.Label_EVENTDATE}</div></th>		        		
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <aura:iteration items="{!v.ServiceEvents}" var="serviceEventItem" indexVar="idx">
+                                <tr>
+                                    <td><div class="slds-truncate" title="{!serviceEventItem.DSP_Code__c}">{!serviceEventItem.DSP_Code__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!serviceEventItem.DSP_Reference__c}">{!serviceEventItem.DSP_Reference__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!serviceEventItem.Service_Event__c}">{!serviceEventItem.Service_Event__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!serviceEventItem.Reject_Reason__c}">{!serviceEventItem.Reject_Reason__c}</div></td>
+                                    <td><div class="slds-truncate" title="{!serviceEventItem.Event_DateTime__c}">{!serviceEventItem.Event_DateTime__c}</div></td>			          		
+                                </tr>
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <footer class="slds-card__footer">
+                <a class="slds-card__footer-action" href="javascript:void(0);" onclick="{!c.viewAll}">View All
+                    <span class="slds-assistive-text">Service Events</span>
+                </a>
+            </footer>
+        </aura:if>
+	</article>
+</aura:component>

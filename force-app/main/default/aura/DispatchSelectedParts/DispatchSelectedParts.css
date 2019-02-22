@@ -1,0 +1,10 @@
+.THIS .sectionPopOver{
+	
+    position:absolute; 
+    margin-left: 6%; 
+    top:12%
+}
+.THIS .popOverIcon {
+    
+    position:relative;
+}

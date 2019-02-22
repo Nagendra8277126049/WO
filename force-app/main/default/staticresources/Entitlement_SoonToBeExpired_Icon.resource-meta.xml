@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StaticResource xmlns="http://soap.sforce.com/2006/04/metadata">
+    <cacheControl>Public</cacheControl>
+    <contentType>image/jpeg</contentType>
+    <description>Soon to be Expired - Entitlement Icon - used in Entitlement Dashboard and Details Component - Indicates in 60 days period</description>
+</StaticResource>

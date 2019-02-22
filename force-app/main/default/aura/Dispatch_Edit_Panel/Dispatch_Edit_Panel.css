@@ -1,0 +1,15 @@
+.THIS .slds-card__header {
+    padding: 0 0 0;
+}
+.THIS .slds-card__header {
+    margin: 0 0 0;
+}
+.THIS .slds-card__body {
+    margin-bottom: 0;
+}
+.THIS .backColor {
+    background: rgb(243, 242, 242);
+}
+.THIS .custom-background {
+    background-color: gray;
+}

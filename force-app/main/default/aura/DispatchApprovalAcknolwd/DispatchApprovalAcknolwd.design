@@ -1,0 +1,5 @@
+<design:component>
+	<design:attribute name="Acknowledged" label="Acknowledged"/>
+	<design:attribute name="criteria" label="Criteria Condition"/>
+	<design:attribute name="AutoAcknwFlag" label="Auto Acknwoledge Flag" />
+</design:component>

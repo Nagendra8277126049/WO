@@ -1,0 +1,7 @@
+<apex:page standardController="Order">
+    <c:LightningLoader ></c:LightningLoader>    
+    <!-- Runs your Flow -->   
+    <flow:interview name="IDS_Unassociate_Order" finishLocation="/{!$ObjectType.Order}" buttonLocation="bottom">
+        <apex:param name="OrderId" value="{!Id}"/>
+    </flow:interview>
+</apex:page>

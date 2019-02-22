@@ -1,0 +1,111 @@
+<!--
+*******************************************************************************************************
+Name:       AccidentalDamageEntitlements.cmp
+Description:  This Lightning Component that will be the place holder for the Entitlement Accidental 
+			Damage.  - Story 4559894 
+*******************************************************************************************************
+Date         Version    Author             Summary of Changes 
+*******************************************************************************************************
+02/19/2018     1.0     Rodrigo Carpio      Initial Release
+*******************************************************************************************************
+-->
+<aura:component controller="AccidentalDamageController" access="global">
+    <aura:attribute name="assetId" type='string'/> 
+    <aura:attribute name="entADList" type="string[]" />
+  	<aura:attribute name="errorMessage" type="string" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+    	    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-contact" title="Accidental Damage">
+                        <lightning:icon iconName="standard:contract_line_item" alternativeText="Accidental Damage" size="small"/>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2>          
+                        <span class="slds-text-heading_small"> {!$Label.c.AD_Header} </span>
+                    </h2>
+                </div>
+    		</header>
+    	</div>
+        <lightning:spinner aura:id="mySpinner" variant="brand" size="small" /> 
+        <aura:if isTrue="{! or(v.entADList != null, v.entADList != undefined)}">
+            <div class="" style="height:250px;">
+                <div class="slds-scrollable--y" style="height: 100%;"> 
+                    <table class="slds-table slds-table_bordered slds-no-row-hover" >
+                        <thead>                  
+                            <tr class="slds-text-title--caps">
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Limit Eligible"><b>{!$Label.c.AD_Limit_Eligible}</b></div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="AD Count"><b>{!$Label.c.AD_Count}</b></div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Override Count"><b>{!$Label.c.AD_Override_Count}</b></div>
+                                </th>  
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Override Count"><b>{!$Label.c.AD_Contract_Year}</b></div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Start Date"><b>{!$Label.c.AD_Start_Date}</b></div>
+                                </th>  
+                                <th scope="col">
+                                    <div class="slds-truncate" title="End Date"><b>{!$Label.c.AD_End_Date}</b></div>
+                                </th>                   
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Dispatch Date"><b>{!$Label.c.AD_Dispatch_Date}</b></div>
+                                </th>                   
+                            </tr>
+                        </thead>
+                        
+                        <tbody> 
+                            <aura:iteration items="{!v.entADList}" var="elAD" indexVar="i">
+                            <tr>
+                                <td data-label="AD_Limit_Eligible">
+                                    <div class="slds-truncate slds-text-body_small slds_wrap_text" title="LIMIT OVERRIDE">
+                                        {!elAD.limitEligible}
+                                    </div>
+                                </td> 
+                                <td data-label="AD_Count">
+                                    <div class="slds-truncate slds-text-body_small slds_wrap_text" title="AD COUNT">
+                                        {!elAD.adCount}
+                                    </div>
+                                </td>
+                                <td data-label="AD_Override_Count">
+                                    <div class="slds-truncate slds-text-body_small slds_wrap_text" title="OVERRIDE COUNT">
+                                        {!elAD.overrideCount}
+                                    </div>
+                                </td>
+                                 <td data-label="AD_Override_Count">
+                                    <div class="slds-truncate slds-text-body_small slds_wrap_text" title="OVERRIDE COUNT">
+                                        {!elAD.contractYear}
+                                    </div>
+                                </td>                               
+                                <td data-label="AD_Start_Date">
+                                    <div class="slds-truncate slds-text-body_small slds_wrap_text" title="START DATE">
+                                        {!elAD.startDate}
+                                    </div>
+                                </td>
+                                <td data-label="AD_End_Date">
+                                    <div class="slds-truncate slds-text-body_small slds_wrap_text" title="END DATE">
+                                        {!elAD.endDate}
+                                    </div>
+                                </td>
+                                <td data-label="AD_Dispatch_Date">
+                                    <div class="slds-truncate slds-text-body_small slds_wrap_text" title="DISPATCH DATE">
+                                        {!elAD.dispatchDate}
+                                    </div>
+                                </td>                           
+                            </tr>
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                </div> 
+            </div>
+        </aura:if>
+    </article>
+</aura:component>

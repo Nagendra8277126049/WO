@@ -1,0 +1,272 @@
+<aura:component controller="UserDetailsController" implements="force:appHostable,flexipage:availableForAllPageTypes" access="global" >    
+    <aura:attribute name="UserId" type="String" description="Contains the selected user id"/>
+    <aura:attribute name="UserName" type="String" description="Contains the name of user for whom queue details needed"/>
+    <aura:attribute name="QueueResult" type="List" description="List to store User details returned from Server"/>
+    <aura:attribute name="ListOfQueue" type="List" description="Contains the list of queues for the queried user"/>
+    <aura:attribute name="UserResult" type="List" description="List to store User details returned from Server"/>
+    <aura:attribute name="isOpen" type="boolean" default="false" description="Used to display/hide search user modal"/>
+    <aura:attribute name="selectedRecord" type="sObject" default="{}" description="Use,for store SELECTED sObject Record"/>
+    <aura:attribute name="ListOfUser" type="List" description="Contains the list of users from the query result"/>
+    <aura:attribute name="selectedLookUpRecords" type="sObject[]" default="[]" description="List of selected records"/>
+    <aura:attribute name="selectedUserRecords" type="List" description="List of selected records"/>    
+    <aura:attribute name="isQOpen" type="boolean" default="false" description="Used to add Queues from the Queue Assignment section"/>
+    <aura:attribute name="isClone" type="boolean" default="false" description="Used to display/hide Confrim Removal message modal"/>
+    <aura:attribute name="showMe" type="boolean" default="false" description="Used to display/hide Remove Queue button"/>
+    <aura:attribute name="RecId" type="String" access="global" description="Contains the single user id selcted from toggle menu"/>
+    <aura:attribute name="isSingle" type="boolean" default="false"/>
+    <aura:attribute name="isMulti" type="boolean" default="false"/>
+    <aura:attribute name="isUOpen" type="boolean" default="false" description="Used to display/hide modal for clone user search"/>
+    <aura:attribute name="isConf" type="boolean" default="false" description="Used to display/hide Confrim Removal message modal"/>
+    <aura:attribute name="selectedCount" type="String" default="0" description="Used to count checkbox select"/>
+    <aura:attribute name="isSelect" type="boolean" default="false" description="Used to display/hide Confrim SelectAll modal"/>
+    <lightning:workspaceAPI aura:id="workspace"/>
+    <!--HANDLER -->
+    <aura:handler name="init" value="{!this}" action="{!c.doinit}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.douserinit}"/>
+    <!--declare events hendlers-->  
+    <aura:handler name="oSelectedRecordEvent" event="c:selectedsObjectRecordEvent" action="{!c.getSelectid}"/>
+    <!--LIGHTNING CARD TO DISPLAY USER DETAILS-->
+    <div style="margin-top:-26px;margin-right:-2px;margin-left:-2px;margin-bottom:-12px">
+        <span class="slds-icon_container" title="User Assignments" >
+            <span class="slds-assistive-text">User Assignments</span>
+        </span>
+        <div class="slds-grid slds-grid_vertical">
+            <div class="slds-page-header slds-page-header_record-home slds-col">
+                <div class="slds-page-header__row">
+                    <div class="slds-page-header__col-title">
+                        <div class="slds-media">
+                            <div class="slds-media__figure" style="padding-top: 2px;">
+                                <span><lightning:icon aura:id="icon1" class="cls" size="x-large" iconName='standard:user' /></span>
+                            </div>
+                            <div class="slds-media__body">
+                                <div class="slds-page-header__name">
+                                    <div class="slds-page-header__name-title">
+                                        <h1>
+                                            <span>User Assignments</span> 
+                                            <span class="slds-page-header__title slds-truncate">
+                                                <aura:iteration items="{!v.UserResult}" var="usr">
+                                                    <td>{!usr.Username}</td>
+                                                </aura:iteration>
+                                            </span>
+                                        </h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-page-header__col-actions">
+                        <div class="slds-page-header__controls">
+                            <div class="slds-page-header__control">
+                                <ul class="slds-button-group-list">
+                                    
+                                    <aura:if isTrue="{!v.isClone}">  
+                                        <li>
+                                            <button class="slds-button slds-button_neutral" onclick="{!c.OpenUserModal}">Clone</button>
+                                        </li>
+                                    </aura:if>
+                                    
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-page-header__row slds-page-header__row_gutters">
+                    <div class="slds-page-header__col-details">
+                        <ul class="slds-page-header__detail-row">
+                            <li class="slds-page-header__detail-block">
+                                <div class="slds-text-title slds-truncate" title="BatchId">Batch ID</div>
+                                <aura:iteration items="{!v.UserResult}" var="usr">
+                                    <td>{!usr.FederationIdentifier}</td>
+                                </aura:iteration>
+                            </li>
+                            <li class="slds-page-header__detail-block">
+                                <div class="slds-text-title slds-truncate" title="BatchId">Manager</div>
+                                <aura:iteration items="{!v.UserResult}" var="usr">
+                                    <td>{!usr.Manager}</td>
+                                </aura:iteration>                            
+                            </li>
+                            <li class="slds-page-header__detail-block" >
+                                <div class="slds-text-title slds-truncate" title="Role">Role</div>
+                                <aura:iteration items="{!v.UserResult}" var="usr">
+                                    <td>{!usr.Role}</td>
+                                </aura:iteration>
+                            </li>
+                            <li class="slds-page-header__detail-block" style="padding-left: 173px;">
+                                <div class="slds-text-title slds-truncate" title="Profile">Profile</div>
+                                <aura:iteration items="{!v.UserResult}" var="usr">
+                                    <td>{!usr.Profile}</td>
+                                </aura:iteration>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--LIGHTNING CARD TO DISPLAY ASSIGNED QUEUES-->
+        <div class="slds-col" style="margin-top: 15px;margin-bottom: 15px">
+            <lightning:card  title="Queue Assignments" iconName="standard:channel_programs"> 
+                <aura:set attribute="actions">
+                    <aura:if isTrue="{!v.showMe}">
+                        <lightning:button onclick="{!c.confirmremove}" value="{#v.UserId}"  variant="brand" label="Remove"/> 
+                    </aura:if>
+                    <lightning:button onclick="{!c.OpenQueueModal}" variant="Neutral" label="Add"/> 
+                </aura:set>
+                <article class="slds-card">
+                    <div class="slds-card__body">
+                        <div class="slds-table--header-fixed_container" style="height:150px;">
+                            <!-- <div style="height:50%;"> -->
+                            <table class="slds-table slds-table_bordered slds-table--header-fixed" >
+                                <thead><tr class="slds-text-title_caps" >
+                                    <th scope="col" >
+                                        <div class="slds-truncate slds-cell-fixed"  style="width: 30px;padding-top: 10px; padding-left: 20px;padding-right: 20px;">
+                                            <div class="slds-checkbox">  
+                                                <label class="slds-checkbox">
+                                                    <aura:if isTrue="{!v.isSelect}">
+                                                        <ui:inputCheckbox aura:id="box3" change="{!c.selectAll}" />
+                                                    </aura:if> 
+                                                    <span class="slds-checkbox_faux"></span>
+                                                    <span class="slds-form-element__label text"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 800px;padding-top: 10px;padding-left: 10px;" title="Queue">Queue</div></th>                      
+                                    <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 250px;padding-top: 10px;padding-left: 10px;" title="Channel">Channel</div></th>
+                                    <th scope="col"><div class="slds-truncate slds-cell-fixed" style="width: 180px;padding-top: 10px;padding-left: 10px;" title="Date Created">Date Created</div></th>
+                                    </tr>
+                                </thead>
+                                <tbody align="right">                                       
+                                    <aura:iteration items="{!v.QueueResult}" var="queue" indexVar="count"> 
+                                        <tr>
+                                            <td data-label="Select Row" style="width: 2px;padding-left: 20px;">
+                                                <label class="slds-checkbox">
+                                                    <ui:inputCheckbox text="{!queue.QueueId}" aura:id="boxPack" value="" change="{!c.checkboxSelect}" />
+                                                    <span class="slds-checkbox_faux"></span>
+                                                    <span class="slds-form-element__label text"></span>
+                                                </label>
+                                            </td>
+                                            <td scope="row" style="width: 820px;"><a href="#"><ui:outputText click="{!c.SearchQueueUser}" value="{!queue.QueueName}" class="{!queue.QueueId}"/></a></td>
+                                            <!--    <td scope="row" style="width: 500px;"><div class="slds-truncate" style="width: 520px;"  title="{!queue.Name}"><a>{!queue.Name}</a></div></td> -->
+                                            <td scope="row" style="width: 300px;"><div class="slds-truncate" style="margin-left:0px;"></div>
+                                                <aura:if isTrue="{!queue.queueType == 'Chat'}">
+                                                    <a><lightning:icon aura:id="icon1" class="cls1" size="x-small"  iconName='utility:chat' /></a>
+                                                    <aura:set attribute="else">
+                                                        <aura:if isTrue="{!queue.queueType == 'Email'}">
+                                                            <a><lightning:icon aura:id="icon1" class="cls1" size="x-small" iconName='utility:email' /></a>
+                                                            <aura:set attribute="else">
+                                                               <!--   <a><lightning:icon aura:id="icon1" class="cls1" size="x-small"  iconName='utility:travel_and_places' /></a> -->
+                                                               <img src="/resource/SVG_Workorder_new" style="width:21px" class="image"/> 
+                                                            </aura:set></aura:if>
+                                                    </aura:set>
+                                                </aura:if>                                        
+                                            </td>
+                                            <td scope="row" style="width: 200px;"><div class="slds-truncate" title="{!queue.QueueCreatedDate}">{!queue.QueueCreatedDate}</div></td>
+                                            <td scope="row" style="width: 100px;">
+                                                <lightning:buttonMenu alternativeText="Toggle menu" class="cls_button" iconSize="Small" onselect="{!c.handleMenuSelect}">
+                                                    <lightning:menuItem  value="{!queue.QueueId}" label="Remove"/>
+                                                </lightning:buttonMenu></td>
+                                        </tr>    
+                                    </aura:iteration>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <footer class="slds-card__footer" style="text-align: center;">  <!---slds-p-around_medium-->
+                        <aura:if isTrue="{!v.isClone}">
+                            <lightning:button onclick="{!c.OpenAssignedQueues}" value="{!v.UserId}" variant="Neutral" label="View All"/> 
+                        </aura:if>
+                    </footer>
+                </article>
+            </lightning:card>
+        </div>
+        <!-- OPEN MODAL FOR CONFIRMATION MESSAGE -->
+        <aura:if isTrue="{!v.isConf}">
+            <div style="height: 300px;">
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header">
+                            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                            </button>
+                            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Confirm Removals</h2>
+                        </header>
+                        <aura:if isTrue="{!v.isSingle}">
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                <p>Are you sure want to remove these queues?</p>
+                            </div>
+                            <footer class="slds-modal__footer">
+                                <button class="slds-button slds-button_neutral" onclick="{!c.closeModal }">Cancel</button>
+                                <button class="slds-button slds-button_brand" onclick="{!c.removesinglerec}" >Remove</button>
+                            </footer>
+                        </aura:if>
+                        <aura:if isTrue="{!v.isMulti}">
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                <p>Are you sure want to remove these queues?</p>
+                            </div>
+                            <footer class="slds-modal__footer">
+                                <button class="slds-button slds-button_neutral" onclick="{!c.closeModal }">Cancel</button>
+                                <button class="slds-button slds-button_brand" onclick="{!c.deleteSelected}" value="{#v.UserId}">Remove</button>
+                            </footer>
+                        </aura:if>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </div>
+        </aura:if>
+        
+        <!-- OPEN MODAL FOR CLONE USER -->
+        <aura:if isTrue="{!v.isOpen}">                
+            <!--###### MODAL BOX Start######--> 
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-modal_small slds-fade-in-open">
+                <div class="slds-modal__container slds-p-around_medium">
+                    <header class="slds-modal__header" style="width:600px;">
+                        <h2 id="modal-heading-01" class="slds-text-heading_small slds-hyphenate" align="Left">Select up to 15 users to apply cloning.</h2>
+                        <c:QueueUserLookup objectAPIName="user"  
+                                           IconName="standard:user"
+                                           lstSelectedRecords="{!v.selectedUserRecords}"
+                                           label="User Name"
+                                           CloneId="{#v.UserId}"/>
+                        <lightning:buttonIcon iconName="utility:close" onclick="{!c.closeModal}" alternativeText="close" variant="bare-inverse" class="slds-modal__close"/>   
+                    </header>
+                    <footer class="slds-modal__footer" style="width:600px;">   
+                        <lightning:button onclick="{!c.CloneUser}" value="{!v.selectedUserRecords}" variant="brand" label="Apply Cloning"/> 
+                        <lightning:button variant="neutral" label="Cancel" onclick="{!c.closeModal }"/>                         
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+            <!--###### MODAL BOX Part END Here ######--> 
+        </aura:if>
+        
+        <!-- OPEN MODAL -->
+        <aura:if isTrue="{!v.isQOpen}">                
+            <!--###### MODAL BOX Start######--> 
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-modal_small slds-fade-in-open">
+                <div class="slds-modal__container slds-m-around-medium">
+                    <!-- ###### MODAL BOX HEADER Start ######-->
+                    <header class="slds-modal__header" style="width:600px;">
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate" align="Left">You can add up to 15 Queues at one time.</h2>
+                        <c:UserQueueLookup objectAPIName="group"  
+                                           IconName="standard:group"
+                                           lstSelectedRecords="{!v.selectedLookUpRecords}"
+                                           label="Queue Name"
+                                           lstofgrp="{!v.ListOfQueue}"
+                                           UserId="{#v.UserId}"/>
+                        <lightning:buttonIcon iconName="utility:close"
+                                              onclick="{!c.closeModal }"
+                                              alternativeText="close"
+                                              variant="bare-inverse"
+                                              class="slds-modal__close"/>
+                    </header>
+                    <!--###### MODAL BOX BODY Part Start######-->
+                    <!--###### MODAL BOX FOOTER Part Start ######-->
+                    <footer class="slds-modal__footer" style="width:600px;">                         
+                        <lightning:button onclick="{!c.AddQueue}" value="{!v.selectedLookUpRecords}" variant="brand" label="Add"/> 
+                        <lightning:button variant="neutral" label="Cancel" onclick="{!c.closeModal }"/> 
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+            <!--###### MODAL BOX Part END Here ######--> 
+        </aura:if>
+    </div>
+</aura:component>

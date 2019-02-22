@@ -1,0 +1,99 @@
+<!--
+   *******************************************************************************************************
+   Name:       DispatchReturnedParts.cmp
+   Description:  This Lightning Component will show returned parts. - 5535030  - In WO details 
+   			screen under parts tab the parts section shows parts returned 
+   Developer: Harsha Reddy
+   *******************************************************************************************************
+   -->
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId" controller="DispatchReturnedPartController">
+   <!-- Label -->
+   <aura:attribute name="Label_PARTNUMBER" type="String" default="PART NUMBER"/>
+   <aura:attribute name="Label_DESCRIPTION" type="String" default="DESCRIPTION"/>
+   <aura:attribute name="Label_QUANTITY" type="String" default="QTY"/>
+   <aura:attribute name="Label_RETURNDATE" type="String" default="RETURN DATE"/>
+   <aura:attribute name="Label_UNITPRICE" type="String" default="UNIT PRICE"/>
+   <aura:attribute name="Label_SERVICETAG" type="String" default="SERVICE TAG"/>
+   <aura:attribute name="Label_WAYBILL" type="String" default="WAY BILL"/>
+   <aura:attribute name="Label_CARRIER" type="String" default="CARRIER"/>
+   <aura:attribute name="Label_UserName" type="String" default="UserName"/>
+   <aura:attribute name="Label_PartsReturnedCompName" type="String" default=""/>
+   <aura:attribute name="dispatchPartsOrderLineList" type="List" default="[]"/>
+   <aura:attribute name="width" type="String"/>
+   <!-- Handler -->
+   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+   <aura:handler event="force:refreshView" action="{!c.doInit}" />
+   <lightning:navigation aura:id="navService"/>
+   <article class="slds-card slds-card_boundary">
+      <div class="slds-card__header slds-grid">
+         <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure">
+               <span class="slds-icon_container slds-icon-standard-contact" >
+                  <lightning:icon iconName="standard:work_order_item" size="small" alternativeText="Parts"/>
+               </span>
+            </div>
+            <div class="slds-media__body">
+               <h2 class="slds-card__header-title">
+                  <a href="javascript:void(0);" class="slds-card__header-link slds-truncate">
+                  <span class="slds-text-heading_small">{!v.Label_PartsReturnedCompName} ({!v.dispatchPartsOrderLineList.length})</span>
+                  </a>
+               </h2>
+            </div>
+         </header>
+      </div>
+      <aura:if isTrue="{! not(empty(v.dispatchPartsOrderLineList))}">
+         <div class="slds-card__body slds-card__body_inner">
+            <div class="slds-scrollable" style="height:10rem; width:100%;">
+               <table class="slds-table slds-table--bordered slds-table--striped slds-table--cell-buffer">
+                  <thead>
+                     <tr class="slds-text-heading--label">
+                        <th scope="col">
+                           <div class="slds-truncate">{#v.Label_PARTNUMBER}</div>
+                        </th>
+                        <th scope="col">
+                           <div class="slds-truncate">{#v.Label_DESCRIPTION}</div>
+                        </th>
+                        <th scope="col">
+                           <div class="slds-truncate">{#v.Label_QUANTITY}</div>
+                        </th>
+                        <th scope="col">
+                           <div class="slds-truncate">{#v.Label_RETURNDATE}</div>
+                        </th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <aura:iteration items="{!v.dispatchPartsOrderLineList}" var="returnedPartItem">
+                        <tr>
+                           <td>
+                               <div class="slds-truncate" title="{!returnedPartItem.ISP_Part__c}"><ui:outputURL value="{!returnedPartItem.Part__r.URLLInk__c}" label="{!returnedPartItem.ISP_Part__c}" target="_blank"/></div>
+                           </td>
+                           <aura:if isTrue="{! not(empty(returnedPartItem.ISP_Description__c))}">
+                              <td>
+                                 <div class="slds-truncate" title="{!returnedPartItem.ISP_Description__c}">{!returnedPartItem.ISP_Description__c}</div>
+                              </td>
+                              <aura:set attribute="else">
+                                 <td>
+                                    <div class="slds-truncate" title="{!returnedPartItem.Part__r.PartDescription__c}">{!returnedPartItem.Part__r.PartDescription__c}</div>
+                                 </td>
+                              </aura:set>
+                           </aura:if>
+                           <td>
+                              <div class="slds-truncate" title="{!returnedPartItem.ISP_Qty__c}">{!returnedPartItem.ISP_Qty__c}</div>
+                           </td>
+                           <td>
+                              <div class="slds-truncate" title="{!returnedPartItem.ISP_Return_Date__c}">{!returnedPartItem.ISP_Return_Date__c}</div>
+                           </td>
+                        </tr>
+                     </aura:iteration>
+                  </tbody>
+               </table>
+            </div>
+         </div>
+         <footer class="slds-card__footer">
+            <a class="slds-card__footer-action" href="javascript:void(0);" onclick="{!c.viewAll}">View All
+            <span class="slds-assistive-text">Part Details</span>
+            </a>
+         </footer>
+      </aura:if>
+   </article>
+</aura:component>

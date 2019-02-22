@@ -1,0 +1,30 @@
+<!--
+*******************************************************************************************************
+Name:       SMSCheck.cmp
+Description:  This Lightning Component is for Collaborate Chat.  - Story 5428506  
+*******************************************************************************************************
+Date         Version         Author                 Summary of Changes 
+*******************************************************************************************************
+10/18/2018     1.0         Rajesh Guru /Sunil Surappagari       Initial Release
+
+*******************************************************************************************************
+-->
+
+<aura:component controller="PhoneCheck" implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global">
+    <aura:attribute name="rID" type="String" default=""/>
+    <aura:attribute name="statusMsg" type="String" />
+    <aura:attribute name="item"  type="Case"/>
+    <aura:handler name="init" value="this" action="{!c.doInit}"/>
+    
+    <div>
+        <span style="color: red;"><b>{!v.statusMsg}</b></span>
+    </div>
+    
+    
+    <ui:inputCheckbox aura:id="checkbox" label="SMS Auto Case Closure"  value="{!v.item.SMS_Case_Closure__c}"  change="{!c.checkboxSelect}"/>
+   
+    
+        
+       
+    
+</aura:component>

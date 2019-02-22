@@ -1,0 +1,72 @@
+<aura:component controller ="VoiceQuickCaseHandler" implements="force:hasRecordId,force:lightningQuickActionWithoutHeader,flexipage:availableForRecordHome" access="global">
+    <aura:attribute name="TranscriptId" type="String" />
+    <aura:attribute name="CaseId" type="String"  />
+    <aura:attribute name="qc" type="Boolean" default='true'/>
+    <aura:attribute name="checkCase" type="Boolean" default='false'/> 
+    <aura:attribute name="caseTitle" type="String" default='Quick Call Case -'/> 
+    <aura:attribute name="record" type="Object" description="The record object to be displayed" />
+    <aura:attribute name="callTranscriptRecord" type="Object" />
+    <aura:attribute name="recordError" type="String" />
+    <aura:attribute name="errorMsg" type="String" default=''/>
+    <aura:attribute name="caseDesc" type="String" default='{!v.callTranscriptRecord.Summary__c }'/> 
+    
+    <aura:html tag="style">
+        .cuf-content {
+        padding: 0 0rem !important;
+        }
+        .slds-p-around--medium {
+        padding: 0rem !important;
+        }       
+        .slds-modal__content{
+        height:unset !important;
+        max-height:unset !important;
+        }
+    </aura:html>
+    <div class="modal-header slds-modal__header slds-size_1-of-1">
+        <h4 class="title slds-text-heading--medium" >New Quick Call Case</h4>
+    </div>
+    <force:recordData aura:id="record"
+                      layoutType="FULL"
+                      recordId="{!v.recordId}" 
+                      targetRecord="{!v.record}" 
+                      targetFields="{!v.callTranscriptRecord}" 
+                      recordUpdated="{!c.handleOnLoad}"/>
+    
+    <lightning:recordEditForm aura:id="recordCreateForm"
+                              onload="{!c.handleLoad}"
+                              onsubmit="{!c.validateCaseFields}" 
+                              onsuccess="{!c.handleSuccess}" 
+                              objectApiName="Case">
+        <!-- MODAL BODY / INPUT FORM -->    
+        <div class="slds-modal__content slds-p-around_medium slds-form--stacked slds-size_1-of-1" aura:id="modalbody" id="modalbody">
+            <aura:if isTrue="{!v.checkCase}">
+                <div class="slds-m-bottom_small slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
+                    <span class="slds-assistive-text">warning</span>
+                    <span class="slds-icon_container slds-icon-utility-warning slds-m-left_x-small slds-m-right_x-small" title="Description of icon when needed">
+                        <lightning:icon iconName="utility:warning" size="x-small" alternativeText="Warning!" variant="warning"/>
+                    </span>
+                    <!--  <h2>The Quick Call Case will replace any current Case and will be auto-closed upon saving.</h2>-->
+                    <h2>{!$Label.c.VoiceQuickCallCaseMsg}</h2>
+                </div>
+            </aura:if>
+            <lightning:inputField  aura:id="CaseSubject"     fieldName="Subject" value="{!v.caseTitle}"/>
+            <lightning:inputField aura:id="CaseDescription"  fieldName="Description" />
+            <lightning:inputField  aura:id="CaseDisposition"  fieldName="Disposition_Reason__c" />
+            <div class="slds-hide">
+                <lightning:inputField fieldName="Quick_Call__c" value="{!v.qc}" />
+                <lightning:inputField fieldName="Status" value="Closed" />
+            </div>
+            <div id="errorMsg">
+                {!v.errorMsg}
+            </div>
+        </div>   
+        <!-- End of Modal Content -->
+        
+        <!-- MODAL FOOTER -->
+        <div class="modal-footer slds-modal__footer slds-size_1-of-1">
+            <lightning:button aura:id="CancelBtn" variant="neutral" label="Cancel" title="Cancel" type="text" onclick="{!c.handleCancel}"/>
+            <lightning:button aura:id="SaveBtn" variant="brand" type="submit" name="save" label="Save" />
+        </div>
+        
+    </lightning:recordEditForm>
+</aura:component>

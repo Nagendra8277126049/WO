@@ -1,0 +1,37 @@
+<!--
+*******************************************************************************************************
+Name:         Dispatch_Sudmit_Panel.cmp
+Description:  This Lightning Component that will be the place holder for Edit Work Order Button 
+				- Story 5263685 
+*******************************************************************************************************
+Date         Version    Author             Summary of Changes 
+*******************************************************************************************************
+04/28/2018     1.0     Harsha Reddy        Initial Release
+04/28/2018     1.0     Rodrigo Carpio      Initial Release
+08/28/2018     1.1     Harsha Reddy        Story - 5263685
+********************************************************
+-->
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId" access="global">
+    <aura:attribute name="SubmitReviewMessage" type="String" />
+    <aura:attribute name="SubmitButtonLabel" type="String" />
+    <aura:attribute name="CancelButtonLabel" type="String" />
+    <div class="custom-background">
+        <lightning:card class="backColor">
+            <lightning:layout horizontalAlign="spread">
+                <lightning:layoutItem flexibility="auto" padding="around-small">
+                    <!--{#v.SubmitReviewMessage}-->
+                </lightning:layoutItem>
+                <lightning:layoutItem flexibility="auto" padding="around-small">
+                    <div class="slds-float_right">
+                        <lightning:button label="{#v.CancelButtonLabel}" onclick="{!c.handleCancel}" />
+                        <lightning:button label="{#v.SubmitButtonLabel}" onclick="{!c.handleSubmit}" variant="brand" />
+                    </div>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </lightning:card>
+    </div>
+    <!--set component in the varible {!v.body}-->
+    <div aura:id="cmpBody">
+        {!v.body}
+    </div>
+</aura:component>

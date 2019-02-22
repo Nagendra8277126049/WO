@@ -1,0 +1,51 @@
+<design:component >
+	<design:attribute name="caseId" label="CaseRecordId"/>
+    <design:attribute name="caseSubject" label="caseSubject"/>
+    <design:attribute name="caseDescription" label="caseDescription"/>
+    <design:attribute name="casePrimaryContactId" label="casePrimaryContactId"/>
+    <design:attribute name="casePrimaryContactRole" label="casePrimaryContactRole"/>
+    <design:attribute name="caseSecondaryContactId" label="caseSecondaryContactId" />
+    <design:attribute name="caseSecondaryContactRole" label="caseSecondaryContactRole"/>
+    <design:attribute name="caseAccountId" label="caseAccountId" />
+    <design:attribute name="caseAssetId" label="caseAssetId" />
+    <design:attribute name="Region" label="Region" />
+    <design:attribute name="CountryCode" label="CountryCode" />
+    
+    <design:attribute name="assetModel" label="assetModel" />
+    
+    <design:attribute name="CountryBUID" label="CountryBUID" />
+    <design:attribute name="RegionName" label="RegionName" />
+    <design:attribute name="SubRegionName" label="SubRegionName" />
+    <design:attribute name="Environment" label="Environment" />
+    <design:attribute name="SubEnvironment" label="SubEnvironment" />
+    
+    <design:attribute name="addressStreetBilling" label="addressStreetBilling" />
+    <design:attribute name="addressStreetBilling2" label="addressStreetBilling2" />
+    <design:attribute name="addressCityBilling" label="addressCityBilling" />
+    <design:attribute name="addressStateBilling" label="addressStateBilling" />
+    <design:attribute name="addressPostalCodeBilling" label="addressPostalCodeBilling" />
+    <design:attribute name="addressCountryBilling" label="addressCountryBilling" />
+
+    <design:attribute name="addressStreet" label="addressStreet" />
+    <design:attribute name="addressCity" label="addressCity" />
+    <design:attribute name="addressState" label="addressState" />
+    <design:attribute name="addressPostalCode" label="addressPostalCode" />
+    <design:attribute name="addressCountry" label="addressCountry" />
+    <design:attribute name="partyLocationId" label="partyLocationId" />
+    <design:attribute name="assetPartyLocationId" label="assetPartyLocationId" />
+    <design:attribute name="brazilAddressLine1" label="brazilAddressLine1" />
+    <design:attribute name="brazilAddressLine2" label="brazilAddressLine2" />
+    <design:attribute name="brazilAddressLine3" label="brazilAddressLine3" />
+    <design:attribute name="brazilAddressLine4" label="brazilAddressLine4" />
+    <!-- MB: added below design attribute to save CFI Number and CFI Exists on work order as part of Nov Story: 5417023 -->
+    <design:attribute name="customFactoryIntNum" label="CFI Number" /> 
+   
+    <!-- Added for DEFECT 5670951 // Starts Here // *** 10/01/2018 *** Harsha-->
+    <design:attribute name="safetyIssueFlag" label="Safety Issue Flag"/>
+    <design:attribute name="typeOfSafetyIssue" label="Type Of Safety Issue"/>
+     <!-- Added for DEFECT 5670951 // Ends Here // *** 10/01/2018 *** Harsha-->
+    
+    <sfdc:objects >
+        <sfdc:object >Case</sfdc:object>
+    </sfdc:objects>
+</design:component>

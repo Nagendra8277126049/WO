@@ -1,0 +1,82 @@
+<aura:component controller="ARRProposalApexController" implements="force:lightningQuickAction,force:appHostable,force:hasRecordId,lightning:actionOverride,flexipage:availableForAllPageTypes" access="global" >
+    <aura:attribute name="skuNumber" type="String"/>
+    <aura:attribute name="serviceType" type="String"/>
+    <aura:attribute name="country" type="String"/>
+    <aura:attribute name="serviceSkuID" type="String"/>
+    
+	<aura:attribute name="countryOptions" type="Map"/>  
+    <aura:attribute name="serviceTypeOptions" type="Map"/>  
+    
+    <aura:attribute name="recordId" type="String"/>    
+    <aura:attribute name="serviceSku" type="ServiceSku__x"/>
+    <force:recordData aura:id="serviceSkuRecord" recordId="{!v.recordId}" targetFields="{!v.serviceSku}" layoutType="FULL"
+                      recordUpdated="{!c.updateEditValues}"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    
+    <aura:html tag="style">
+        .error-message-theme .modal-header {
+        color: rgb(255, 255, 255) !important;
+        background-color: rgb(194, 57, 52) !important;
+        }
+    </aura:html>
+    
+    <div aria-labelledby="create-form">
+        <form class="slds-form--stacked slds-p-bottom--medium"> 
+            
+            <lightning:select aura:id="create-form" 
+                              name="Country" 
+                              label="Country" 
+                              required="true"
+                              value="{!v.country}">
+                <option value="">-- None --</option>
+                <aura:iteration items="{!v.countryOptions}" var="item">
+                    <option value="{!item.Value}" text="{!item.Label}"></option>
+                </aura:iteration>
+            </lightning:select>
+            
+            <lightning:input aura:id="create-form" 
+                             label="SKU Number"
+                             name="SkuNumber"
+                             value="{!v.skuNumber}"
+                             required="true"
+                             /> 
+            
+            <lightning:select aura:id="create-form" 
+                              name="ServiceType" 
+                              label="Service Type" 
+                              required="true"
+                              value="{!v.serviceType}">
+                <option value="">-- None --</option>
+                <aura:iteration items="{!v.serviceTypeOptions}" var="item">
+                    <option value="{!item.Value}" text="{!item.Label}" selected="{!item.selected}"></option>
+                </aura:iteration>
+            </lightning:select>
+            
+            <div id="loading-spinner" style="display:block"  role="status" class="slds-spinner slds-spinner_medium">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+
+            <lightning:button
+                              class="grid-icon"
+                              name="BackButton"
+                              label="Back" 
+                              title="Back" 
+                              disabled="{! v.recordId &amp;&amp; !v.serviceSkuID }"
+                              onclick="{! c.back }"/>
+            
+            <lightning:button variant="brand" 
+                              class="grid-icon"
+                              name="PostButton"
+                              label="{! v.recordId ? 'Update' : 'Create' }"
+                              title="{! v.recordId ? 'Update' : 'Create' }"
+                              disabled="{! v.recordId &amp;&amp; !v.serviceSkuID }"
+                              onclick="{! c.post }"/>
+            
+        </form>
+    </div>
+    
+    <lightning:overlayLibrary aura:id="errorNotification"/>
+</aura:component>

@@ -1,0 +1,48 @@
+.THIS .card{
+    background-color:rgb(250,250,249);
+}
+.THIS .slds-lookup__search-input{
+    width:100%;
+  /*  margin-left:1143px; */
+    margin-top:-9px;
+}
+.THIS .button{
+   margin-top:-45px;
+   
+  /*  margin-left:1434px; */
+}
+
+
+.THIS.fixed_header tbody{
+  display:block;
+  overflow:auto;
+  height:200px;
+  width:100%;
+   
+}
+.THIS.fixed_header thead tr{
+  display:block;
+}
+
+.THIS .cls svg{
+    fill : rgb(110,138,174);
+}
+
+.THIS .slds-grid_align-end{
+   background-color : rgb(250, 250, 249);
+    width:97%;
+}
+
+.THIS .image path{
+    fill : rgb(110,138,174);
+}
+
+.THIS .avatarIconColor svg {
+    fill:rgb(110,138,174); 
+}
+.THIS.workorder svg{
+    background-color :rgb(37, 48, 69);
+}
+.THIS.workorder {
+   background-color:white !Important;
+}

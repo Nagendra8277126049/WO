@@ -1,0 +1,83 @@
+<aura:component controller="DispatchCreationFromOrderListController" implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global" >
+
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="OrderItems" type="Object[]" />
+    <aura:attribute name="columns" type="List" />
+    <aura:attribute name="isLoading" type="boolean" />
+    <aura:attribute name="sortedBy" type="String" />
+    <aura:attribute name="sortedDirection" type="Boolean" default="true" />
+    <aura:attribute name="selectedAssets" type="List" />
+    <aura:attribute name="assets" type="String" />
+    <aura:attribute name="workOrderLineItems" type="String" />
+    <aura:attribute name="dispatchMsg" type="String" default = "No Asset" />
+    <aura:attribute name="hideCheckboxes" type="Boolean" default="false" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.getItems}" />
+    
+    <aura:attribute name="ties" type="List" default="[
+    {'label': '1', 'value': '1'},
+    {'label': '3', 'value': '3'}
+    ]"/>
+    
+    <aura:attribute name="orderNumbers" type="List" default="[
+    {'label': '112310', 'value': '112310'},
+    {'label': '1553399', 'value': '1553399'},
+    {'label': '20019', 'value': '20019'}
+    ]"/>
+    
+    
+	<aura:attribute name="value" type="List" default="option1"/>
+    
+    <!--
+    <div class="slds-grid slds-wrap">
+      <div class="slds-col slds-size_1-of-6">
+        <lightning:checkboxGroup name="Orders:"
+                             label="Orders"
+                             options="{! v.orderNumbers }"
+                             value="{! v.value }"
+                             onchange=""/>
+      </div>
+      <div class="slds-col slds-size_1-of-6">
+        <lightning:checkboxGroup name="Ties:"
+                             label="Ties"
+                             options="{! v.ties }"
+                             value="{! v.value }"
+                             onchange=""/>
+      </div>
+    </div>
+    -->
+        
+    <div class="slds-card-wrapper">
+        <lightning:card title="Create Dispatch">
+            <div class="slds-border_top slds-border_bottom">
+                <lightning:layout horizontalAlign="center">
+                    <aura:if isTrue="{!not(empty(v.OrderItems))}">
+                        <lightning:layoutItem padding="around-small" size="12">
+                            <div align="center">
+                                 <lightning:datatable
+                                    aura:id="orderItemsTable"
+                                    keyField="Id"
+                                    sortedBy="{!v.sortedBy}"
+                                    sortedDirection="{!v.sortedDirection}"
+                                    selectedRows="{!v.selectedRows }"
+                                    data="{!v.OrderItems }"
+                                    columns="{!v.columns }"
+                                    isLoading="{!v.isLoading }"
+                                    onsort="{!c.updateColumnSorting}"
+                                    onrowselection="{!c.getSelectedName}" 
+                                    hideCheckboxColumn="{!v.hideCheckboxes}"
+                                />
+                                <div class="slds-p-top_small">
+                                    <lightning:button label="Create Dispatch" title="Create Dispatch" onclick="{!c.listSelectedRows}" aura:id="createDispatchBtn"/>
+                                </div>
+                            </div>
+                        </lightning:layoutItem>
+                         <aura:set attribute="else">
+                             <aura:text value="{! v.dispatchMsg }"></aura:text>
+                         </aura:set>
+                    </aura:if>
+                </lightning:layout>
+            </div>
+        </lightning:card>
+    </div>
+</aura:component>

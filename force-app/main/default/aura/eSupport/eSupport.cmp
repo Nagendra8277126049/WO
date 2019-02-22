@@ -1,0 +1,253 @@
+<!--
+*******************************************************************************************************
+Name:eSupport.cmp
+Apex Controller: CaseDiagnosisStepsController
+Description: Lightning component to display eSupport data stored in Case fields and SATC through web services
+    Story 4656242:SFDC Phase2: Display if there are any Diagnostics alerts on an Asset and Case Page
+    Story 4560890:SFDC Pilot Phase 2 :: Agent Console :: Need to capture the diagnosis steps
+
+*******************************************************************************************************
+Date         Version            Author                Summary of Changes 
+*******************************************************************************************************
+02/28/2018     1.0       	Amitabh Wankhede	         Initial Release
+07/19/2018     1.1			Srikanth Parvathareddy       Story 5067671 :SA Changes on Asset Details and Diagnostic Tab
+07/31/2018	   1.2          Sushmitha J					 Defect 5384965: no use case for passed results 
+*******************************************************************************************************
+-->
+<aura:component controller="CaseDiagnosisStepsController" implements="flexipage:availableForRecordHome,force:lightningQuickActionWithoutHeader,force:hasRecordId" access="global" >
+    
+    <aura:attribute name="recId" type="String" />
+    <aura:attribute name="EsupportDiagList" type="object"/>
+    <aura:attribute name="ReportDateLabel" type="String"/>
+    <aura:attribute name="eSupport" type="String"/>
+    <aura:attribute name="PassedResult" type="String"/>
+    <aura:attribute name="FailedResult" type="String"/>
+    <aura:attribute name="TestResult" type="String"/>
+    <aura:attribute name="TestName" type="String"/>
+    <aura:attribute name="TestDate" type="String"/>
+    <aura:attribute name="ErrorCode" type="String"/>
+    <aura:attribute name="TestResultEngPass" type="String"/>
+    <aura:attribute name="TestResultEngFail" type="String"/>
+    <aura:attribute name="ErrorMessage" type="String"/>
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    <aura:attribute name="PassedCalled" type="boolean" default="false"/>
+    <aura:attribute name="ReportDate" type="String"/>
+    <aura:attribute name="eSupportURLLabel" type="String"/>
+    <aura:attribute name="Critical" type="String"/>
+    <aura:attribute name="NeedsAttention" type="String"/>
+    <aura:attribute name="Recommended" type="String"/>
+    <aura:attribute name="OpenParanthesis" type="String"/>
+    <aura:attribute name="CloseParanthesis" type="String"/>
+    <aura:attribute name="Count" type="String" default="0"/>
+    <aura:attribute name="Paranthesis" type="String"/>
+    <aura:attribute name="noRecordsFoundMessage" type="string"/>
+	
+	<!-- Attributes for RecordID -->
+    <aura:attribute name="record" type="Object"/>
+    <aura:attribute name="assetRecord" type="Object"/>
+    <aura:attribute name="recordError" type="String"/>
+	
+	<force:recordData aura:id="recordLoader"
+      recordId="{!v.recId}"
+      layoutType="FULL"
+      targetRecord="{!v.record}"
+      targetFields="{!v.assetRecord}"
+      targetError="{!v.recordError}"
+      />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <!--Story 5067671 :SA Changes on Asset Details and Diagnostic Tab - Modified by Srikanth P  -->    
+    <article class="slds-card">
+        <!-- Spinner Code Begins Here -->
+        <aura:if isTrue="{!v.Spinner}">
+            <div aura:id="mySpinner" class="slds-spinner_container">
+                <div class="slds-spinner--brand  slds-spinner slds-spinner--small slds-is-relative" role="alert">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </aura:if>
+        <!-- Spinner Code Ends Here -->
+        
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-contact" title="Support">
+                        <lightning:icon iconName="standard:service_report" alternativeText="Support" size="small"/>
+                    </span>
+                </div>
+                <div class="slds-media__body slds-truncate" >
+                    <h3>  
+                        <span class="slds-text-heading_small slds-truncate"><b>{!v.eSupport}</b></span>
+                    </h3>    
+                </div>
+            </header>
+        </div>
+        <div class="slds-truncate" align="left" style="height:26px;padding-top:3px;" title="Report">
+            <span class="slds-text-body_regular">{!$Label.c.Report}</span>
+        </div> 
+    
+        <!--Both DiagnosticDate and Results found scenario -->  
+        <ui:scrollerWrapper class="scrollerSize"> 
+            <aura:if isTrue="{!equals(v.EsupportDiagList[0].IsAllHardwareTestPassed,'false')}">
+            <aura:if isTrue="{!and(or(v.EsupportDiagList[0].DiagnosticDate!=null,v.EsupportDiagList[0].DiagnosticDate!=undefined),or(v.EsupportDiagList[0].HardwareType!=null,v.EsupportDiagList[0].HardwareType!=undefined))}"> 
+                <div class="slds-card__body">
+                    <div class="slds-truncate" align="left">
+                        <span>
+                            <b><!--<ui:outputURL value="{!v.EsupportDiagList[0].URL}" target="_blank" label="{!$Label.c.eSupportReport}"/>&nbsp; Removed URL as part of UX review-->
+                                {!$Label.c.eSupportReport}&nbsp;
+                                <ui:outputURL value="{!v.EsupportDiagList[0].URL}" target="_blank" label="{!v.EsupportDiagList[0].DiagnosticDate}" />
+                            </b>
+                        </span>      
+                    </div>
+                    <br/>
+                    <div class="slds-scrollable_y" style="height: 150px;">
+                        <table class="slds-table slds-table_bordered slds-no-row-hover">
+                            <thead >
+                                <tr class="slds-text-title_caps">
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Hardware Type"><b>{!$Label.c.HARDWARE_TYPE}</b></div>
+                                    </th> 
+                                    <th scope="col" class="titlespace">
+                                        <div class="slds-truncate" title="eSupport Result"><b>{!$Label.c.RESULT}</b></div>
+                                    </th>  
+                                </tr>
+                            </thead>
+                            
+                            <tbody> 
+                                <aura:iteration items="{!v.EsupportDiagList}" var="ed" indexVar="i">
+                                    <tr>
+                                        <td data-label="Hardware Type" class="slds-text-body_small slds-cell-wrap">
+                                            {!ed.HardwareType} 
+                                        </td> 
+                                        <td data-label="End Date" class="slds-truncate slds-text-body_small titlespace">
+                                            {!ed.Result} 
+                                        </td>
+                                    </tr>
+                                </aura:iteration>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>  
+            </aura:if>
+           </aura:if>
+        </ui:scrollerWrapper>
+        
+        <!-- No record found scenario --> 
+        <ui:scrollerWrapper class="scrollerSize"> 
+            <aura:if isTrue="{!and(or(v.EsupportDiagList[0].DiagnosticDate==null,v.EsupportDiagList[0].DiagnosticDate==undefined),or(v.EsupportDiagList[0].HardwareType==null,v.EsupportDiagList[0].HardwareType==undefined))}">      
+                <div class="slds-card__body">
+                    <div align="left" class="slds-text-body_regular">
+                        <span>
+                            <b> <h3>{!$Label.c.No_Available_Reports}
+                                &nbsp;<ui:outputURL value="{!$Label.c.DellSupport + v.assetRecord.Name}" target="_blank" label="{!v.eSupportURLLabel}" /></h3></b>
+                        </span>      
+                    </div>
+                    <br/>
+                    <div class="slds-scrollable_y" style="height: 150px;">
+                        <table class="slds-table slds-table_bordered slds-no-row-hover">
+                            <thead >
+                                <tr class="slds-text-title_caps">
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Hardware Type"><b>{!$Label.c.HARDWARE_TYPE}</b></div>
+                                    </th> 
+                                    <th scope="col" class="titlespace">
+                                        <div class="slds-truncate" title="eSupport Result"><b>{!$Label.c.RESULT}</b></div>
+                                    </th>  
+                                </tr>
+                            </thead>    
+                        </table>
+                        <br/>
+                        <br/>
+                        <div class="slds-text-body_regular" align="slds-text-align_center">
+                            <h3 align="center">
+                                {!v.noRecordsFoundMessage}
+                            </h3>
+                        </div> 
+                    </div>
+                </div>
+            </aura:if> 
+        </ui:scrollerWrapper> 
+        
+        <!--DiagnosticDate found and Results notfound scenario -->
+        <ui:scrollerWrapper class="scrollerSize"> 
+            <aura:if isTrue="{!or(and( or(v.EsupportDiagList[0].DiagnosticDate!=null,v.EsupportDiagList[0].DiagnosticDate!=undefined), or(v.EsupportDiagList[0].HardwareType==null,v.EsupportDiagList[0].HardwareType==undefined) ), equals(v.EsupportDiagList[0].IsAllHardwareTestPassed,'true'))}">       
+                <div class="slds-card__body">
+                    <div class="slds-truncate" align="left">
+                        <span>
+                            <b><!--<ui:outputURL value="{!v.EsupportDiagList[0].URL}" target="_blank" label="{!$Label.c.eSupportReport}"/>&nbsp; Removed URL as part of UX review-->
+                                {!$Label.c.eSupportReport}&nbsp;
+                                <ui:outputURL value="{!v.EsupportDiagList[0].URL}" target="_blank" label="{!v.EsupportDiagList[0].DiagnosticDate}" />
+                            </b>
+                        </span>      
+                    </div>
+                    <br/>
+                    <div class="slds-scrollable_y" style="height: 150px;">
+                        <table class="slds-table slds-table_bordered slds-no-row-hover">
+                            <thead >
+                                <tr class="slds-text-title_caps">
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Hardware Type"><b>{!$Label.c.HARDWARE_TYPE}</b></div>
+                                    </th> 
+                                    <th scope="col" class="titlespace">
+                                        <div class="slds-truncate" title="eSupport Result"><b>{!$Label.c.RESULT}</b></div>
+                                    </th>  
+                                </tr>
+                            </thead>    
+                        </table>
+                        <br/>
+                        <div  class="slds-card__header slds-grid slds-align_absolute-center" >
+                            <div class="eimgSize">
+                                <img src="{!$Resource.eSupport_Icon}"/>
+                            </div>&nbsp;&nbsp;
+                            <div class="slds-text-body_Large slds-text-align_center textHeight" >{!$Label.c.eSupportPassResult}</div>
+                        </div>   
+                    </div>
+                </div>
+            </aura:if> 
+        </ui:scrollerWrapper>  
+        
+        <!-- No DiagnosticDate but records found scenario --> 
+        <ui:scrollerWrapper class="scrollerSize"> 
+            <aura:if isTrue="{!and(or(v.EsupportDiagList[0].DiagnosticDate==null,v.EsupportDiagList[0].DiagnosticDate==undefined),or(v.EsupportDiagList[0].HardwareType!=null,v.EsupportDiagList[0].HardwareType!=undefined))}">      
+                <div class="slds-card__body">
+                    <div align="left" class="slds-text-body_regular">
+                        <span>
+                            <b> <h3>{!$Label.c.No_Available_Reports}
+                                &nbsp;<ui:outputURL value="{!v.EsupportDiagList[0].URL}" target="_blank" label="{!v.eSupportURLLabel}" /></h3></b>
+                        </span>      
+                    </div>
+                    <br/>
+                    <div class="slds-scrollable_y" style="height: 150px;">
+                        <table class="slds-table slds-table_bordered slds-no-row-hover">
+                            <thead >
+                                <tr class="slds-text-title_caps">
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Hardware Type"><b>{!$Label.c.HARDWARE_TYPE}</b></div>
+                                    </th> 
+                                    <th scope="col" class="titlespace">
+                                        <div class="slds-truncate" title="eSupport Result"><b>{!$Label.c.RESULT}</b></div>
+                                    </th>  
+                                </tr>
+                            </thead> 
+                            <tbody> 
+                                <aura:iteration items="{!v.EsupportDiagList}" var="ed" indexVar="i">
+                                    <tr>
+                                        <td data-label="Hardware Type" class="slds-text-body_small slds-cell-wrap">
+                                            {!ed.HardwareType} 
+                                        </td> 
+                                        <td data-label="End Date" class="slds-truncate slds-text-body_small titlespace">
+                                            {!ed.Result} 
+                                        </td>
+                                    </tr>
+                                </aura:iteration>
+                            </tbody> 
+                        </table>
+                    </div>
+                </div>
+            </aura:if> 
+        </ui:scrollerWrapper> 
+    </article>
+</aura:component>

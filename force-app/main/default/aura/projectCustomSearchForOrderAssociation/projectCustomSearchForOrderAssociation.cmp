@@ -1,0 +1,90 @@
+<aura:component controller="projectSearchController" implements="flexipage:availableForAllPageTypes,lightning:availableForFlowScreens" access="global">
+
+    <!-- CREATE ATTRIBUTE/VARIABLE-->
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="searchResult" type="List" />
+    <aura:attribute name="orderNumber" type="String" />
+    <aura:attribute name="projectName" type="String" />
+    <aura:attribute name="poNumber" type="String" />
+    <aura:attribute name="customerName" type="String" />
+    <aura:attribute name="dealId" type="String" />
+    <aura:attribute name="dateCreatedStart" type="Date" />
+    <aura:attribute name="dateCreatedEnd" type="Date" />
+    <aura:attribute name="Message" type="boolean" default="false" />
+    <aura:attribute name="AssociationComplete" type="boolean" default="false" />
+    <aura:attribute name="TotalNumberOfRecord" type="integer" default="0" />
+    <aura:attribute name="columns" type="List" />
+    <aura:attribute name="orderNumbers" type="String" />
+    <aura:attribute name="orderIds" type="List" />
+
+    <aura:attribute name="sortedBy" type="String" />
+    <aura:attribute name="sortedDirection" type="String" />
+
+    <aura:attribute name="defaultSortDirection" type="String" />
+    <aura:handler name="init" value="{!this}" action="{! c.init }" />
+
+    <div class="slds-grid slds-gutters slds-grid_align-center" style="height: 100%;">
+        <div class="slds-col slds-size_3-of-12">
+            <!-- SEARCH INPUT AND SEARCH BUTTON-->
+            <div class="slds-box">
+                <lightning:card title="Project Search for Order Association" iconName="standard:case">
+                    <lightning:layout horizontalAlign="spread">
+                        <lightning:layoutItem>
+                            <div class="slds-text-body_regular">At least one entry required</div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem>
+                            <lightning:button onclick="{!c.Search}" label="Search" iconName="utility:search" variant="brand" />
+                        </lightning:layoutItem>
+
+                    </lightning:layout>
+
+                    <lightning:input value="{!v.orderNumber}" aura:id="orderNumber" label="Order Number" />
+                    <lightning:input value="{!v.projectName}" aura:id="projectName" label="Project Name" />
+                    <lightning:input value="{!v.poNumber}" aura:id="poNumber" label="PO Number" />
+                    <lightning:input value="{!v.customerName}" aura:id="customerName" label="Customer Name" />
+                    <lightning:input value="{!v.dealId}" aura:id="dealId" label="Deal ID" />
+                    <div class="slds-text-title">Date Created</div>
+                    <lightning:layout title="a">
+                        <lightning:layoutItem flexibility="auto">
+                            <lightning:input type="date" value="{!v.dateCreatedStart}" aura:id="dateCreatedStart" label="From" />
+                        </lightning:layoutItem>
+                        <lightning:layoutItem flexibility="auto">
+                            <lightning:input type="date" value="{!v.dateCreatedEnd}" aura:id="dateCreatedEnd" label="To" />
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </lightning:card>
+            </div>
+
+        </div>
+        <div class="slds-col slds-size_9-of-12">
+            <div class="slds-box" style="padding-top: 6px">
+                <lightning:card>
+                    <div class="slds-text-heading_small">Selected Orders</div>
+                    <aura:if isTrue="{!v.AssociationComplete}">
+                        <div class="slds-text-body_regular greenText">The selected order(s) have been successfully associated. Close this Association window to continue.</div>
+                    </aura:if>
+                    <div class="slds-text-body_regular" style="padding-bottom: 10px">{! v.orderNumbers }</div>
+                    <div class="slds-border_top">
+                        <div class="slds-text-heading_small" style="padding-top: 10px; padding-bottom: 5px">Search Results</div>
+                    </div>
+                    <div style="height: 30vw">
+                        <!-- SHOW LOADING SPINNER-->
+                        <lightning:spinner variant="brand" size="large" aura:id="Id_spinner" class="slds-hide" />
+                        <lightning:datatable data="{! v.searchResult }" columns="{! v.columns }" keyField="Id" hideCheckboxColumn="true" onrowaction="{! c.handleRowAction }" showRowNumberColumn="false" sortedBy="{! v.sortedBy }" sortedDirection="{! v.sortedDirection }" onsort="{! c.updateColumnSorting }" defaultSortDirection="{! v.defaultSortDirection }" maxColumnWidth="2000" />
+                    </div>
+
+                    <!-- ERROR MESSAGE IF NOT RECORDS FOUND-->
+                    <aura:if isTrue="{!v.Message}">
+                        <div class="slds-notify_container slds-is-relative">
+                            <div class="slds-notify slds-notify_toast slds-theme_error" role="alert">
+                                <div class="slds-notify__content">
+                                    <h2 class="slds-text-heading_small">No Records Found...</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </aura:if>
+                </lightning:card>
+            </div>
+        </div>
+    </div>
+</aura:component>

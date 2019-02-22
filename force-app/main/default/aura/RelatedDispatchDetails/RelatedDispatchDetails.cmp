@@ -1,0 +1,157 @@
+<!--
+*******************************************************************************************************
+Name:       RelatedDispatchDetails.cmp
+Description:  This Lightning Component displays the related dispatches details page.  - Story 4150193
+*******************************************************************************************************
+Date         Version    Author                Summary of Changes 
+*******************************************************************************************************
+12/04/2017     1.0     Rodrigo Carpio         Initial Release
+02/06/2017     1.1     Harsha Reddy           Updated Interface Reference and Removed global access
+08/07/2018     1.2     Harsha Reddy           DEFECT 5443199 - Updated the Code to Use 
+											  lightning:isUrlAddressable - Since  
+											  force:NavigateToComponent(Deprecated in Summer'18)
+*******************************************************************************************************
+-->
+<aura:component controller="ReletadDispatchController" implements="lightning:isUrlAddressable">
+    <aura:attribute name="dispatchList" type="object" />
+    <!-- Button Attributes -->
+    <aura:attribute name="next" type="boolean" default="false" />
+    <aura:attribute name="previous" type="boolean" default="false" />
+    <aura:attribute name="page" type="integer" description="pageNumber" />
+    <aura:attribute name="Spinner" type="boolean" default="false" />
+    <aura:attribute name="assetId" type="string" default="{!v.pageReference.state.assetId}" />
+    
+    <lightning:workspaceAPI aura:id="detailWorkspace" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <!-- section for the data display starts here -->
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-contact" title="Dispatches">
+                        <lightning:icon iconName="standard:service_appointment" alternativeText="Dispatches" size="small" />
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2>
+                        <span class="slds-text-heading_small"> {!$Label.c.RelatedDispatchesHeader} </span>
+                    </h2>
+                </div>
+            </header>
+        </div>
+
+        <!-- Spinner Code Begins Here -->
+        <aura:if isTrue="{!v.Spinner}">
+            <div aura:id="spinnerId">
+                <div class="slds-spinner--brand  slds-spinner slds-spinner--small " role="alert">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </aura:if>
+        <!-- Spinner Code Ends Here -->
+
+        <aura:if isTrue="{! !empty(v.dispatchList)}">
+            <ui:scrollerWrapper class="scrollerSize">
+                <div class="slds-card__body">
+                    <div class="slds-scrollable--y" style="height: 400px;">
+                        <table class="slds-table slds-table_bordered slds-no-row-hover">
+                            <thead>
+                                <tr class="slds-text-title--caps">
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Dispatch Number"><b>{!$Label.c.DispatchNumber}</b></div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Entitlement Name"><b>{!$Label.c.DispatchStatus}</b></div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="End Date"><b>{!$Label.c.DispatchOption}</b></div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate " title="Tracking Number"><b>{!$Label.c.DispatchTrackingNumber}</b></div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Return Tracking Number"><b>{!$Label.c.DispatchReturnTracking}</b></div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="ETA"><b>{!$Label.c.DispatchETA}</b></div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Date Created"><b>{!$Label.c.DispatchDateCreated}</b></div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Labor Status"><b>{!$Label.c.DispatchLabotStatus}</b></div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Parts Status"><b>{!$Label.c.DispatchPartStatus}</b></div>
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <aura:iteration items="{!v.dispatchList}" var="el" indexVar="i">
+                                    <tr>
+                                        <!--
+                                        <td data-label="Dispatch Number"><div class='slds-text-link slds-truncate no-text-overflow'>{!el.dispatchNumber}</div>                    
+                                        </td>	
+										-->
+                                        <td data-label="Dispatch Number">
+                                            <div class='slds-truncate no-text-overflow'>{!el.dispatchNumber}</div>
+                                        </td>
+                                        <td data-label="Status">
+                                            <div class='slds-truncate no-text-overflow'>{!el.status}</div>
+                                        </td>
+                                        <td data-label="Option">
+                                            <div class='slds-truncate no-text-overflow'>{!el.option}</div>
+                                        </td>
+                                        <!--
+                                        <td data-label="Tracking Number"><div class='slds-text-link slds-truncate no-text-overflow slds_wrap_text'>{!el.trackingNumber}</div>                    
+                                        </td>
+										-->
+                                        <td data-label="Tracking Number">
+                                            <div class='slds-truncate no-text-overflow slds_wrap_text'>{!el.trackingNumber}</div>
+                                        </td>
+                                        <!--
+                                        <td data-label="Return Tracking Number"><div class='slds-text-link slds-truncate no-text-overflow slds_wrap_text'>{!el.trackingNumberReturn}</div>                    
+                                        </td> 
+										-->
+                                        <td data-label="Return Tracking Number">
+                                            <div class='slds-truncate no-text-overflow slds_wrap_text'>{!el.trackingNumberReturn}</div>
+                                        </td>
+                                        <td data-label="ETA">
+                                            <div class='slds-truncate no-text-overflow'>{!el.eTA}</div>
+                                        </td>
+                                        <td data-label="Date Created">
+                                            <div class='slds-truncate no-text-overflow'>{!el.dateCreated}</div>
+                                        </td>
+                                        <td data-label="Labor Status">
+                                            <div class='slds-truncate no-text-overflow'>{!el.laborStatus}</div>
+                                        </td>
+                                        <td data-label="Parts Status">
+                                            <div class='slds-truncate no-text-overflow'>{!el.partsStatus}</div>
+                                        </td>
+                                    </tr>
+                                </aura:iteration>
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </ui:scrollerWrapper>
+        </aura:if>
+        <footer class="slds-card__footer">
+            <!-- Button's Logic Begins Here -->
+            <aura:if isTrue="{!v.previous}">
+                <ui:button press="{!c.previousPage}" label="Previous" />
+            </aura:if>
+            <aura:if isTrue="{!v.next}">
+                <ui:button aura:id="nextbtn" press="{!c.nextPage}" label="Next" />
+            </aura:if>
+            <!-- Button's Logic Ends Here -->
+        </footer>
+    </article>
+    <!-- section for the data display ends here -->
+</aura:component>

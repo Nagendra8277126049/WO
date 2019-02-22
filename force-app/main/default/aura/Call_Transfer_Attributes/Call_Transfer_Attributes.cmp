@@ -1,0 +1,107 @@
+<aura:component controller="CallTransferHandler" implements="force:hasRecordId,lightning:isUrlAddressable,force:appHostable,flexipage:availableForAllPageTypes" access="global" >
+    <aura:attribute name="transferType" type="String" default="Warm" />
+    <aura:attribute name="ctrRecId" type="String" default="" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <lightning:workspaceAPI aura:id="workspace" />
+
+    <!-- Must load the InGenius Proxy iFrame somewhere in the page. We will be sending a post message through it later. 
+		 INGENIUS-SERVER must be replaced with the domain of each of the InGenius servers. -->
+    <iframe src="{!$Label.c.InGeniusServer}" style="visibility:hidden; display:none;" id="ICEA" />
+    <lightning:card  title="">
+        <lightning:recordEditForm aura:id="recordEditForm" 
+                                          recordId="{!v.ctrRecId}"
+                                  		  onload="{!c.handleLoad}"
+                                          onsuccess="{!c.handleSuccess}"
+                                  		  objectApiName="Call_Transfer_Attributes__c">
+            <div class="slds-box">
+               <lightning:layoutItem size="12">
+                    <div class="slds-text-heading_large slds-border_bottom slds-p-bottom_small slds-m-bottom_large">Call Transfer</div>
+               </lightning:layoutItem>
+               <lightning:layout multipleRows="true">
+                        <lightning:layoutItem size="6">
+                           <div class="slds-m-right_xx-large slds-m-bottom_x-small">
+                               <lightning:inputField aura:id="Category" fieldName="Category__c" />
+                           </div>                                
+                       </lightning:layoutItem>         
+                       <lightning:layoutItem size="6">
+                           <div class="slds-m-bottom_x-small">
+                               <lightning:inputField aura:id="Detail" fieldName="Detail__c" />
+                           </div>                               
+                       </lightning:layoutItem>
+                       <lightning:layoutItem size="12">
+                           <div id="param" class="slds-m-top_small slds-text-heading_small slds-p-around_xx-small slds-m-bottom_medium">Additional Parameters</div>
+                       </lightning:layoutItem>                            
+                       <lightning:layoutItem size="6">
+                           <div class="slds-p-right_xx-large slds-m-bottom_x-small">
+                               <lightning:inputField aura:id="LocalChannel" fieldName="Local_Channel__c" />
+                           </div>                               
+                       </lightning:layoutItem>         
+                       <lightning:layoutItem size="6">
+                           <div class="slds-m-bottom_x-small">
+                               <lightning:inputField aura:id="ProductLine" fieldName="Product_Line__c" />
+                           </div>                                
+                       </lightning:layoutItem> 
+                       <lightning:layoutItem size="6">
+                           <div class="slds-m-right_xx-large slds-m-bottom_x-small">
+                               <lightning:inputField fieldName="Override_Asset_Entitlement__c" />
+                           </div>
+                       </lightning:layoutItem>         
+                       <lightning:layoutItem size="6">
+                           <div class="slds-m-bottom_x-small">
+                               <lightning:inputField fieldName="Override_Customer_Entitlement__c" disabled="true" />
+                           </div>
+                       </lightning:layoutItem>
+                       <lightning:layoutItem size="6">
+                           <div class="slds-m-right_xx-large slds-m-bottom_x-small">
+                               <lightning:inputField aura:id="CallerLocation" fieldName="Caller_Location__c" disabled="true" />
+                           </div>
+                       </lightning:layoutItem>         
+                       <lightning:layoutItem size="6">
+                           <div class="slds-m-bottom_x-small">
+                               <lightning:inputField aura:id="CustomerBUID" fieldName="Customer_BUID__c" disabled="true" />
+                           </div>
+                       </lightning:layoutItem>
+                       <lightning:layoutItem size="6">
+                           <div class="slds-m-right_xx-large slds-m-bottom_x-small">
+                               <lightning:inputField aura:id="Language" fieldName="Language__c" />
+                           </div>
+                       </lightning:layoutItem>         
+                       <lightning:layoutItem size="6">
+                           <div class="slds-m-bottom_x-small">
+                               <lightning:inputField aura:id="TransferType" fieldName="Transfer__c" value="{!v.transferType}" disabled="true" onchange="{! c.transferTypeChange}" />
+                           </div>  
+                       </lightning:layoutItem>
+                       <lightning:layoutItem size="12">
+                                 <lightning:inputField fieldName="Notes__c" />
+                         </lightning:layoutItem>                         
+                   </lightning:layout >
+       			</div>
+                <div class="slds-hide">
+                    <!--<lightning:inputField fieldName="RecordTypeId" value="{!$Label.c.CallTransfer_ReadOnlyRecordTypeId}" />  !-->
+           			<lightning:inputField fieldName="Status__c" value="Completed" />
+                </div>
+               	<div id="transferText" class="slds-m-bottom_small slds-align_absolute-center"> 
+                    <aura:if isTrue="{! v.transferType == 'Cold'}">
+                        <div>
+                            <lightning:icon iconName="utility:hide" alternativeText="Blind Transfer" variant="error" size="x-small"/>
+                            <span id="blindtext">
+                                This is a <strong>blind transfer.</strong>
+                            </span>
+                        </div>
+                    </aura:if>
+                    <aura:if isTrue="{! v.transferType == 'Warm'}">
+                        <div>        
+                           <lightning:icon iconName="utility:comments" alternativeText="Warm Transfer" variant="warning" size="x-small" />
+                           <span id="warmtext">
+                                This is a <strong>warm transfer.</strong>
+                           </span>
+                        </div>
+                    </aura:if>                
+            	</div>
+                <div class="slds-align_absolute-center">                
+                    <lightning:button aura:id="Cancel" label="Cancel" onclick="{!c.closeFocusedTab}" class="slds-m-right_x-small" />
+                    <lightning:button variant="brand" type="submit" name="Transfer Call" label="Transfer Call" />
+                </div>
+            </lightning:recordEditForm>
+    </lightning:card>
+</aura:component>

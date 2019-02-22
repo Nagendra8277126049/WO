@@ -1,0 +1,32 @@
+<aura:component>
+    <aura:attribute name="record" type="Object" />
+    <aura:attribute name="simpleRecord" type="Object" />
+    <aura:attribute name="recordError" type="String" />
+    <aura:attribute name="recordId" type="String" required="true" />
+    <force:recordData aura:id="recordLoader" recordId="{!v.recordId}" fields="Status"
+        targetRecord="{!v.record}" targetFields="{!v.simpleRecord}" targetError="{!v.recordError}"
+        mode="EDIT" />
+    <div class="demo-only" style="height: 100%;">
+        <section class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-modal__close" title="Close" onclick="{!c.closeMe}">
+                            <lightning:icon class="white slds-icon_small" iconName="utility:close"/> 
+                            <span class="slds-assistive-text">
+                                Close
+                            </span>
+                        </button>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    "Are you sure you want to cancel your Work Order"?
+                </div>
+                <div class="slds-modal__footer">
+                    <lightning:button variant="neutral" label="No" onclick="{!c.closeMe}" />
+                    <lightning:button variant="brand" label="Yes" onclick="{!c.onClickYes}" />
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </div>
+
+</aura:component>

@@ -1,0 +1,4 @@
+<aura:component implements="flexipage:availableForRecordHome">
+    <lightning:workspaceAPI aura:id="workspace"/>
+	<aura:handler event="c:OpenInNewTab" action="{!c.handleOpenInNewTab}"/>
+</aura:component>

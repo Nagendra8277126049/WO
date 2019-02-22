@@ -1,0 +1,21 @@
+<apex:page standardController="WorkOrder" extensions="CancelWorkOrderLineItemController" action="{!cancelWorkOrderLineItems}">
+    <c:LightningLoader ></c:LightningLoader> 
+	<apex:form >
+        <script>
+        (function(){
+            var showAlert = "{!showAlert}";
+            var alertMessage = "{!alertMessage}";
+            
+            if(showAlert) {
+                alert(alertMessage);
+               
+                window.history.back();
+            }
+        })();
+        </script>
+        
+    	<apex:inputHidden value="{!workOrder.BUID__c}"/>
+        <apex:inputHidden value="{!workOrder.Status}"/>
+        
+    </apex:form>
+</apex:page>

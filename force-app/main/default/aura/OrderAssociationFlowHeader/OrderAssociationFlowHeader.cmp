@@ -1,0 +1,3 @@
+<aura:component implements="lightning:availableForFlowScreens" access="global">
+<h1 class="slds-page-header__title slds-m-right--small slds-truncate slds-align-middle">Order Association</h1>	
+</aura:component>
