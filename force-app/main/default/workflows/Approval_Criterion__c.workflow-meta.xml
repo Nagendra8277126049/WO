@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldUpdates>
+        <fullName>UpdateApprovalCriterionExternalID</fullName>
+        <field>Approval_Criterion_External_Id__c</field>
+        <formula>Name</formula>
+        <name>UpdateApprovalCriterionExternalID</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <rules>
+        <fullName>ApprovalCriterionExternalDUpdate</fullName>
+        <actions>
+            <name>UpdateApprovalCriterionExternalID</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <formula>OR(AND(ISNEW(),NOT(ISBLANK(Name))),AND(ISCHANGED(Name),NOT(ISBLANK(Name))))</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+</Workflow>

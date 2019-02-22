@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FlowDefinition xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionNumber>35</activeVersionNumber>
+    <description>Set up order service tower based on order items class</description>
+    <masterLabel>IDS - Order Classification</masterLabel>
+</FlowDefinition>

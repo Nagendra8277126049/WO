@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldUpdates>
+        <fullName>ActionFieldUpdate</fullName>
+        <field>Date_time_for_the_first_email__c</field>
+        <formula>now()</formula>
+        <name>Date time for the first email</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <targetObject>ParentId</targetObject>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>count_of_first_outbound_message</fullName>
+        <field>Count_of_incoming_message__c</field>
+        <formula>1</formula>
+        <name>count of first outbound message</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <targetObject>ParentId</targetObject>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>email_received</fullName>
+        <field>Email_Received__c</field>
+        <literalValue>1</literalValue>
+        <name>email received</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <targetObject>ParentId</targetObject>
+    </fieldUpdates>
+    <rules>
+        <fullName>Capture Email Read Timestamp</fullName>
+        <active>false</active>
+        <criteriaItems>
+            <field>EmailMessage.Time_to_Read__c</field>
+            <operation>equals</operation>
+            <value>Read</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Date%2Ftime for the first email</fullName>
+        <actions>
+            <name>ActionFieldUpdate</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <actions>
+            <name>count_of_first_outbound_message</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <formula>text ( Status) = &#39;sent&#39; &amp;&amp;  ISBLANK( Parent.Date_time_for_the_first_email__c )</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+</Workflow>

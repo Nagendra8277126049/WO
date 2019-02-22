@@ -2,7 +2,11 @@
     "compilerOptions": {
         "experimentalDecorators": true,
         "baseUrl": ".",
-        "paths": {}
+        "paths": {
+            "c/mwd-diagnostic-tier-special-list": [
+                "mwdDiagnosticTierSpecialList/mwdDiagnosticTierSpecialList.js"
+            ]
+        }
     },
     "include": [
         "**/*",

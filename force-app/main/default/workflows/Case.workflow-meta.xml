@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <alerts>
+        <fullName>CaseBackup</fullName>
+        <description>CaseBackup</description>
+        <protected>false</protected>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        <recipients>
+            <field>Case_Backup__c</field>
+            <type>userLookup</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/CaseBackup</template>
+    </alerts>
+    <alerts>
+        <fullName>Email_Alert_for_Cases_without_reference</fullName>
+        <description>Email Alert for cases without reference number</description>
+        <protected>false</protected>
+        <recipients>
+            <field>SuppliedEmail</field>
+            <type>email</type>
+        </recipients>
+        <senderAddress>technical_support@dell.com</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>unfiled$public/Email_for_Without_Refernce</template>
+    </alerts>
+    <alerts>
+        <fullName>Email_Alert_for_Closed_Cases</fullName>
+        <description>Email Alert for Closed Cases</description>
+        <protected>false</protected>
+        <recipients>
+            <field>ContactId</field>
+            <type>contactLookup</type>
+        </recipients>
+        <recipients>
+            <field>SuppliedEmail</field>
+            <type>email</type>
+        </recipients>
+        <senderAddress>technical_support@dell.com</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>unfiled$public/Email_for_WithRefernce</template>
+    </alerts>
+    <fieldUpdates>
+        <fullName>CaseStatus</fullName>
+        <field>Status</field>
+        <literalValue>Resolved</literalValue>
+        <name>CaseStatus</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>true</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>CaseStatusUpdate</fullName>
+        <field>Status</field>
+        <literalValue>Closed</literalValue>
+        <name>CaseStatusUpdate</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Case_Closed</fullName>
+        <field>Status</field>
+        <literalValue>Closed</literalValue>
+        <name>Case Closed</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Case_Status_Closed</fullName>
+        <description>The case status will be closed because there is no reference number.</description>
+        <field>Status</field>
+        <literalValue>Closed</literalValue>
+        <name>Case Status Closed</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>true</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Queue_Details</fullName>
+        <field>Queue_Details__c</field>
+        <formula>Owner:Queue.QueueName</formula>
+        <name>Queue Details</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Set_Check_for_Validation_Flag</fullName>
+        <field>check_for_validation__c</field>
+        <literalValue>1</literalValue>
+        <name>Set Check for Validation Flag</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Set_Status_to_Closed</fullName>
+        <field>Status</field>
+        <literalValue>Closed</literalValue>
+        <name>Set Status to Closed</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Time_Stamp_for_change_of_Case_owner</fullName>
+        <description>Time Stamp for change of Case owner when changed from queue to owner</description>
+        <field>Accepted_time__c</field>
+        <formula>NOW()</formula>
+        <name>Time Stamp for change of Case owner</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>email_received_false</fullName>
+        <field>Email_Received__c</field>
+        <literalValue>0</literalValue>
+        <name>email received false</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <outboundMessages>
+        <fullName>CaseCreate</fullName>
+        <apiVersion>41.0</apiVersion>
+        <description>Outbound Message to push the case fields while creation and updation #4144132</description>
+        <endpointUrl>https://test.com</endpointUrl>
+        <fields>AccountId</fields>
+        <fields>AssetId</fields>
+        <fields>Asset_Name__c</fields>
+        <fields>CaseNumber</fields>
+        <fields>CaseReferenceId__c</fields>
+        <fields>Collaboration_Type__c</fields>
+        <fields>CompletedDate__c</fields>
+        <fields>ContactCountryCode__c</fields>
+        <fields>ContactEmail__c</fields>
+        <fields>ContactFirstName__c</fields>
+        <fields>ContactHomePhoneType__c</fields>
+        <fields>ContactHomePhone__c</fields>
+        <fields>ContactLastName__c</fields>
+        <fields>ContactPhoneExtension__c</fields>
+        <fields>CreatedDate</fields>
+        <fields>Customer_Number__c</fields>
+        <fields>Delta_SR__c</fields>
+        <fields>Description</fields>
+        <fields>Disposition_Reason__c</fields>
+        <fields>External_ID__c</fields>
+        <fields>Id</fields>
+        <fields>Operating_System_Details__c</fields>
+        <fields>Operating_System__c</fields>
+        <fields>Origin</fields>
+        <fields>OwnerId</fields>
+        <fields>OwnerLogin__c</fields>
+        <fields>ParentId</fields>
+        <fields>Parent_Legacy_SR_Num__c</fields>
+        <fields>Priority</fields>
+        <fields>Quick_Call__c</fields>
+        <fields>ReOpenFlag__c</fields>
+        <fields>RecordTypeId</fields>
+        <fields>Resolution_Summary__c</fields>
+        <fields>ResolvedDate__c</fields>
+        <fields>SMS_Case_Closure__c</fields>
+        <fields>SMS_SR_Flag__c</fields>
+        <fields>Service_Tag__c</fields>
+        <fields>Status</fields>
+        <fields>Subject</fields>
+        <fields>Type</fields>
+        <includeSessionId>true</includeSessionId>
+        <integrationUser>servicesfdcdev@dell.com</integrationUser>
+        <name>CaseCreate</name>
+        <protected>false</protected>
+        <useDeadLetterQueue>false</useDeadLetterQueue>
+    </outboundMessages>
+    <outboundMessages>
+        <fullName>S360_Case_Sync</fullName>
+        <apiVersion>42.0</apiVersion>
+        <description>This is created to Sync Case between lightning and S360</description>
+        <endpointUrl>https://test.com</endpointUrl>
+        <fields>CaseNumber</fields>
+        <fields>Id</fields>
+        <includeSessionId>false</includeSessionId>
+        <integrationUser>soniya_sharaff@dellteam.com.dellservices</integrationUser>
+        <name>S360 Case Sync</name>
+        <protected>false</protected>
+        <useDeadLetterQueue>false</useDeadLetterQueue>
+    </outboundMessages>
+    <rules>
+        <fullName>Case Sync to S360</fullName>
+        <actions>
+            <name>S360_Case_Sync</name>
+            <type>OutboundMessage</type>
+        </actions>
+        <active>true</active>
+        <description>This Rule is created to Sync Cases between lightning and S360</description>
+        <formula>AND (OR(ISPICKVAL(Asset.Product2.Product_Identifier__c , &quot;S360&quot;),ISPICKVAL(Case_Source__c, &quot;OLS&quot;)), ($Profile.Name &lt;&gt;&quot;Service Integration Profile&quot;), (RecordTypeId&lt;&gt;$Label.Internal_Case ),(RecordTypeId&lt;&gt; $Label.InternalCaseReadOnly))</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+    <rules>
+        <fullName>CreateUpdateCaseSR</fullName>
+        <actions>
+            <name>CaseCreate</name>
+            <type>OutboundMessage</type>
+        </actions>
+        <active>true</active>
+        <description>Workflow rule to trigger the outbound message action for integration with delta - #4144132</description>
+        <formula>AND(NOT(ISPICKVAL(Status ,&#39;Closed&#39;)), NOT(ISCHANGED(Delta_SR__c)), NOT(ISPICKVAL(Case_Source__c ,&#39;Delta&#39;)), NOT(ISPICKVAL(Case_Source__c ,&#39;OLS&#39;)), NOT(ISBLANK(TEXT(Origin))),  NOT(ISPICKVAL(Asset.Product2.Product_Identifier__c , &#39;S360&#39;)), NOT(OR((ISCHANGED(Case_Classification_List__c)),ISCHANGED(Best_Prediction__c),ISCHANGED(Top_3_Predictions__c),ISCHANGED(next_best_action__c),ISCHANGED(next_best_action_link__c),ISCHANGED(Accidental_Damage_Probability__c),ISCHANGED(Accidental_Damage__c),ISCHANGED(ADClassification__c))))</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+    <rules>
+        <fullName>Populating the Queue in case</fullName>
+        <actions>
+            <name>Queue_Details</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <description>Populating the queue of a case</description>
+        <formula>((ISCHANGED( OwnerId ) || ( ISNEW() )) &amp;&amp; BEGINS( OwnerId , $Label.Queueid)&amp;&amp; (RecordTypeId&lt;&gt;$Label.Internal_Case ) &amp;&amp; (RecordTypeId&lt;&gt; $Label.InternalCaseReadOnly))</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+    <rules>
+        <fullName>Set to Case Closed</fullName>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>Completed</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Quick_Call__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </criteriaItems>
+        <description>To Close Quick Contact Cases.
+**Using workflow due to limitations in process builder**</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+        <workflowTimeTriggers>
+            <actions>
+                <name>Case_Closed</name>
+                <type>FieldUpdate</type>
+            </actions>
+            <offsetFromField>Case.CompletedDate__c</offsetFromField>
+            <timeLength>1</timeLength>
+            <workflowTimeTriggerUnit>Hours</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+    </rules>
+    <rules>
+        <fullName>Time stamp when the case got assigned from queue to agent</fullName>
+        <actions>
+            <name>Time_Stamp_for_change_of_Case_owner</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <formula>BEGINS( OwnerId , &#39;005&#39;)  &amp;&amp;
+ISBLANK (Accepted_time__c) &amp;&amp; 
+(ISCHANGED(Status) &amp;&amp; TEXT(PRIORVALUE(Status)) = &#39;Not Assigned&#39;) &amp;&amp; TEXT(Status) = &#39;In Progress&#39;</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+    <rules>
+        <fullName>Update Case Status</fullName>
+        <active>false</active>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>Resolved</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Quick_Call__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </criteriaItems>
+        <description>Quick Contact case after the disposition and case being resolved, should be moved to closed status automatically within 60 min</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+        <workflowTimeTriggers>
+            <actions>
+                <name>CaseStatusUpdate</name>
+                <type>FieldUpdate</type>
+            </actions>
+            <timeLength>1</timeLength>
+            <workflowTimeTriggerUnit>Hours</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+    </rules>
+    <rules>
+        <fullName>Update Case To Resolved</fullName>
+        <actions>
+            <name>CaseStatus</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>false</active>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>In Progress</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Quick_Call__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </criteriaItems>
+        <description>When Quick Contact is Checked Case Status updates to Resolved from In Progress.</description>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+</Workflow>

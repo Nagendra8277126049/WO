@@ -1,0 +1,1723 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <description>Pass service tag to Apex call, call Support Assist API and get attributes and save the attributes in the case level</description>
+        <name>GetSAAttributes</name>
+        <label>GetSAAttributes</label>
+        <locationX>292</locationX>
+        <locationY>422</locationY>
+        <actionName>GRAgentJourneyController</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Assignment_s_1_OS</targetReference>
+        </connector>
+        <inputParameters>
+            <name>ServiceTag</name>
+            <value>
+                <elementReference>ServiceTag</elementReference>
+            </value>
+        </inputParameters>
+        <outputParameters>
+            <assignToReference>SAAttributes</assignToReference>
+            <name>output</name>
+        </outputParameters>
+    </actionCalls>
+    <assignments>
+        <name>Assignment_s1_no</name>
+        <label>Assignment_s1_no</label>
+        <locationX>336</locationX>
+        <locationY>758</locationY>
+        <assignmentItems>
+            <assignToReference>Transcript</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Screen1~did a kb article solve the issue?~No~{!$Flow.CurrentDateTime}</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Select_Windows_Version</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assignment_S1_Yes</name>
+        <label>Assignment_S1_Yes</label>
+        <locationX>721</locationX>
+        <locationY>813</locationY>
+        <assignmentItems>
+            <assignToReference>Transcript</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Screen1~did a kb article solve the issue?~Yes~{!$Flow.CurrentDateTime}</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>ResolvedStep</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Screen1: did a kb article solve the issue?</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>FeedbackHeader</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assignment_s2</name>
+        <label>Assignment_s2</label>
+        <locationX>374</locationX>
+        <locationY>835</locationY>
+        <assignmentItems>
+            <assignToReference>Transcript</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>|Screen2~Select Windows Version~{!Select_the_version_of_Windows_currently_installed_on_the_system}~{!$Flow.CurrentDateTime}</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Remove_external_devices_and_perform_hard_reset</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assignment_s3</name>
+        <label>Assignment_s3</label>
+        <locationX>417</locationX>
+        <locationY>1063</locationY>
+        <assignmentItems>
+            <assignToReference>Transcript</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>|Screen3~Does the system boot?~{!Does_the_system_boot}~{!$Flow.CurrentDateTime}</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Decision_Name</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>assignment_s4</name>
+        <label>assignment_s4</label>
+        <locationX>599</locationX>
+        <locationY>911</locationY>
+        <assignmentItems>
+            <assignToReference>Transcript</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>|Screen4~Do any of the devices cause the error to return?~{!Do_any_of_the_devices_cause_the_error_to_return}~{!$Flow.CurrentDateTime}</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>FeedbackHeader</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assignment_s5</name>
+        <label>Assignment_s5</label>
+        <locationX>927</locationX>
+        <locationY>1061</locationY>
+        <assignmentItems>
+            <assignToReference>Transcript</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>|Screen5~Choose the item the most closely matches~{!Choose_the_item_the_most_closely_matches}~{!$Flow.CurrentDateTime}</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>FeedbackHeader</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assignment_s_1</name>
+        <label>Assignment_s_1</label>
+        <locationX>688</locationX>
+        <locationY>440</locationY>
+        <assignmentItems>
+            <assignToReference>Transcript</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Screen 1. Select Windows Version - {!$Flow.CurrentDateTime}</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Screen_1_Select_the_version_of_Windows_currently_installed_on_the_system</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assignment_s_1_1</name>
+        <label>Assignment_s_1.1</label>
+        <locationX>1292</locationX>
+        <locationY>268</locationY>
+        <assignmentItems>
+            <assignToReference>Transcript</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Screen 1.1 Reconnect external devices one at a time and test - {!$Flow.CurrentDateTime}</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Screen_1_1_Do_any_of_the_devices_cause_the_error_to_return</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assignment_s_1_1_No</name>
+        <label>Assignment_s_1.1_No</label>
+        <locationX>1637</locationX>
+        <locationY>305</locationY>
+        <assignmentItems>
+            <assignToReference>Transcript</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>S.13 Hard reset and draining residual power resolved no boot - {!$Flow.CurrentDateTime}</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>L1_Reopen_this_tab_to_create_log</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assignment_s_1_1_Yes</name>
+        <label>Assignment_s_1_1_Yes</label>
+        <locationX>1628</locationX>
+        <locationY>219</locationY>
+        <assignmentItems>
+            <assignToReference>Transcript</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>S.26 Troubleshoot external device that causes No Boot - S.26 Troubleshoot external device that causes No Boot</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>L1_Reopen_this_tab_to_create_log</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assignment_s_1_OS</name>
+        <label>Assignment_s_1_OS</label>
+        <locationX>416</locationX>
+        <locationY>423</locationY>
+        <assignmentItems>
+            <assignToReference>Transcript</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Screen 1 Select OS - {!$Flow.CurrentDateTime}</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>BIOSVersionText</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>BIOSVersion</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>SAAttributes</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>RemoveParsedValue</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Create_Record_Once_flow_is_started</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assignment_s_1a</name>
+        <label>Assignment_s_1a</label>
+        <locationX>1091</locationX>
+        <locationY>446</locationY>
+        <assignmentItems>
+            <assignToReference>Transcript</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Screen 1a Remove external devices and perform hard reset. - {!$Flow.CurrentDateTime}</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Screen_1a_Does_the_system_boot</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assignment_s_23_1</name>
+        <label>Assignment_s_23_1</label>
+        <locationX>1879</locationX>
+        <locationY>408</locationY>
+        <assignmentItems>
+            <assignToReference>Transcript</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Screen S.23.1 Reopen this tab to create log and be transferred to the Hard Drive pathv - {!$Flow.CurrentDateTime}</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>UpdateFlowLog</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assignment_s_5</name>
+        <label>Assignment_s_5</label>
+        <locationX>1454</locationX>
+        <locationY>442</locationY>
+        <assignmentItems>
+            <assignToReference>Transcript</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Screen 5 Run EPSA Diagnostics - {!$Flow.CurrentDateTime}</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Screen_5_Choose_the_item_that_most_closely_matches_the_EPSA_results</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assignment_s_5_ePSA</name>
+        <label>Assignment_s_5_ePSA</label>
+        <locationX>1393</locationX>
+        <locationY>866</locationY>
+        <assignmentItems>
+            <assignToReference>Transcript</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Screen 5.3 Troubleshoot No POST - {!$Flow.CurrentDateTime}</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <name>Assignment_s_5_HDDRelatedCode</name>
+        <label>Assignment_s_5_HDDRelatedCode</label>
+        <locationX>1683</locationX>
+        <locationY>436</locationY>
+        <assignmentItems>
+            <assignToReference>Transcript</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Screen 5.1 HDD related code - {!$Flow.CurrentDateTime}</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Screen_S_23_1_Reopen_this_tab_to_create_log_and_be_transferred_to_the_Hard_Drive</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assignment_s_5_NoCodeDetected</name>
+        <label>Assignment_s_5_NoCodeDetected</label>
+        <locationX>1660</locationX>
+        <locationY>719</locationY>
+        <assignmentItems>
+            <assignToReference>Transcript</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Screen 5.1.1 Determine if the system is configured with RAID - {!$Flow.CurrentDateTime}</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Screen_5_1_1_Is_the_system_configured_with_RAID</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assignment_s_5_OtherCode</name>
+        <label>Assignment_s_5_OtherCode</label>
+        <locationX>1888</locationX>
+        <locationY>571</locationY>
+        <assignmentItems>
+            <assignToReference>Transcript</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>S.23 Reopen this tab to create log and be transferred to the ePSA Diagnostic path - {!$Flow.CurrentDateTime}</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>UpdateFlowLog</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assignment_s_L1</name>
+        <label>Assignment_s_L1</label>
+        <locationX>1882</locationX>
+        <locationY>180</locationY>
+        <assignmentItems>
+            <assignToReference>Transcript</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>L1. Reopen this tab to create log - {!$Flow.CurrentDateTime}</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>UpdateFlowLog</targetReference>
+        </connector>
+    </assignments>
+    <choices>
+        <name>Bootpath_Code</name>
+        <choiceText>Bootpath Code</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Bootpath Code</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>eSPA_would_not_run_or_freezes</name>
+        <choiceText>eSPA would not run or freezes</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>eSPA would not run or freezes</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen1_No</name>
+        <choiceText>No</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>No</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen1_Yes</name>
+        <choiceText>Yes</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Yes</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen3_No</name>
+        <choiceText>No</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>No</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen3_Yes</name>
+        <choiceText>Yes</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Yes</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen4_No</name>
+        <choiceText>No</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>No</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen4_Yes</name>
+        <choiceText>Yes</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Yes</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen_1_1_No</name>
+        <choiceText>No</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>No</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen_1_1_Yes</name>
+        <choiceText>Yes</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Yes</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen_1_NA</name>
+        <choiceText>{!SAAttributes}</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <elementReference>SAAttributes</elementReference>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen_1_W10</name>
+        <choiceText>Windows 10</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Windows 10</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen_1_W7</name>
+        <choiceText>Windows 7</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Windows 7</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen_1_W8</name>
+        <choiceText>Windows 8/8.1</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Windows 8/8.1</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen_1_Win10</name>
+        <choiceText>Windows 10</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Windows 10</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen_1_Win7</name>
+        <choiceText>Windows 7</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Windows 7</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen_1_Win8</name>
+        <choiceText>Windows 8/8.1</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Windows 8/8.1</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen_1a_HardReset</name>
+        <choiceText>Unable to remove external devices and perform hard reset</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Unable to remove external devices and perform hard reset</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen_1a_No</name>
+        <choiceText>No</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>No</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen_1a_SysWillNotSoftReboot</name>
+        <choiceText>System will not soft re-boot</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>System will not soft re-boot</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen_1a_Yes</name>
+        <choiceText>Yes</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Yes</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen_5_1_1_WithoutRAID</name>
+        <choiceText>System is configured without RAID</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>System is configured without RAID</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen_5_1_1_WithRAID</name>
+        <choiceText>System is configured with RAID</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>System is configured with RAID</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen_5_BIOS</name>
+        <choiceText>Unable to enter boot menu or BIOS</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Unable to enter boot menu or BIOS</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen_5_BootpathCode</name>
+        <choiceText>Bootpath code</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Bootpath code</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen_5_ePSA</name>
+        <choiceText>ePSA would not run or freezes</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>ePSA would not run or freezes</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen_5_HDDRelatedCode</name>
+        <choiceText>HDD related code</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>HDD related code</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen_5_NoCodesDetected</name>
+        <choiceText>No codes detected</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>No codes detected</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>GR_Screen_5_OtherCode</name>
+        <choiceText>Other code</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Other code</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>HDD_related_code</name>
+        <choiceText>HDD related code</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>HDD related code</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>No_Codes_detected</name>
+        <choiceText>No Codes detected</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>No Codes detected</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Other_code</name>
+        <choiceText>Other code</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Other code</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>System_will_not_soft_Re_boot</name>
+        <choiceText>System will not soft Re-boot</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>System will not soft Re-boot</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Unable_to_enter_boot_menu_or_BIOS</name>
+        <choiceText>Unable to enter boot menu or BIOS</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Unable to enter boot menu or BIOS</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Unable_to_remove_external_devices</name>
+        <choiceText>Unable to remove external devices</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Unable to remove external devices</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Windows_10</name>
+        <choiceText>Windows 10</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Windows 10</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Windows_7</name>
+        <choiceText>Windows 7</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Windows 7</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Windows_8_8_1</name>
+        <choiceText>Windows 8/8.1</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Windows 8/8.1</stringValue>
+        </value>
+    </choices>
+    <decisions>
+        <name>Decision_Name</name>
+        <label>Decision Name</label>
+        <locationX>528</locationX>
+        <locationY>1074</locationY>
+        <defaultConnectorLabel>[Default Outcome]</defaultConnectorLabel>
+        <rules>
+            <name>Screen1_Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Does_the_system_boot</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Yes</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Reconnect_external_devices_one_at_a_time_and_test</targetReference>
+            </connector>
+            <label>Screen1_Yes</label>
+        </rules>
+        <rules>
+            <name>Screen1_Other_than_Yes</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>Does_the_system_boot</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>No</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>System_will_not_soft_Re_boot</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>System will not soft Re-boot</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Unable_to_remove_external_devices</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Unable to remove external device</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Run_ePSA_Diagnositcs</targetReference>
+            </connector>
+            <label>Screen1_Other than Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>did_a_kb_article_solve_the_issue_checkpoint</name>
+        <label>did a kb article solve the issue?</label>
+        <locationX>492</locationX>
+        <locationY>811</locationY>
+        <defaultConnectorLabel>[Default Outcome]</defaultConnectorLabel>
+        <rules>
+            <name>Screen1_Yes_1</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>did_a_kb_article_solve_the_issue_Screen1</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Yes</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assignment_S1_Yes</targetReference>
+            </connector>
+            <label>Screen1_Yes</label>
+        </rules>
+        <rules>
+            <name>Screen1_No</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>did_a_kb_article_solve_the_issue_Screen1</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>No</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assignment_s1_no</targetReference>
+            </connector>
+            <label>Screen1_No</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Screen_1_1_Do_any_of_the_devices_cause_the_error_to_return</name>
+        <label>Screen 1.1 Do any of the devices cause the error to return?</label>
+        <locationX>1392</locationX>
+        <locationY>270</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>GR_Screen1_1_Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GR_Screen_1_1_Yes</leftValueReference>
+                <operator>WasSelected</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>S_26_Troubleshoot_external_device_that_causes_No_Boot</targetReference>
+            </connector>
+            <label>GR_Screen1_1_Yes</label>
+        </rules>
+        <rules>
+            <name>GR_Screen1_1_No</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GR_Screen_1_1_No</leftValueReference>
+                <operator>WasSelected</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>S_13_Hard_reset_and_draining_residual_power_resolved_no_boot</targetReference>
+            </connector>
+            <label>GR_Screen1_1_No</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Screen_1_Select_the_version_of_Windows_currently_installed_on_the_system</name>
+        <label>Screen 1 Select the version of Windows currently installed on the system.</label>
+        <locationX>804</locationX>
+        <locationY>443</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Select_Windows_Version_W7</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>Select_the_version_of_Windows_v2</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <stringValue>7</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>SAAttributes</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <stringValue>7</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Screen_1a_Remove_external_devices_and_perform_hard_reset</targetReference>
+            </connector>
+            <label>Select_Windows_Version_W7</label>
+        </rules>
+        <rules>
+            <name>Select_Windows_Version_W8</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>Select_the_version_of_Windows_v2</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <stringValue>8</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>SAAttributes</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <stringValue>8</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Screen_1a_Remove_external_devices_and_perform_hard_reset</targetReference>
+            </connector>
+            <label>Select_Windows_Version_W8</label>
+        </rules>
+        <rules>
+            <name>Select_Windows_Version_W10</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>Select_the_version_of_Windows_v2</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <stringValue>10</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>SAAttributes</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <stringValue>10</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Screen_1a_Remove_external_devices_and_perform_hard_reset</targetReference>
+            </connector>
+            <label>Select_Windows_Version_W10</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Screen_1a_Does_the_system_boot</name>
+        <label>Screen 1a Does the system boot?</label>
+        <locationX>1204</locationX>
+        <locationY>448</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>GR_Screen1a_Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GR_Screen_1a_Yes</leftValueReference>
+                <operator>WasSelected</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Screen_1_1_Reconnect_external_devices_one_at_a_time_and_test</targetReference>
+            </connector>
+            <label>GR_Screen1a_Yes</label>
+        </rules>
+        <rules>
+            <name>GR_Screen1a_No</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GR_Screen_1a_No</leftValueReference>
+                <operator>WasSelected</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Screen_5_Run_EPSA_Diagnostics</targetReference>
+            </connector>
+            <label>GR_Screen1a_No</label>
+        </rules>
+        <rules>
+            <name>GR_Screen1a_SysWillNotSoftReBoot</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GR_Screen_1a_SysWillNotSoftReboot</leftValueReference>
+                <operator>WasSelected</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Screen_5_Run_EPSA_Diagnostics</targetReference>
+            </connector>
+            <label>GR_Screen1a_SysWillNotSoftReBoot</label>
+        </rules>
+        <rules>
+            <name>GR_Screen1a_HardReset</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GR_Screen_1a_HardReset</leftValueReference>
+                <operator>WasSelected</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Screen_5_Run_EPSA_Diagnostics</targetReference>
+            </connector>
+            <label>GR_Screen1a_HardReset</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Screen_5_1_1_Is_the_system_configured_with_RAID</name>
+        <label>Screen 5.1.1 Is the system configured with RAID?</label>
+        <locationX>1766</locationX>
+        <locationY>721</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>GR_Screen5_1_1_WithRAID</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GR_Screen_5_1_1_WithRAID</leftValueReference>
+                <operator>WasSelected</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <label>GR_Screen5.1.1_WithRAID</label>
+        </rules>
+        <rules>
+            <name>GR_Screen5_1_1_WithoutRAID</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GR_Screen_5_1_1_WithoutRAID</leftValueReference>
+                <operator>WasSelected</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <label>GR_Screen5.1.1_WithoutRAID</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Screen_5_Choose_the_item_that_most_closely_matches_the_EPSA_results</name>
+        <label>Screen 5 Choose the item that most closely matches the EPSA results</label>
+        <locationX>1446</locationX>
+        <locationY>578</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>GR_Screen5_NoCodeDetected</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GR_Screen_5_NoCodesDetected</leftValueReference>
+                <operator>WasSelected</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Screen_5_1_1_Determine_if_the_system_is_configured_with_RAID</targetReference>
+            </connector>
+            <label>GR_Screen5_NoCodeDetected</label>
+        </rules>
+        <rules>
+            <name>GR_Screen5_HDDRelatedCode</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GR_Screen_5_HDDRelatedCode</leftValueReference>
+                <operator>WasSelected</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Screen_5_1_HDD_related_code</targetReference>
+            </connector>
+            <label>GR_Screen5_HDDRelatedCode</label>
+        </rules>
+        <rules>
+            <name>GR_Screen5_BootpathCode</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GR_Screen_5_BootpathCode</leftValueReference>
+                <operator>WasSelected</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Screen_5_1_1_Determine_if_the_system_is_configured_with_RAID</targetReference>
+            </connector>
+            <label>GR_Screen5_BootpathCode</label>
+        </rules>
+        <rules>
+            <name>GR_Screen5_OtherCode</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GR_Screen_5_OtherCode</leftValueReference>
+                <operator>WasSelected</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>S_23_Reopen_this_tab_to_create_log_and_be_transferred_to_the_ePSA_Diagnostic_pat</targetReference>
+            </connector>
+            <label>GR_Screen5_OtherCode</label>
+        </rules>
+        <rules>
+            <name>GR_Screen5_ePSA</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GR_Screen_5_ePSA</leftValueReference>
+                <operator>WasSelected</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Screen_5_3_Troubleshoot_No_POST</targetReference>
+            </connector>
+            <label>GR_Screen5_ePSA</label>
+        </rules>
+        <rules>
+            <name>GR_Screen5_BIOS</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GR_Screen_5_BIOS</leftValueReference>
+                <operator>WasSelected</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <label>GR_Screen5_BIOS</label>
+        </rules>
+    </decisions>
+    <description>As part of Feb Release _30012019</description>
+    <formulas>
+        <name>BIOSVersion</name>
+        <dataType>String</dataType>
+        <expression>(LEFT({!SAAttributes},FIND(&quot;;&quot;,{!SAAttributes})-1))</expression>
+    </formulas>
+    <formulas>
+        <name>RemoveParsedValue</name>
+        <dataType>String</dataType>
+        <expression>(RIGHT({!SAAttributes},LEN({!SAAttributes})-FIND(&quot;;&quot;,{!SAAttributes})))</expression>
+    </formulas>
+    <interviewLabel>No Boot Flow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>No Boot Flow</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <recordCreates>
+        <name>Create_Record_Once_flow_is_started</name>
+        <label>Create Record Once flow is started</label>
+        <locationX>501</locationX>
+        <locationY>356</locationY>
+        <assignRecordIdToReference>FlowLogId</assignRecordIdToReference>
+        <connector>
+            <targetReference>Screen_1_Select_Windows_Version</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Case_Id__c</field>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Flow_Name__c</field>
+            <value>
+                <stringValue>No Boot Flow</stringValue>
+            </value>
+        </inputAssignments>
+        <object>Flow_Log__c</object>
+    </recordCreates>
+    <recordLookups>
+        <name>GetServiceTagFromCaseId</name>
+        <label>GetServiceTagFromCaseId</label>
+        <locationX>188</locationX>
+        <locationY>315</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>GetSAAttributes</targetReference>
+        </connector>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <object>Case</object>
+        <outputAssignments>
+            <assignToReference>ServiceTag</assignToReference>
+            <field>Asset_Name__c</field>
+        </outputAssignments>
+    </recordLookups>
+    <recordUpdates>
+        <name>UpdateFlowLog</name>
+        <label>UpdateFlowLog</label>
+        <locationX>2001</locationX>
+        <locationY>180</locationY>
+        <connector>
+            <targetReference>EndScreen</targetReference>
+        </connector>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>FlowLogId</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Feedback__c</field>
+            <value>
+                <elementReference>Feedback</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Flow_Transcript__c</field>
+            <value>
+                <elementReference>Transcript</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Resolved_Step__c</field>
+            <value>
+                <elementReference>ResolvedStep</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Flow_Log__c</object>
+    </recordUpdates>
+    <screens>
+        <name>did_a_kb_article_solve_the_issue</name>
+        <label>did a kb article solve the issue?</label>
+        <locationX>21</locationX>
+        <locationY>775</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <fields>
+            <name>did_a_kb_article_solve_the_issue_Screen1</name>
+            <choiceReferences>GR_Screen1_Yes</choiceReferences>
+            <choiceReferences>GR_Screen1_No</choiceReferences>
+            <dataType>String</dataType>
+            <fieldText>did a kb article solve the issue?</fieldText>
+            <fieldType>RadioButtons</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>EndScreen</name>
+        <label>EndScreen</label>
+        <locationX>2120</locationX>
+        <locationY>180</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <fields>
+            <name>Title1</name>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>EndScreenMessage</name>
+            <fieldText>Thank you for the feedback. Click on Finish button to return back to the case record.</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>FeedbackHeader</name>
+        <label>FeedbackHeader</label>
+        <locationX>766</locationX>
+        <locationY>921</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <fields>
+            <name>FeedbackHeaderText</name>
+            <fieldText>Sounds good! customer issue has been resolved. Please Share your feedback.</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>Feedback</name>
+            <fieldText>Feedback</fieldText>
+            <fieldType>LargeTextArea</fieldType>
+            <isRequired>false</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>L1_Reopen_this_tab_to_create_log</name>
+        <label>L1. Reopen this tab to create log</label>
+        <locationX>1773</locationX>
+        <locationY>264</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Assignment_s_L1</targetReference>
+        </connector>
+        <fields>
+            <name>Please_share_feedback_on_resolving_the_issue</name>
+            <fieldText>Please share feedback on resolving the issue</fieldText>
+            <fieldType>LargeTextArea</fieldType>
+            <isRequired>false</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Reconnect_external_devices_one_at_a_time_and_test</name>
+        <label>Reconnect external devices one at a time and test</label>
+        <locationX>516</locationX>
+        <locationY>941</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>assignment_s4</targetReference>
+        </connector>
+        <fields>
+            <name>Do_any_of_the_devices_cause_the_error_to_return</name>
+            <choiceReferences>GR_Screen4_Yes</choiceReferences>
+            <choiceReferences>GR_Screen4_No</choiceReferences>
+            <dataType>String</dataType>
+            <fieldText>Do any of the devices cause the error to return?</fieldText>
+            <fieldType>RadioButtons</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Remove_external_devices_and_perform_hard_reset</name>
+        <label>Remove external devices and perform hard reset.</label>
+        <locationX>251</locationX>
+        <locationY>923</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Assignment_s3</targetReference>
+        </connector>
+        <fields>
+            <name>Removeexternaldevicesandperformhardreset</name>
+            <fieldText>Procedure
+Perform a Hard Reset
+Perform a full shutdown on the computer. (Do not suspend or hibernate)
+Remove all the external peripherals, if any, connected to the system. 
+For laptops:  Remove the battery (if the battery is Customer removable unit CRU) and unplug the power cable from the system
+For desktops:  Disconnect the power cable from the back of the system.
+Check for any removable media in the system and remove if present. i.e. DVDs, USB drives, SD cards
+After unplugging, press the Power button for 30 seconds to drain any residual power from the computer. 
+For laptops: Reinsert the battery and plug in the power cord. If the battery was not removed, then plug in only the power cord.
+For desktops: Reconnect the power cable and any necessary peripherals (Mouse, Keyboard, Monitor)
+If the system boots, perform a soft boot/restart to determine if the system will reboot without having to perform a hard shutdown.
+ 
+
+Note: If it is not possible to remove external peripherals and perform the hard reset (due to user disabilities for example), perform a reboot without removing the devices. If the system will still not boot, recommend the user get help removing the peripherals prior to performing OS recovery steps or replacing any hardware.</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>Does_the_system_boot</name>
+            <choiceReferences>GR_Screen3_Yes</choiceReferences>
+            <choiceReferences>GR_Screen3_No</choiceReferences>
+            <choiceReferences>System_will_not_soft_Re_boot</choiceReferences>
+            <choiceReferences>Unable_to_remove_external_devices</choiceReferences>
+            <dataType>String</dataType>
+            <fieldText>Does the system boot?</fieldText>
+            <fieldType>RadioButtons</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Run_ePSA_Diagnositcs</name>
+        <label>Run ePSA Diagnositcs</label>
+        <locationX>714</locationX>
+        <locationY>1062</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Assignment_s5</targetReference>
+        </connector>
+        <fields>
+            <name>RunePSADiagnositcs</name>
+            <fieldText>Run ePSA
+
+Dell Enhanced Pre-Boot System Diagnostics (ePSA) are diagnostics that are built into the hardware of your system. These tests allow you to check the hardware of your system from outside the Windows® operating system removing software from the diagnostic process.
+
+To run ePSA, perform the following steps:
+
+For Dell Desktop or All-In-One
+Restart the computer
+As the computer boots, press F12 when the Dell Splash Screen appears
+At the One Time Boot menu, press the arrow key to highlight Diagnostics and press enter
+A graphical menu, listing all the discovered devices in the system is now displayed and the express diagnostics will run
+Note: Takes about 4 minutes to complete
+ 
+For Dell Portable:
+Shutdown the computer
+Press and Hold the &lt;Fn&gt; key while pressing the power button, then release both
+A graphical menu, listing all the discovered devices in the system is now displayed and the express diagnostics should run
+If the diagnostics fail, make a note of the error code
+Based on the diagnostic findings, the code will assist you in troubleshooting the fault
+Note: Takes about 4 minutes to complete</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>Choose_the_item_the_most_closely_matches</name>
+            <choiceReferences>No_Codes_detected</choiceReferences>
+            <choiceReferences>HDD_related_code</choiceReferences>
+            <choiceReferences>Bootpath_Code</choiceReferences>
+            <choiceReferences>Other_code</choiceReferences>
+            <choiceReferences>eSPA_would_not_run_or_freezes</choiceReferences>
+            <choiceReferences>Unable_to_enter_boot_menu_or_BIOS</choiceReferences>
+            <dataType>String</dataType>
+            <fieldText>Choose the item the most closely matches</fieldText>
+            <fieldType>RadioButtons</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>S_13_Hard_reset_and_draining_residual_power_resolved_no_boot</name>
+        <label>S.13 Hard reset and draining residual power resolved no boot</label>
+        <locationX>1535</locationX>
+        <locationY>305</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Assignment_s_1_1_No</targetReference>
+        </connector>
+        <fields>
+            <name>Screen_s_13_Content</name>
+            <fieldText>Please Continue by clicking Next</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>S_23_Reopen_this_tab_to_create_log_and_be_transferred_to_the_ePSA_Diagnostic_pat</name>
+        <label>S.23 Reopen this tab to create log and be transferred to the ePSA Diagnostic path</label>
+        <locationX>1789</locationX>
+        <locationY>570</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Assignment_s_5_OtherCode</targetReference>
+        </connector>
+        <fields>
+            <name>Please_share_feedback_on_resolving_the_issue_v23</name>
+            <fieldText>Please share feedback on resolving the issue</fieldText>
+            <fieldType>LargeTextArea</fieldType>
+            <isRequired>false</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>S_26_Troubleshoot_external_device_that_causes_No_Boot</name>
+        <label>S.26 Troubleshoot external device that causes No Boot</label>
+        <locationX>1523</locationX>
+        <locationY>219</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Assignment_s_1_1_Yes</targetReference>
+        </connector>
+        <fields>
+            <name>Screen_s_26_Content</name>
+            <fieldText>&lt;h5&gt;&lt;b&gt;Troubleshoot external device that causes No Boot&lt;/b&gt;&lt;/h5&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Screen_1_1_Reconnect_external_devices_one_at_a_time_and_test</name>
+        <label>Screen 1.1 Reconnect external devices one at a time and test</label>
+        <locationX>1205</locationX>
+        <locationY>268</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Assignment_s_1_1</targetReference>
+        </connector>
+        <fields>
+            <name>Do_any_of_the_devices_cause_the_error_to_return_v2</name>
+            <choiceReferences>GR_Screen_1_1_Yes</choiceReferences>
+            <choiceReferences>GR_Screen_1_1_No</choiceReferences>
+            <dataType>String</dataType>
+            <fieldText>Do any of the devices cause the error to return?</fieldText>
+            <fieldType>RadioButtons</fieldType>
+            <isRequired>false</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Screen_1_Select_Windows_Version</name>
+        <label>Screen 1. Select Windows Version</label>
+        <locationX>581</locationX>
+        <locationY>440</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Assignment_s_1</targetReference>
+        </connector>
+        <fields>
+            <name>Screen1_content</name>
+            <fieldText>&lt;h4&gt;&lt;b&gt;Attention:&lt;/b&gt;&lt;/h4&gt; Operating System is defaulted below based on Support Assist data. Confirm with customer and click next button. 
+If value is &lt;b&gt;NA&lt;/b&gt;, please check with customer and update correct OS to proceed further.</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>Select_the_version_of_Windows_v2</name>
+            <choiceReferences>GR_Screen_1_NA</choiceReferences>
+            <choiceReferences>GR_Screen_1_Win7</choiceReferences>
+            <choiceReferences>GR_Screen_1_Win8</choiceReferences>
+            <choiceReferences>GR_Screen_1_Win10</choiceReferences>
+            <dataType>String</dataType>
+            <fieldText>Select the version of Windows currently installed on the system.</fieldText>
+            <fieldType>DropdownBox</fieldType>
+            <isRequired>false</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Screen_1a_Remove_external_devices_and_perform_hard_reset</name>
+        <label>Screen 1a Remove external devices and perform hard reset.</label>
+        <locationX>976</locationX>
+        <locationY>445</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Assignment_s_1a</targetReference>
+        </connector>
+        <fields>
+            <name>Screen1a_Content</name>
+            <fieldText>&lt;h5&gt;&lt;b&gt;Procedure&lt;/b&gt;&lt;/h5&gt;
+&lt;h3 style=&quot;color: #00a3cc;&quot;&gt;&lt;b&gt;Perform a Hard Reset&lt;/b&gt;&lt;/h3&gt;
+ 
+1.	Perform a full shutdown on the computer. (Do not suspend or hibernate)
+2.	Remove all the external peripherals, if any, connected to the system. 
+a.	For laptops:  Remove the battery (if the battery is Customer removable unit CRU) and unplug the power cable from the system
+b.	For desktops:  Disconnect the power cable from the back of the system.
+3.	Check for any removable media in the system and remove if present. i.e. DVDs, USB drives, SD cards
+4.	After unplugging, press the Power button for 30 seconds to drain any residual power from the computer. 
+a.	For laptops: Reinsert the battery and plug in the power cord. If the battery was not removed, then plug in only the power cord.
+b.	For desktops: Reconnect the power cable and any necessary peripherals (Mouse, Keyboard, Monitor)
+5.	If the system boots, perform a soft boot/restart to determine if the system will reboot without having to perform a hard shutdown.
+ 
+Note: If it is not possible to remove external peripherals and perform the hard reset (due to user disabilities for example), perform a reboot without removing the devices. If the system will still not boot, recommend the user get help removing the peripherals prior to performing OS recovery steps or replacing any hardware.</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>Does_the_system_boot_v2</name>
+            <choiceReferences>GR_Screen_1a_Yes</choiceReferences>
+            <choiceReferences>GR_Screen_1a_No</choiceReferences>
+            <choiceReferences>GR_Screen_1a_SysWillNotSoftReboot</choiceReferences>
+            <choiceReferences>GR_Screen_1a_HardReset</choiceReferences>
+            <dataType>String</dataType>
+            <fieldText>Does the system boot?</fieldText>
+            <fieldType>RadioButtons</fieldType>
+            <isRequired>false</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Screen_5_1_1_Determine_if_the_system_is_configured_with_RAID</name>
+        <label>Screen 5.1.1 Determine if the system is configured with RAID</label>
+        <locationX>1556</locationX>
+        <locationY>697</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Assignment_s_5_NoCodeDetected</targetReference>
+        </connector>
+        <fields>
+            <name>Is_the_system_configured_with_RAID</name>
+            <choiceReferences>GR_Screen_5_1_1_WithRAID</choiceReferences>
+            <choiceReferences>GR_Screen_5_1_1_WithoutRAID</choiceReferences>
+            <dataType>String</dataType>
+            <fieldText>Is the system configured with RAID?</fieldText>
+            <fieldType>RadioButtons</fieldType>
+            <isRequired>false</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Screen_5_1_HDD_related_code</name>
+        <label>Screen 5.1 HDD related code</label>
+        <locationX>1567</locationX>
+        <locationY>438</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Assignment_s_5_HDDRelatedCode</targetReference>
+        </connector>
+        <fields>
+            <name>Screen5_1_Content</name>
+            <fieldText>&lt;h5&gt;&lt;b&gt;Procedure&lt;/b&gt;&lt;/h5&gt;
+&lt;h3 style=&quot;color: #00a3cc;&quot;&gt;&lt;b&gt;Troubleshoot as Hard Drive issue&lt;/b&gt;&lt;/h3&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Screen_5_3_Troubleshoot_No_POST</name>
+        <label>Screen 5.3 Troubleshoot No POST</label>
+        <locationX>1391</locationX>
+        <locationY>743</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Assignment_s_5_ePSA</targetReference>
+        </connector>
+        <fields>
+            <name>Screen5_3_Content</name>
+            <fieldText>&lt;h5&gt;&lt;b&gt;Procedure&lt;/b&gt;&lt;/h5&gt;
+&lt;h3 style=&quot;color: #00a3cc;&quot;&gt;&lt;b&gt;Troubleshoot as a No POST Issue&lt;/b&gt;&lt;/h3&gt;
+ 
+When redirected to the No POST guided path be sure to select &quot;No POST&quot; rather than No Power.</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Screen_5_Run_EPSA_Diagnostics</name>
+        <label>Screen 5 Run EPSA Diagnostics</label>
+        <locationX>1346</locationX>
+        <locationY>444</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Assignment_s_5</targetReference>
+        </connector>
+        <fields>
+            <name>Screen5_Content</name>
+            <fieldText>&lt;h5&gt;&lt;b&gt;Procedure&lt;/b&gt;&lt;/h5&gt;
+&lt;h3 style=&quot;color: #00a3cc;&quot;&gt;&lt;b&gt;Run ePSA&lt;/b&gt;&lt;/h3&gt;
+ 
+Dell Enhanced Pre-Boot System Diagnostics (ePSA) are diagnostics that are built into the hardware of your system. These tests allow you to check the hardware of your system from outside the Windows® operating system removing software from the diagnostic process.
+ 
+To run ePSA, perform the following steps:
+ 
+&lt;b&gt;For Dell Desktop or All-In-One&lt;/b&gt;
+1.	Restart the computer
+2.	As the computer boots, press F12 when the Dell Splash Screen appears
+3.	At the One Time Boot menu, press the arrow key to highlight Diagnostics and press enter
+4.	A graphical menu, listing all the discovered devices in the system is now displayed and the express diagnostics will run
+&lt;b&gt;&lt;i&gt;Note:&lt;/i&gt;&lt;/b&gt; Takes about 4 minutes to complete
+ 
+&lt;b&gt;For Dell Portable:&lt;/b&gt;
+1.	Shutdown the computer
+2.	Press and Hold the &lt;Fn&gt; key while pressing the power button, then release both
+3.	A graphical menu, listing all the discovered devices in the system is now displayed and the express diagnostics should run
+4.	If the diagnostics fail, make a note of the error code
+5.	Based on the diagnostic findings, the code will assist you in troubleshooting the fault
+&lt;b&gt;Note:&lt;/b&gt; Takes about 4 minutes to complete
+ 
+Reference:
+&lt;a href=”http://kb.dell.com/infocenter/index?page=content&amp;id=SLN293620&quot;&gt;http://kb.dell.com/infocenter/index?page=content&amp;id=SLN293620&lt;/a&gt;
+ 
+If you dispatching against an ePSA code , you must use the Dell Code Validation tool.
+ 
+1.	Go to &lt;a href=”https://satc.dell.com/#/&quot;&gt;https://satc.dell.com/#/&lt;/a&gt;
+2.	If this is your first use enter your settings preferences
+3.	Ensure any popup blocker is disabled for this site
+4.	Input the Service tag and click search
+5.	Enter the ePSA code and validation code then click submit
+6.	Record the ePSA error code and the validation code in your log.
+
+
+&lt;b&gt;EPSA Test Results&lt;/b&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>Choose_the_item_that_most_closely_matches_the_EPSA_results</name>
+            <choiceReferences>GR_Screen_5_NoCodesDetected</choiceReferences>
+            <choiceReferences>GR_Screen_5_HDDRelatedCode</choiceReferences>
+            <choiceReferences>GR_Screen_5_BootpathCode</choiceReferences>
+            <choiceReferences>GR_Screen_5_OtherCode</choiceReferences>
+            <choiceReferences>GR_Screen_5_ePSA</choiceReferences>
+            <choiceReferences>GR_Screen_5_BIOS</choiceReferences>
+            <dataType>String</dataType>
+            <fieldText>Choose the item that most closely matches the EPSA results</fieldText>
+            <fieldType>RadioButtons</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Screen_S_23_1_Reopen_this_tab_to_create_log_and_be_transferred_to_the_Hard_Drive</name>
+        <label>Screen S.23.1 Reopen this tab to create log and be transferred to the Hard Drive path</label>
+        <locationX>1783</locationX>
+        <locationY>415</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Assignment_s_23_1</targetReference>
+        </connector>
+        <fields>
+            <name>Please_share_feedback_on_resolving_the_issue_v23_1</name>
+            <fieldText>Please share feedback on resolving the issue</fieldText>
+            <fieldType>LargeTextArea</fieldType>
+            <isRequired>false</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Select_Windows_Version</name>
+        <label>Select Windows Version</label>
+        <locationX>180</locationX>
+        <locationY>846</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Assignment_s2</targetReference>
+        </connector>
+        <fields>
+            <name>Select_the_version_of_Windows_currently_installed_on_the_system</name>
+            <choiceReferences>Windows_7</choiceReferences>
+            <choiceReferences>Windows_8_8_1</choiceReferences>
+            <choiceReferences>Windows_10</choiceReferences>
+            <dataType>String</dataType>
+            <fieldText>Select the version of Windows currently installed on the system</fieldText>
+            <fieldType>RadioButtons</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <startElementReference>GetServiceTagFromCaseId</startElementReference>
+    <status>Active</status>
+    <variables>
+        <name>BIOSVersionText</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>FlowLogId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Stores Id of the case</description>
+        <name>recordId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
+        <name>ResolvedStep</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>SAAttributes</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
+        <name>ServiceTag</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>Transcript</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

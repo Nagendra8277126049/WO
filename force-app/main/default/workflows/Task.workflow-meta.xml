@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <outboundMessages>
+        <fullName>S360_Task_Sync</fullName>
+        <apiVersion>43.0</apiVersion>
+        <description>This OBM is created to sync Task,Logs and Email messages from lightning to S360</description>
+        <endpointUrl>https://test.com</endpointUrl>
+        <fields>Id</fields>
+        <fields>WhatId</fields>
+        <fields>WhoId</fields>
+        <includeSessionId>false</includeSessionId>
+        <integrationUser>soniya_sharaff@dellteam.com.dellservices</integrationUser>
+        <name>S360 Task Sync</name>
+        <protected>false</protected>
+        <useDeadLetterQueue>false</useDeadLetterQueue>
+    </outboundMessages>
+    <outboundMessages>
+        <fullName>TaskCreateActivityToDelta</fullName>
+        <apiVersion>41.0</apiVersion>
+        <description>Outbound Message to push the event fields from SFDC to Delta - #4191821</description>
+        <endpointUrl>https://test.com</endpointUrl>
+        <fields>ActivityDate</fields>
+        <fields>AssignedToLogin__c</fields>
+        <fields>CallType</fields>
+        <fields>Description</fields>
+        <fields>Id</fields>
+        <fields>ParentCaseOrigin__c</fields>
+        <fields>Priority</fields>
+        <fields>Public__c</fields>
+        <fields>RecordTypeId</fields>
+        <fields>Status</fields>
+        <fields>Subject</fields>
+        <fields>TaskSubtype</fields>
+        <fields>Type</fields>
+        <fields>WhatId</fields>
+        <includeSessionId>false</includeSessionId>
+        <integrationUser>servicesfdcdev@dell.com</integrationUser>
+        <name>TaskCreateActivityToDelta</name>
+        <protected>false</protected>
+        <useDeadLetterQueue>false</useDeadLetterQueue>
+    </outboundMessages>
+    <rules>
+        <fullName>Task Sync to S360</fullName>
+        <actions>
+            <name>S360_Task_Sync</name>
+            <type>OutboundMessage</type>
+        </actions>
+        <active>true</active>
+        <description>This Rule is created to Sync Task,Log and Email messages between lightning and S360</description>
+        <formula>EMC_Task__c = True</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+    <rules>
+        <fullName>TaskActivityOutboundMessage</fullName>
+        <actions>
+            <name>TaskCreateActivityToDelta</name>
+            <type>OutboundMessage</type>
+        </actions>
+        <active>true</active>
+        <description>Workflow rule to trigger the Task outbound message for integration - #4191821</description>
+        <formula>AND(NOT(ISBLANK(WhatId)),     BEGINS(WhatId, &#39;500&#39;),     NOT(IsDeltaActivity__c),     NOT(EMC_Task__c)     )</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+</Workflow>

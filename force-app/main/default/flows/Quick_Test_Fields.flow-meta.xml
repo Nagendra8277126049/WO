@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>New Fields added QuickTest Result message, QuikTest_Status</description>
+    <interviewLabel>Quick TEst Fields {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Quick Test Fields</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Find_Quick_Test_Fields</name>
+        <label>Find Quick Test Fields</label>
+        <locationX>295</locationX>
+        <locationY>61</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <filters>
+            <field>ChatKey</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>in_ChatkeyValue</elementReference>
+            </value>
+        </filters>
+        <object>LiveChatTranscript</object>
+        <outputAssignments>
+            <assignToReference>QuickTestResultMessage</assignToReference>
+            <field>Quick_SA_Test_Msg__c</field>
+        </outputAssignments>
+        <outputAssignments>
+            <assignToReference>QuickSATest</assignToReference>
+            <field>Quick_SA_Test__c</field>
+        </outputAssignments>
+    </recordLookups>
+    <startElementReference>Find_Quick_Test_Fields</startElementReference>
+    <status>Active</status>
+    <variables>
+        <name>in_ChatkeyValue</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>QuickSATest</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
+        <name>QuickTestResultMessage</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+        <value>
+            <stringValue/>
+        </value>
+    </variables>
+</Flow>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldUpdates>
+        <fullName>Set_Completed_DateTime_in_Chat_Transcrip</fullName>
+        <field>Completed_Date_Time__c</field>
+        <formula>NOW()</formula>
+        <name>Set Completed DateTime in Chat Transcrip</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <outboundMessages>
+        <fullName>S360_LCT_Sync</fullName>
+        <apiVersion>43.0</apiVersion>
+        <description>This OBM is used to sync LCT from Lightning to S360</description>
+        <endpointUrl>https://test.com</endpointUrl>
+        <fields>Id</fields>
+        <includeSessionId>false</includeSessionId>
+        <integrationUser>soniya_sharaff@dellteam.com.dellservices</integrationUser>
+        <name>S360 LCT Sync</name>
+        <protected>false</protected>
+        <useDeadLetterQueue>false</useDeadLetterQueue>
+    </outboundMessages>
+    <rules>
+        <fullName>LCT Sync to S360</fullName>
+        <actions>
+            <name>S360_LCT_Sync</name>
+            <type>OutboundMessage</type>
+        </actions>
+        <active>true</active>
+        <description>This Rule is created to sync LCT from Lightning to S360</description>
+        <formula>AND(ISPICKVAL(Asset__r.Product2.Product_Identifier__c , &quot;S360&quot;),ISPICKVAL(Status, &quot;Completed&quot;))</formula>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>When Live Chat Transcript Status set to Completed</fullName>
+        <actions>
+            <name>Set_Completed_DateTime_in_Chat_Transcrip</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>LiveChatTranscript.Status</field>
+            <operation>equals</operation>
+            <value>Completed</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+</Workflow>

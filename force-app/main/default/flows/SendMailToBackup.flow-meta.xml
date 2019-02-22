@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>SendMailToBackup</name>
+        <label>SendMailToBackup</label>
+        <locationX>255</locationX>
+        <locationY>311</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>EmailBody</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>EmailSubject</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>BackupUser.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <elementReference>DellSupportEmail</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <elementReference>OrgWideEmailAddress</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <decisions>
+        <name>IsUserFound</name>
+        <label>IsUserFound</label>
+        <locationX>255</locationX>
+        <locationY>162</locationY>
+        <defaultConnectorLabel>[Default Outcome]</defaultConnectorLabel>
+        <rules>
+            <name>UserFound</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>LookUpCaseBackup</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>SendMailToBackup</targetReference>
+            </connector>
+            <label>UserFound</label>
+        </rules>
+    </decisions>
+    <description>STORY 5242563</description>
+    <interviewLabel>SendMailToBackup {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>SendMailToBackup</label>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>LookUpCaseBackup</name>
+        <label>LookUpCaseBackup</label>
+        <locationX>261</locationX>
+        <locationY>46</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>IsUserFound</targetReference>
+        </connector>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>ParentCase.Case_Backup__c</elementReference>
+            </value>
+        </filters>
+        <object>User</object>
+        <outputReference>BackupUser</outputReference>
+        <queriedFields>Email</queriedFields>
+        <queriedFields>Id</queriedFields>
+    </recordLookups>
+    <startElementReference>LookUpCaseBackup</startElementReference>
+    <status>Active</status>
+    <textTemplates>
+        <name>EmailBody</name>
+        <text>An email has been received for case 
+{!ParentCase.CaseNumber}  :  {!ParentCase.Subject}
+
+Please click the link below to review the new email and respond appropriately.
+https://dellservices.lightning.force.com/{!Email.Id}
+
+NOTE: It is not recommended that you forward this email because its association with the original case may be lost.</text>
+    </textTemplates>
+    <textTemplates>
+        <name>EmailSubject</name>
+        <text>New case email notification. Case number {!ParentCase.CaseNumber}</text>
+    </textTemplates>
+    <variables>
+        <name>BackupUser</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+        <objectType>User</objectType>
+    </variables>
+    <variables>
+        <name>DellSupportEmail</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>technical_support@dell.com</stringValue>
+        </value>
+    </variables>
+    <variables>
+        <description>STORY 5242563</description>
+        <name>Email</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+        <objectType>EmailMessage</objectType>
+    </variables>
+    <variables>
+        <name>OrgWideEmailAddress</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>OrgWideEmailAddress</stringValue>
+        </value>
+    </variables>
+    <variables>
+        <name>ParentCase</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+        <objectType>Case</objectType>
+    </variables>
+</Flow>

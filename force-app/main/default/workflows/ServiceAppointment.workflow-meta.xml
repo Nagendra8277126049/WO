@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldUpdates>
+        <fullName>PSA_Update_Record_Type_on_Service_Appoin</fullName>
+        <field>RecordTypeId</field>
+        <lookupValue>Installation_Badge</lookupValue>
+        <lookupValueType>RecordType</lookupValueType>
+        <name>PSA Update Record Type on Service Appoin</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>LookupValue</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <rules>
+        <fullName>PSA Update Record Type on Service Appointment</fullName>
+        <actions>
+            <name>PSA_Update_Record_Type_on_Service_Appoin</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <formula>Work_Order__r.RecordType.DeveloperName = &quot;Installation_Badge&quot;</formula>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+</Workflow>

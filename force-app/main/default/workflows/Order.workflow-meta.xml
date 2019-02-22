@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldUpdates>
+        <fullName>Approval_Rejected</fullName>
+        <field>Order_Approval_Status__c</field>
+        <literalValue>Rejected</literalValue>
+        <name>Approval Rejected</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>true</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Approval_Status_Pending</fullName>
+        <field>Order_Approval_Status__c</field>
+        <literalValue>Pending</literalValue>
+        <name>Approval Status Pending</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Approval_Status_to_Approved</fullName>
+        <field>Order_Approval_Status__c</field>
+        <literalValue>Approved</literalValue>
+        <name>Approval Status to Approved</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>true</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Clear_Approver</fullName>
+        <field>Association_Approver__c</field>
+        <name>Clear Approver</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>LookupValue</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Clear_Suggested_Project</fullName>
+        <field>Approval_Project_Id__c</field>
+        <name>Clear Suggested Project</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Null</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Clear_Suggested_Project_From_Order</fullName>
+        <field>Approval_Project_Id__c</field>
+        <name>Clear Suggested Project From Order</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Null</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Clear_Suggested_Project_Name</fullName>
+        <field>Approval_Project_Name__c</field>
+        <name>Clear Suggested Project Name</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Null</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>PSA_Timestamp_Now_On_Order</fullName>
+        <field>Approved_Rejected_Timestamp__c</field>
+        <formula>now()</formula>
+        <name>PSA Timestamp Now On Order</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Send_To_Click_To_False</fullName>
+        <field>Send_To_Click__c</field>
+        <literalValue>0</literalValue>
+        <name>Send To Click To False</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <outboundMessages>
+        <fullName>Send_Order_To_Click</fullName>
+        <apiVersion>44.0</apiVersion>
+        <endpointUrl>https://test.com</endpointUrl>
+        <fields>Id</fields>
+        <includeSessionId>true</includeSessionId>
+        <integrationUser>boomi_ff_click_integration@dell.com.dellservices</integrationUser>
+        <name>Send Order To Click</name>
+        <protected>false</protected>
+        <useDeadLetterQueue>false</useDeadLetterQueue>
+    </outboundMessages>
+    <rules>
+        <fullName>PSA Mark Timestamp on Order</fullName>
+        <actions>
+            <name>PSA_Timestamp_Now_On_Order</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <formula>AND(    IsBlank(Approved_Rejected_Timestamp__c),    (OR(Is_Delivered__c,Is_Canceled__c))    )</formula>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Send Order To Click</fullName>
+        <actions>
+            <name>Send_To_Click_To_False</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <actions>
+            <name>Send_Order_To_Click</name>
+            <type>OutboundMessage</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Order.Send_To_Click__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+</Workflow>

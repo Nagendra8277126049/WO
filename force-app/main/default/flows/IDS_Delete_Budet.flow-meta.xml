@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <decisions>
+        <name>Check_if_budget_exists_before_deletion</name>
+        <label>Check if budget exists before deletion</label>
+        <locationX>123</locationX>
+        <locationY>273</locationY>
+        <defaultConnectorLabel>[Default Outcome]</defaultConnectorLabel>
+        <rules>
+            <name>Budget_exists</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Budgets</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Delete_Budget</targetReference>
+            </connector>
+            <label>Budget exists</label>
+        </rules>
+    </decisions>
+    <description>Without logs.</description>
+    <interviewLabel>IDS - Delete Budet {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>IDS - Delete Budet</label>
+    <processType>AutoLaunchedFlow</processType>
+    <recordDeletes>
+        <name>Delete_Budget</name>
+        <label>Delete Budget</label>
+        <locationX>124</locationX>
+        <locationY>416</locationY>
+        <inputReference>Budgets</inputReference>
+    </recordDeletes>
+    <recordLookups>
+        <name>Get_Budget</name>
+        <label>Get Budget</label>
+        <locationX>123</locationX>
+        <locationY>170</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Check_if_budget_exists_before_deletion</targetReference>
+        </connector>
+        <filters>
+            <field>Order__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Order.Id</elementReference>
+            </value>
+        </filters>
+        <object>pse__Budget__c</object>
+        <outputReference>Budgets</outputReference>
+        <queriedFields>Id</queriedFields>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Order</name>
+        <label>Get Order</label>
+        <locationX>122</locationX>
+        <locationY>78</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_Budget</targetReference>
+        </connector>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>OrderId</elementReference>
+            </value>
+        </filters>
+        <object>Order</object>
+        <outputReference>Order</outputReference>
+        <queriedFields>Id</queriedFields>
+    </recordLookups>
+    <startElementReference>Get_Order</startElementReference>
+    <status>Active</status>
+    <variables>
+        <name>Budgets</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>pse__Budget__c</objectType>
+    </variables>
+    <variables>
+        <name>LogId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
+        <name>Order</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Order</objectType>
+    </variables>
+    <variables>
+        <name>OrderId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>
